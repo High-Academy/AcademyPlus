@@ -1,0 +1,577 @@
+<!DOCTYPE html>
+<html lang="ht">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Boussòl — Fòmasyon Swivi &amp; Evalyasyon Pwojè</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600;9..144,700&family=Inter:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg: #FAF9F5;
+    --bg-alt: #F0EEE6;
+    --panel: #FFFFFF;
+    --ink: #1C2333;
+    --ink-soft: #4A5164;
+    --navy: #16223E;
+    --navy-deep: #0E1729;
+    --gold: #D9A441;
+    --gold-deep: #B9852A;
+    --teal: #2F6F52;
+    --line: #DEDAD0;
+    --radius: 14px;
+    --shadow: 0 20px 50px -25px rgba(22,34,62,0.35);
+  }
+
+  *{box-sizing:border-box;}
+  html{scroll-behavior:smooth;}
+  body{
+    margin:0;
+    background:var(--bg);
+    color:var(--ink);
+    font-family:'Inter', sans-serif;
+    line-height:1.55;
+    -webkit-font-smoothing:antialiased;
+  }
+  h1,h2,h3,.display{
+    font-family:'Fraunces', serif;
+    font-weight:600;
+    letter-spacing:-0.01em;
+    color:var(--navy);
+    margin:0;
+  }
+  .mono{
+    font-family:'IBM Plex Mono', monospace;
+  }
+  a{color:inherit;}
+  img,svg{display:block;max-width:100%;}
+  button{font-family:inherit;}
+  :focus-visible{outline:2px solid var(--gold-deep); outline-offset:3px;}
+
+  .wrap{
+    max-width:1120px;
+    margin:0 auto;
+    padding:0 28px;
+  }
+
+  /* ---------- HEADER ---------- */
+  header{
+    position:sticky; top:0; z-index:40;
+    background:rgba(250,249,245,0.88);
+    backdrop-filter:blur(10px);
+    border-bottom:1px solid var(--line);
+  }
+  .nav{
+    display:flex; align-items:center; justify-content:space-between;
+    padding:18px 0; gap:16px;
+  }
+  .nav-right{display:flex; align-items:center; gap:12px;}
+  .brand{display:flex; align-items:center; gap:10px; text-decoration:none; line-height:1;}
+  .brand svg{width:34px;height:34px; flex-shrink:0;}
+  .brand-text{display:flex; flex-direction:column; justify-content:center; gap:2px;}
+  .brand-name{font-family:'Fraunces', serif; font-weight:700; font-size:1.3rem; color:var(--navy); line-height:1;}
+  .brand-tag{font-family:'IBM Plex Mono', monospace; font-size:0.62rem; letter-spacing:.12em; text-transform:uppercase; color:var(--ink-soft); display:block; line-height:1;}
+  nav.links{display:flex; align-items:center; gap:36px; font-size:0.96rem; font-weight:600;}
+  nav.links a{
+    text-decoration:none; color:var(--ink-soft); transition:color .2s ease;
+    position:relative; padding:8px 2px; letter-spacing:.01em;
+  }
+  nav.links a::after{
+    content:""; position:absolute; left:2px; right:2px; bottom:2px; height:2px;
+    background:var(--gold-deep); border-radius:2px;
+    transform:scaleX(0); transform-origin:left; transition:transform .25s ease;
+  }
+  nav.links a:hover{color:var(--navy);}
+  nav.links a:hover::after{transform:scaleX(1);}
+  .btn-nav{
+    background:var(--navy); color:#fff; padding:10px 20px; border-radius:999px;
+    text-decoration:none; font-weight:600; font-size:0.88rem; white-space:nowrap;
+    display:inline-flex; align-items:center;
+  }
+  .menu-toggle{
+    display:none; background:none; border:1px solid var(--line); border-radius:8px;
+    width:40px; height:40px; align-items:center; justify-content:center; cursor:pointer;
+  }
+  .menu-toggle svg{width:20px;height:20px;}
+  @media(max-width:760px){
+    .nav{position:relative;}
+    nav.links{
+      display:none; position:absolute; top:100%; left:0; right:0; background:var(--panel);
+      flex-direction:column; align-items:flex-start; gap:0; border-bottom:1px solid var(--line);
+      box-shadow:var(--shadow);
+    }
+    nav.links.open{display:flex;}
+    nav.links a{padding:14px 28px; width:100%; border-top:1px solid var(--line);}
+    nav.links a::after{display:none;}
+    nav.links a:active{background:var(--bg-alt);}
+    .menu-toggle{display:inline-flex;}
+    .btn-nav{padding:9px 16px; font-size:0.82rem;}
+  }
+
+  /* ---------- HERO ---------- */
+  .hero{
+    padding:28px 0 48px;
+  }
+  .hero-grid{
+    display:grid; grid-template-columns:0.85fr 1.15fr; gap:44px; align-items:center;
+  }
+  @media(max-width:760px){
+    .hero-grid{grid-template-columns:1fr; gap:28px;}
+    .hero-grid .hero-illustration{order:2; max-width:220px; margin:0 auto;}
+    .hero-grid > div:not(.hero-illustration){order:1;}
+  }
+  .eyebrow{
+    font-family:'IBM Plex Mono', monospace; font-size:0.72rem; letter-spacing:.16em;
+    text-transform:uppercase; color:var(--teal); margin-bottom:12px; display:flex; gap:10px; align-items:center;
+  }
+  .eyebrow::before{content:""; width:26px; height:1px; background:var(--teal);}
+  .hero h1{font-size:clamp(2rem, 3.4vw, 2.85rem); line-height:1.14; max-width:20ch;}
+  .hero h1 em{font-style:normal; color:var(--gold-deep);}
+  .hero p.lead{
+    margin-top:14px; font-size:1.08rem; color:var(--ink-soft); max-width:46ch;
+  }
+  .hero-cta{display:flex; gap:14px; margin-top:22px; flex-wrap:wrap;}
+  .btn-primary{
+    background:var(--gold); color:var(--navy-deep); border:none; padding:15px 28px;
+    border-radius:999px; font-weight:700; font-size:0.98rem; cursor:pointer;
+    box-shadow:0 14px 30px -14px rgba(217,164,65,0.65);
+    transition:transform .15s ease, box-shadow .15s ease;
+  }
+  .btn-primary:hover{transform:translateY(-1px); box-shadow:0 18px 34px -14px rgba(217,164,65,0.75);}
+  .btn-ghost{
+    background:transparent; color:var(--navy); border:1.5px solid var(--line); padding:14px 24px;
+    border-radius:999px; font-weight:600; font-size:0.98rem; cursor:pointer; text-decoration:none;
+    display:inline-flex; align-items:center;
+  }
+  .btn-ghost:hover{border-color:var(--navy);}
+
+  .compass-wrap{position:relative; display:flex; align-items:center; justify-content:center;}
+  .compass-wrap svg{width:100%; max-width:380px;}
+  #needle{transform-origin:200px 200px; animation:seek 7s ease-in-out infinite;}
+  @keyframes seek{
+    0%,100%{transform:rotate(-8deg);}
+    50%{transform:rotate(14deg);}
+  }
+  @media (prefers-reduced-motion: reduce){ #needle{animation:none;} }
+
+  /* ---------- STRIP ---------- */
+  .strip{
+    background:var(--navy); color:#fff; padding:14px 0;
+  }
+  .strip .wrap{display:flex; justify-content:space-between; flex-wrap:wrap; gap:18px;}
+  .strip-item{display:flex; align-items:baseline; gap:8px; font-size:0.9rem; color:#CBD3E1;}
+  .strip-item b{font-family:'Fraunces', serif; color:#fff; font-size:1.15rem; font-weight:600;}
+
+  /* ---------- SECTION HEADS ---------- */
+  section{padding:52px 0;}
+  .sec-head{max-width:640px; margin-bottom:30px;}
+  .sec-head .eyebrow{color:var(--gold-deep);}
+  .sec-head .eyebrow::before{background:var(--gold-deep);}
+  .sec-head h2{font-size:clamp(1.8rem,3vw,2.4rem);}
+  .sec-head p{color:var(--ink-soft); margin-top:14px; font-size:1.04rem;}
+
+  /* ---------- COURSES ---------- */
+  .courses{background:var(--bg-alt); border-top:1px solid var(--line); border-bottom:1px solid var(--line);}
+  .course-grid{display:grid; grid-template-columns:repeat(2,1fr); gap:18px;}
+  @media(max-width:760px){ .course-grid{grid-template-columns:1fr;} }
+
+  .card{
+    background:var(--panel); border-radius:var(--radius); padding:24px;
+    border:1px solid var(--line); box-shadow:var(--shadow); display:flex; flex-direction:column; gap:14px;
+  }
+  .card-top{display:flex; justify-content:space-between; align-items:flex-start; gap:12px;}
+  .modnum{
+    font-family:'IBM Plex Mono', monospace; font-size:0.72rem; color:var(--teal);
+    border:1px solid var(--teal); border-radius:999px; padding:4px 10px; white-space:nowrap;
+  }
+  .card h3{font-size:1.28rem; line-height:1.25;}
+  .card p{color:var(--ink-soft); font-size:0.95rem; margin:0;}
+  .card-meta{display:flex; gap:16px; font-size:0.82rem; color:var(--ink-soft); font-family:'IBM Plex Mono', monospace;}
+  .card-foot{
+    margin-top:auto; display:flex; align-items:center; justify-content:space-between;
+    padding-top:18px; border-top:1px dashed var(--line);
+  }
+  .price{font-family:'Fraunces', serif; font-size:1.5rem; font-weight:600; color:var(--navy);}
+  .price span{font-size:0.78rem; font-family:'Inter'; color:var(--ink-soft); font-weight:500;}
+  .btn-enroll{
+    background:var(--navy); color:#fff; border:none; padding:12px 20px; border-radius:999px;
+    font-weight:600; font-size:0.85rem; cursor:pointer; transition:background .15s;
+    text-decoration:none; display:inline-flex; align-items:center; white-space:nowrap;
+  }
+  .btn-enroll:hover{background:var(--navy-deep);}
+
+  /* ---------- SIGNUP FORM ---------- */
+  .signup-form{
+    max-width:640px; background:var(--panel); border:1px solid var(--line); border-radius:var(--radius);
+    padding:30px; box-shadow:var(--shadow);
+  }
+  .form-row{display:flex; gap:16px; margin-bottom:16px;}
+  @media(max-width:600px){ .form-row{flex-direction:column; gap:16px;} }
+  .form-group{flex:1; display:flex; flex-direction:column; gap:6px;}
+  .form-group label{font-size:0.85rem; font-weight:600; color:var(--navy);}
+  .form-group input{
+    padding:12px 14px; border:1.5px solid var(--line); border-radius:8px;
+    font-size:0.95rem; font-family:inherit; color:var(--ink); background:var(--bg);
+  }
+  .form-group input:focus{border-color:var(--gold-deep); outline:none;}
+  .form-note{font-size:0.8rem; color:var(--ink-soft); text-align:center; margin-top:14px;}
+
+  /* ---------- HOW IT WORKS ---------- */
+  .steps{display:grid; grid-template-columns:repeat(3,1fr); gap:20px;}
+  @media(max-width:760px){ .steps{grid-template-columns:1fr;} }
+  .step{position:relative; padding-top:8px;}
+  .step-num{
+    font-family:'Fraunces', serif; font-size:2.6rem; color:var(--gold); font-weight:600; line-height:1;
+  }
+  .step h3{margin-top:14px; font-size:1.1rem;}
+  .step p{color:var(--ink-soft); font-size:0.94rem; margin-top:8px;}
+  .step-num-tag{font-family:'IBM Plex Mono',monospace; font-size:.7rem; color:var(--ink-soft); text-transform:uppercase; letter-spacing:.1em;}
+
+  /* ---------- TRUST NOTE ---------- */
+  .note{
+    background:#FFF9EC; border:1px solid #EAD9AE; border-radius:var(--radius);
+    padding:26px 28px; display:flex; gap:16px; align-items:flex-start; margin-top:16px;
+  }
+  .note svg{width:22px;height:22px; flex-shrink:0; margin-top:2px; color:var(--gold-deep);}
+  .note p{margin:0; font-size:0.92rem; color:var(--ink-soft);}
+  .note strong{color:var(--navy);}
+
+  /* ---------- MODAL ---------- */
+  .modal-overlay{
+    position:fixed; inset:0; background:rgba(14,23,41,0.55); backdrop-filter:blur(2px);
+    display:none; align-items:center; justify-content:center; z-index:100; padding:20px;
+  }
+  .modal-overlay.open{display:flex;}
+  .modal-box{
+    background:var(--panel); border-radius:var(--radius); max-width:520px; width:100%;
+    padding:30px; box-shadow:var(--shadow); position:relative; max-height:90vh; overflow-y:auto;
+  }
+  .modal-close{
+    position:absolute; top:16px; right:16px; background:var(--bg-alt); border:none; border-radius:999px;
+    width:34px; height:34px; display:flex; align-items:center; justify-content:center; cursor:pointer;
+    color:var(--ink-soft);
+  }
+  .modal-close:hover{color:var(--navy); background:var(--line);}
+  .modal-eyebrow{font-family:'IBM Plex Mono', monospace; font-size:0.7rem; letter-spacing:.14em; text-transform:uppercase; color:var(--teal); margin-bottom:6px;}
+  .modal-box h3{font-size:1.35rem; padding-right:30px;}
+  .modal-price{font-family:'Fraunces', serif; font-size:1.15rem; color:var(--gold-deep); font-weight:600; margin-top:6px;}
+  .modal-box .signup-form{box-shadow:none; border:none; padding:0; margin-top:20px; max-width:none;}
+
+  /* ---------- FOOTER ---------- */
+  footer{background:var(--navy-deep); color:#B9C0D4; padding:36px 0 22px;}
+  .foot-top{display:flex; justify-content:space-between; flex-wrap:wrap; gap:24px; padding-bottom:24px; border-bottom:1px solid rgba(255,255,255,0.1);}
+  footer .brand-name{color:#fff;}
+  .foot-contact{display:flex; flex-direction:column; gap:8px; font-size:0.92rem;}
+  .foot-contact a{color:#B9C0D4; text-decoration:none;}
+  .foot-contact a:hover{color:#fff;}
+  .foot-bottom{padding-top:24px; font-size:0.8rem; display:flex; justify-content:space-between; flex-wrap:wrap; gap:10px; color:#7C87A3;}
+
+</style>
+</head>
+<body>
+
+<header>
+  <div class="wrap nav">
+    <a href="#" class="brand">
+      <svg viewBox="0 0 40 40" fill="none">
+        <circle cx="20" cy="20" r="18" stroke="#16223E" stroke-width="1.6"/>
+        <circle cx="20" cy="20" r="2.4" fill="#D9A441"/>
+        <path d="M20 6 L23 20 L20 34 L17 20 Z" fill="#16223E" opacity="0.85"/>
+        <path d="M20 6 L23 20 L20 20 Z" fill="#D9A441"/>
+      </svg>
+      <span class="brand-text">
+        <span class="brand-name">Boussòl</span>
+        <span class="brand-tag">Fòmasyon S&amp;E</span>
+      </span>
+    </a>
+    <nav class="links" id="navLinks">
+      <a href="#kous">Fòmasyon yo</a>
+      <a href="#kous">Enskripsyon</a>
+      <a href="#kontak">Kontak</a>
+    </nav>
+    <div class="nav-right">
+      <button class="btn-nav" onclick="openEnskriModal()" type="button">Enskri kounye a</button>
+      <button class="menu-toggle" id="menuToggle" type="button" aria-label="Ouvri meni" aria-expanded="false" aria-controls="navLinks">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
+      </button>
+    </div>
+  </div>
+</header>
+
+<section class="hero">
+  <div class="wrap hero-grid">
+    <div class="hero-illustration compass-wrap">
+      <svg viewBox="0 0 400 400" fill="none">
+        <circle cx="200" cy="200" r="170" stroke="#DEDAD0" stroke-width="1.5"/>
+        <circle cx="200" cy="200" r="140" stroke="#DEDAD0" stroke-width="1"/>
+        <g font-family="IBM Plex Mono" font-size="14" fill="#4A5164">
+          <text x="192" y="42">N</text>
+          <text x="192" y="368">S</text>
+          <text x="40" y="206">W</text>
+          <text x="352" y="206">E</text>
+        </g>
+        <g stroke="#DEDAD0" stroke-width="1">
+          <line x1="200" y1="30" x2="200" y2="60"/>
+          <line x1="200" y1="340" x2="200" y2="370"/>
+          <line x1="30" y1="200" x2="60" y2="200"/>
+          <line x1="340" y1="200" x2="370" y2="200"/>
+        </g>
+        <circle cx="200" cy="200" r="6" fill="#16223E"/>
+        <g id="needle">
+          <path d="M200 70 L214 200 L200 210 Z" fill="#16223E"/>
+          <path d="M200 330 L186 200 L200 190 Z" fill="#D9A441"/>
+        </g>
+        <circle cx="200" cy="200" r="90" stroke="#2F6F52" stroke-width="1" stroke-dasharray="2 6" opacity="0.6"/>
+      </svg>
+    </div>
+    <div>
+      <div class="eyebrow">Fòmasyon an liy · Ayiti</div>
+      <h1>Aprann pilote pwojè yo tankou yon pwofesyonèl <em>Swivi &amp; Evalyasyon</em>.</h1>
+      <p class="lead">Boussòl se yon platfòm fòmasyon ki ede jesyonè pwojè, ajan ONG ak kad leta konstwi zouti solid pou swiv, mezire epi rapòte rezilta pwojè yo — nan Kreyòl, oryante pou reyalite Ayiti a.</p>
+      <div class="hero-cta">
+        <button class="btn-primary" onclick="document.getElementById('kous').scrollIntoView({behavior:'smooth'})">Gade fòmasyon yo</button>
+        <a href="#kijan" class="btn-ghost">Kijan peman an mache →</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="strip">
+  <div class="wrap">
+    <div class="strip-item"><b>4</b> pakèt fòmasyon</div>
+    <div class="strip-item"><b>100%</b> an liy, a pwòp vitès ou</div>
+    <div class="strip-item"><b>&lt;24h</b> pou konfimasyon aksè</div>
+    <div class="strip-item"><b>MonCash</b> sèl mwayen peman</div>
+  </div>
+</div>
+
+<section id="kijan">
+  <div class="wrap">
+    <div class="sec-head">
+      <div class="eyebrow">Peman</div>
+      <h2>Kijan enskripsyon an mache</h2>
+      <p>Ranpli fòm nan, epi peman an fèt dirèkteman nan app MonCash ou. Senp, san frè kache.</p>
+    </div>
+    <div class="steps">
+      <div class="step">
+        <div class="step-num-tag">Etap</div>
+        <div class="step-num">01</div>
+        <h3>Klike "Enskri" sou yon modil</h3>
+        <p>Chwazi modil ou vle a epi klike bouton "Enskri" pou ouvri fòm enskripsyon an.</p>
+      </div>
+      <div class="step">
+        <div class="step-num-tag">Etap</div>
+        <div class="step-num">02</div>
+        <h3>Ranpli fòm nan &amp; klike "PEYE AVEK MONCASH"</h3>
+        <p>Mete non, siyati, telefòn ak imel ou. Nou resevwa enfòmasyon w yo, epi ou redirije otomatikman sou app MonCash.</p>
+      </div>
+      <div class="step">
+        <div class="step-num-tag">Etap</div>
+        <div class="step-num">03</div>
+        <h3>Fè peman an nan MonCash</h3>
+        <p>Konplete peman an nan app MonCash lan. Ou resevwa aksè nan mwens pase 24è apre nou konfime.</p>
+      </div>
+    </div>
+
+    <div class="note">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="12" r="9"/><path d="M12 8v5M12 16h.01"/></svg>
+      <p><strong>Enpòtan:</strong> paske peman an fèt sou yon kont MonCash pèsonèl, verifikasyon an fèt manyèlman. Plas ou nan fòmasyon an konfime sèlman apre nou resevwa &amp; verifye peman an — kidonk pa efase okenn mesaj konfimasyon MonCash jiskaske ou resevwa aksè w. Si w gen kesyon, kontakte nou sou WhatsApp.</p>
+    </div>
+  </div>
+</section>
+
+<section class="courses" id="kous">
+  <div class="wrap">
+    <div class="sec-head">
+      <div class="eyebrow">Katalòg</div>
+      <h2>Chwazi fòmasyon ki koresponn ak bezwen w</h2>
+      <p>Chak modil bati sou sa ki anvan l — kòmanse ak fondamantal yo, epi monte jiska rapòte rezilta pwojè.</p>
+    </div>
+
+    <div class="course-grid">
+
+      <div class="card">
+        <div class="card-top">
+          <h3>Entwodiksyon nan Swivi &amp; Evalyasyon Pwojè</h3>
+          <span class="modnum">MODIL 01</span>
+        </div>
+        <p>Konprann konsèp debaz S&amp;E a, diferans ant swivi ak evalyasyon, ak wòl yo nan sik yon pwojè.</p>
+        <div class="card-meta"><span>4 leson</span><span>~3h</span><span>Nivo: Debitan</span></div>
+        <div class="card-foot">
+          <div class="price">2 500<span> HTG</span></div>
+          <button type="button" class="btn-enroll" onclick="openEnskriModal('Entwodiksyon nan Swivi &amp; Evalyasyon Pwojè', '2 500 HTG')">Enskri</button>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-top">
+          <h3>Kad Lojik &amp; Endikatè Pèfòmans</h3>
+          <span class="modnum">MODIL 02</span>
+        </div>
+        <p>Aprann bati yon Cadre Logique (logframe), defini endikatè SMART epi mete yo an lyen ak objektif pwojè a.</p>
+        <div class="card-meta"><span>5 leson</span><span>~4h</span><span>Nivo: Entèmedyè</span></div>
+        <div class="card-foot">
+          <div class="price">3 000<span> HTG</span></div>
+          <button type="button" class="btn-enroll" onclick="openEnskriModal('Kad Lojik &amp; Endikatè Pèfòmans', '3 000 HTG')">Enskri</button>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-top">
+          <h3>Kolekt &amp; Analiz Done sou Teren</h3>
+          <span class="modnum">MODIL 03</span>
+        </div>
+        <p>Metòd pou kolekte done fyab sou teren, zouti dijital gratis, ak baz analiz kantitatif/kalitatif.</p>
+        <div class="card-meta"><span>6 leson</span><span>~5h</span><span>Nivo: Entèmedyè</span></div>
+        <div class="card-foot">
+          <div class="price">3 500<span> HTG</span></div>
+          <button type="button" class="btn-enroll" onclick="openEnskriModal('Kolekt &amp; Analiz Done sou Teren', '3 500 HTG')">Enskri</button>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-top">
+          <h3>Rapòte Rezilta &amp; Kominike ak Bayè Fon</h3>
+          <span class="modnum">MODIL 04</span>
+        </div>
+        <p>Estriktire yon rapò S&amp;E ki konvenk, prezante done kle yo, epi kominike enpak pwojè a byen.</p>
+        <div class="card-meta"><span>4 leson</span><span>~3h</span><span>Nivo: Avanse</span></div>
+        <div class="card-foot">
+          <div class="price">4 000<span> HTG</span></div>
+          <button type="button" class="btn-enroll" onclick="openEnskriModal('Rapòte Rezilta &amp; Kominike ak Bayè Fon', '4 000 HTG')">Enskri</button>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<div class="modal-overlay" id="enskriModal" aria-hidden="true">
+  <div class="modal-box" role="dialog" aria-modal="true" aria-labelledby="modalTitle">
+    <button type="button" class="modal-close" onclick="closeEnskriModal()" aria-label="Fèmen">
+      <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><line x1="4" y1="4" x2="20" y2="20"/><line x1="20" y1="4" x2="4" y2="20"/></svg>
+    </button>
+    <div class="modal-eyebrow">Fòm enskripsyon</div>
+    <h3 id="modalTitle">Enskri nan fòmasyon an</h3>
+    <div class="modal-price" id="modalPrice" style="display:none;"></div>
+
+    <form class="signup-form" action="https://formsubmit.io/micherlamour300@gmail.com" method="POST">
+      <input type="hidden" name="_subject" value="Nouvo enskripsyon — Boussòl Academy">
+      <input type="hidden" name="_captcha" value="false">
+      <input type="hidden" name="_next" value="https://play.google.com/store/apps/details?id=com.useboom.htwallet">
+      <input type="hidden" name="_template" value="table">
+      <input type="hidden" name="Modil" id="modilField" value="Fòmasyon jeneral">
+
+      <div class="form-row">
+        <div class="form-group">
+          <label for="non">Non</label>
+          <input type="text" id="non" name="Non" placeholder="Non ou" required>
+        </div>
+        <div class="form-group">
+          <label for="siyati">Siyati</label>
+          <input type="text" id="siyati" name="Siyati" placeholder="Siyati ou" required>
+        </div>
+      </div>
+
+      <div class="form-row">
+        <div class="form-group">
+          <label for="telefon">Telefòn</label>
+          <input type="tel" id="telefon" name="Telefon" placeholder="+509 XXXX XXXX" required>
+        </div>
+        <div class="form-group">
+          <label for="email">Email</label>
+          <input type="email" id="email" name="Email" placeholder="imel@egzanp.com" required>
+        </div>
+      </div>
+
+      <button type="submit" class="btn-primary" style="width:100%;">PEYE AVEK MONCASH</button>
+      <p class="form-note">Apre ou fin ranpli fòm nan, enfòmasyon w yo ap voye ban nou epi w ap redirije sou app MonCash pou w kapab fè peman an.</p>
+    </form>
+  </div>
+</div>
+
+
+<footer id="kontak">
+  <div class="wrap">
+    <div class="foot-top">
+      <div>
+        <span class="brand-name display" style="font-size:1.3rem;">Boussòl</span>
+        <p style="max-width:32ch; color:#8892AC; font-size:0.9rem; margin-top:10px;">Fòmasyon Swivi &amp; Evalyasyon pou pwofesyonèl pwojè ann Ayiti.</p>
+      </div>
+      <div class="foot-contact">
+        <span style="color:#fff; font-weight:600; font-size:0.85rem; text-transform:uppercase; letter-spacing:.06em; margin-bottom:4px;">Kontak</span>
+        <a href="https://wa.me/50947655002" target="_blank" rel="noopener">WhatsApp — +509 4765 5002</a>
+        <span class="mono" style="color:#8892AC;">MonCash — 48 21 9522</span>
+      </div>
+    </div>
+    <div class="foot-bottom">
+      <span>© 2026 Boussòl Academy. Tout dwa rezève.</span>
+      <span>Fèt ak swen ann Ayiti 🇭🇹</span>
+    </div>
+  </div>
+</footer>
+
+<script>
+  // ---- Modal enskripsyon ----
+  var modal = document.getElementById('enskriModal');
+  var modalTitle = document.getElementById('modalTitle');
+  var modalPrice = document.getElementById('modalPrice');
+  var modilField = document.getElementById('modilField');
+  var lastFocused = null;
+
+  function openEnskriModal(nomModil, pri){
+    if(nomModil){
+      modalTitle.textContent = nomModil;
+      modilField.value = nomModil;
+    } else {
+      modalTitle.textContent = 'Enskri nan fòmasyon an';
+      modilField.value = 'Fòmasyon jeneral';
+    }
+    if(pri){
+      modalPrice.textContent = pri;
+      modalPrice.style.display = 'block';
+    } else {
+      modalPrice.style.display = 'none';
+    }
+    lastFocused = document.activeElement;
+    modal.classList.add('open');
+    modal.setAttribute('aria-hidden', 'false');
+    document.body.style.overflow = 'hidden';
+    var firstInput = modal.querySelector('input');
+    if(firstInput){ firstInput.focus(); }
+  }
+
+  function closeEnskriModal(){
+    modal.classList.remove('open');
+    modal.setAttribute('aria-hidden', 'true');
+    document.body.style.overflow = '';
+    if(lastFocused){ lastFocused.focus(); }
+  }
+
+  modal.addEventListener('click', function(e){
+    if(e.target === modal){ closeEnskriModal(); }
+  });
+
+  document.addEventListener('keydown', function(e){
+    if(e.key === 'Escape' && modal.classList.contains('open')){ closeEnskriModal(); }
+  });
+
+  // ---- Meni mobil ----
+  var menuToggle = document.getElementById('menuToggle');
+  var navLinks = document.getElementById('navLinks');
+
+  menuToggle.addEventListener('click', function(){
+    var isOpen = navLinks.classList.toggle('open');
+    menuToggle.setAttribute('aria-expanded', isOpen ? 'true' : 'false');
+  });
+
+  navLinks.addEventListener('click', function(e){
+    if(e.target.tagName === 'A'){
+      navLinks.classList.remove('open');
+      menuToggle.setAttribute('aria-expanded', 'false');
+    }
+  });
+</script>
+</body>
+</html>
