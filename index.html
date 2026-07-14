@@ -485,14 +485,14 @@
     </form>
     <nav class="links" id="navLinks">
       <a href="#kous">Formations</a>
-      <a href="#kous">Inscription</a>
+      <a href="#" onclick="openSignupModal(); return false;">Inscription</a>
       <a href="#certificat">Certificats</a>
       <a href="#kontak">Contact</a>
       <a href="#" id="loginNavLinkMobile" onclick="openLoginModal(); return false;">Connexion</a>
     </nav>
     <div class="nav-right">
       <button type="button" class="btn-login" id="loginNavBtn" onclick="openLoginModal()">Connexion</button>
-      <a class="btn-nav" href="#kous">S'inscrire maintenant</a>
+      <button type="button" class="btn-nav" id="signupNavBtn" onclick="openSignupModal()">S'inscrire maintenant</button>
       <button class="menu-toggle" id="menuToggle" type="button" aria-label="Ouvrir le menu" aria-expanded="false" aria-controls="navLinks">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
       </button>
@@ -633,7 +633,16 @@
         </a>
       </aside>
 
-      <div class="course-grid" id="courseGrid">
+      <div class="courses-login-gate" id="coursesLoginGate" style="display:flex; flex-direction:column; align-items:center; text-align:center; gap:14px; padding:56px 28px; background:var(--panel); border:1px solid var(--line); border-radius:var(--radius);">
+        <svg viewBox="0 0 24 24" width="34" height="34" fill="none" stroke="currentColor" stroke-width="1.6" style="color:var(--ink-soft);"><rect x="5" y="11" width="14" height="9" rx="1.5"/><path d="M8 11V8a4 4 0 0 1 8 0v3"/></svg>
+        <h3 style="font-size:1.15rem;">Connectez-vous pour voir les formations</h3>
+        <p style="max-width:38ch; color:var(--ink-soft);">Le catalogue complet des modules est réservé aux personnes connectées. Créez un compte ou connectez-vous pour y accéder.</p>
+        <div style="display:flex; gap:12px; flex-wrap:wrap; justify-content:center;">
+          <button type="button" class="btn-primary" onclick="openLoginModal()">Se connecter</button>
+          <button type="button" class="btn-ghost" onclick="openSignupModal()">Créer un compte</button>
+        </div>
+      </div>
+      <div class="course-grid" id="courseGrid" style="display:none;">
         <p class="search-no-results" id="searchNoResults">Aucun module ne correspond à votre recherche. Essayez un autre mot-clé, par exemple « indicateurs » ou « données ».</p>
 
         <div class="card" id="card-m1">
@@ -903,7 +912,7 @@
     <h3 id="modalTitle">S'inscrire à la formation</h3>
     <div class="modal-price" id="modalPrice" style="display:none;"></div>
 
-    <form class="signup-form" id="enskriForm" action="https://formsubmit.co/micherlamour300@gmail.com" method="POST">
+    <form class="signup-form" id="enskriForm" action="https://formsubmit.co/micherlamour300@gmail.com" method="POST" target="_blank">
       <input type="hidden" name="_subject" value="Nouvelle inscription — High-Academy">
       <input type="hidden" name="_captcha" value="false">
       <input type="hidden" name="_next" id="nextField" value="https://play.google.com/store/apps/details?id=com.useboom.htwallet">
@@ -976,6 +985,20 @@
     <h3 id="loginModalTitle">Connexion</h3>
 
     <form class="signup-form" id="loginForm">
+      <div class="form-row" id="signupNameRow" style="display:none;">
+        <div class="form-group">
+          <label for="loginPrenom">Prénom</label>
+          <input type="text" id="loginPrenom" placeholder="Votre prénom">
+        </div>
+        <div class="form-group">
+          <label for="loginNom">Nom</label>
+          <input type="text" id="loginNom" placeholder="Votre nom">
+        </div>
+      </div>
+      <div class="form-group" id="signupPhoneGroup" style="display:none; margin-bottom:16px;">
+        <label for="loginTelephone">Téléphone</label>
+        <input type="tel" id="loginTelephone" placeholder="+509 XXXX XXXX">
+      </div>
       <div class="form-group" style="margin-bottom:16px;">
         <label for="loginEmail">Email</label>
         <input type="email" id="loginEmail" placeholder="email@exemple.com" required autocomplete="email">
@@ -983,6 +1006,14 @@
       <div class="form-group" style="margin-bottom:6px;">
         <label for="loginPassword">Mot de passe</label>
         <input type="password" id="loginPassword" placeholder="6 caractères minimum" minlength="6" required autocomplete="current-password">
+      </div>
+      <div class="form-group" id="signupConfirmGroup" style="display:none; margin-bottom:6px; margin-top:12px;">
+        <label for="loginPasswordConfirm">Confirmer le mot de passe</label>
+        <input type="password" id="loginPasswordConfirm" placeholder="Retapez le mot de passe" minlength="6" autocomplete="new-password">
+      </div>
+      <div class="form-group" id="signupTermsGroup" style="display:none; margin-top:14px; flex-direction:row; align-items:flex-start; gap:8px;">
+        <input type="checkbox" id="loginAcceptTerms" style="margin-top:3px; width:auto;">
+        <label for="loginAcceptTerms" style="font-weight:400; font-size:0.86rem;">J'accepte la politique du site et les conditions d'utilisation.</label>
       </div>
       <p class="form-note" id="loginError" style="display:none; color:#B3261E; margin-top:10px;"></p>
       <p class="form-note" id="loginSuccess" style="display:none; color:#2F6F52; margin-top:10px;"></p>
@@ -1458,6 +1489,12 @@
   var loginModalTitleEl = document.getElementById('loginModalTitle');
   var loginNavBtn = document.getElementById('loginNavBtn');
   var loginNavLinkMobile = document.getElementById('loginNavLinkMobile');
+  var signupNameRow = document.getElementById('signupNameRow');
+  var signupPhoneGroup = document.getElementById('signupPhoneGroup');
+  var signupConfirmGroup = document.getElementById('signupConfirmGroup');
+  var signupTermsGroup = document.getElementById('signupTermsGroup');
+  var coursesLoginGate = document.getElementById('coursesLoginGate');
+  var courseGridEl = document.getElementById('courseGrid');
 
   var loginMode = 'login'; // ou 'signup'
   var currentSession = null;
@@ -1468,7 +1505,16 @@
     loginMode = mode;
     if(loginError){ loginError.style.display = 'none'; }
     if(loginSuccess){ loginSuccess.style.display = 'none'; }
-    if(mode === 'signup'){
+    var showSignupFields = (mode === 'signup');
+    if(signupNameRow){ signupNameRow.style.display = showSignupFields ? 'flex' : 'none'; }
+    if(signupPhoneGroup){ signupPhoneGroup.style.display = showSignupFields ? 'block' : 'none'; }
+    if(signupConfirmGroup){ signupConfirmGroup.style.display = showSignupFields ? 'block' : 'none'; }
+    if(signupTermsGroup){ signupTermsGroup.style.display = showSignupFields ? 'flex' : 'none'; }
+    document.getElementById('loginPrenom').required = showSignupFields;
+    document.getElementById('loginNom').required = showSignupFields;
+    document.getElementById('loginTelephone').required = showSignupFields;
+    document.getElementById('loginPasswordConfirm').required = showSignupFields;
+    if(showSignupFields){
       loginModalTitleEl.textContent = 'Créer un compte';
       loginSubmitBtn.textContent = 'Créer mon compte';
       loginToggleText.textContent = 'Déjà un compte ?';
@@ -1492,6 +1538,17 @@
     loginModal.setAttribute('aria-hidden', 'false');
     document.body.style.overflow = 'hidden';
     var firstInput = loginModal.querySelector('input');
+    if(firstInput){ firstInput.focus(); }
+  }
+
+  function openSignupModal(){
+    if(isLoggedIn()){ return; }
+    lastFocused = document.activeElement;
+    setLoginMode('signup');
+    loginModal.classList.add('open');
+    loginModal.setAttribute('aria-hidden', 'false');
+    document.body.style.overflow = 'hidden';
+    var firstInput = document.getElementById('loginPrenom');
     if(firstInput){ firstInput.focus(); }
   }
 
@@ -1522,6 +1579,9 @@
 
   function applyAccessGate(){
     var granted = isLoggedIn();
+    // Le catalogue des cours ne s'affiche qu'une fois connecté
+    if(courseGridEl){ courseGridEl.style.display = granted ? '' : 'none'; }
+    if(coursesLoginGate){ coursesLoginGate.style.display = granted ? 'none' : 'flex'; }
     MODULES.forEach(function(mod){
       var list = document.getElementById('lessonList-' + mod);
       var locked = document.getElementById('lessonLocked-' + mod);
@@ -1544,32 +1604,75 @@
       var password = document.getElementById('loginPassword').value;
       if(loginError){ loginError.style.display = 'none'; }
       if(loginSuccess){ loginSuccess.style.display = 'none'; }
-      loginSubmitBtn.disabled = true;
 
-      var authCall = loginMode === 'signup'
-        ? supabaseClient.auth.signUp({ email: email, password: password })
-        : supabaseClient.auth.signInWithPassword({ email: email, password: password });
+      if(loginMode === 'signup'){
+        var prenom = document.getElementById('loginPrenom').value.trim();
+        var nom = document.getElementById('loginNom').value.trim();
+        var telephone = document.getElementById('loginTelephone').value.trim();
+        var passwordConfirm = document.getElementById('loginPasswordConfirm').value;
+        var acceptTerms = document.getElementById('loginAcceptTerms').checked;
 
-      authCall.then(function(result){
-        loginSubmitBtn.disabled = false;
-        if(result.error){
-          loginError.textContent = result.error.message;
+        if(password !== passwordConfirm){
+          loginError.textContent = 'Les deux mots de passe ne correspondent pas.';
           loginError.style.display = 'block';
           return;
         }
-        if(loginMode === 'signup' && !result.data.session){
-          // La confirmation par email est activée sur le projet Supabase :
-          // le compte est créé mais l'élève doit confirmer son email avant de se connecter.
-          loginSuccess.textContent = 'Compte créé ! Vérifiez votre email pour confirmer votre inscription, puis connectez-vous.';
-          loginSuccess.style.display = 'block';
-          setLoginMode('login');
+        if(!acceptTerms){
+          loginError.textContent = 'Vous devez accepter la politique du site pour créer un compte.';
+          loginError.style.display = 'block';
           return;
         }
-        currentSession = result.data.session;
-        closeLoginModal();
-        applyAccessGate();
-        updateLoginButton();
-      });
+
+        loginSubmitBtn.disabled = true;
+        supabaseClient.auth.signUp({
+          email: email,
+          password: password,
+          options: {
+            data: {
+              prenom: prenom,
+              nom: nom,
+              telephone: telephone,
+              accepted_terms: true
+            }
+          }
+        }).then(function(result){
+          loginSubmitBtn.disabled = false;
+          if(result.error){
+            loginError.textContent = result.error.message;
+            loginError.style.display = 'block';
+            return;
+          }
+          if(!result.data.session){
+            // La confirmation par email est activée sur le projet Supabase :
+            // le compte est créé mais l'élève doit confirmer son email avant de se connecter.
+            loginSuccess.textContent = 'Compte créé ! Vérifiez votre email pour confirmer votre inscription, puis connectez-vous.';
+            loginSuccess.style.display = 'block';
+            loginForm.reset();
+            setLoginMode('login');
+            return;
+          }
+          currentSession = result.data.session;
+          closeLoginModal();
+          loginForm.reset();
+          applyAccessGate();
+          updateLoginButton();
+        });
+      } else {
+        loginSubmitBtn.disabled = true;
+        supabaseClient.auth.signInWithPassword({ email: email, password: password }).then(function(result){
+          loginSubmitBtn.disabled = false;
+          if(result.error){
+            loginError.textContent = result.error.message;
+            loginError.style.display = 'block';
+            return;
+          }
+          currentSession = result.data.session;
+          closeLoginModal();
+          loginForm.reset();
+          applyAccessGate();
+          updateLoginButton();
+        });
+      }
     });
   }
 
@@ -1615,6 +1718,18 @@
       modalPrice.style.display = 'block';
     } else {
       modalPrice.style.display = 'none';
+    }
+    // Pré-remplit prénom/nom depuis le compte connecté, s'ils sont disponibles
+    if(currentSession && currentSession.user && currentSession.user.user_metadata){
+      var meta = currentSession.user.user_metadata;
+      var prenomField = document.getElementById('non');
+      var nomField = document.getElementById('siyati');
+      var emailField = document.getElementById('email');
+      var telField = document.getElementById('telefon');
+      if(prenomField && meta.prenom){ prenomField.value = meta.prenom; }
+      if(nomField && meta.nom){ nomField.value = meta.nom; }
+      if(emailField && currentSession.user.email){ emailField.value = currentSession.user.email; }
+      if(telField && meta.telephone){ telField.value = meta.telephone; }
     }
     lastFocused = document.activeElement;
     modal.classList.add('open');
