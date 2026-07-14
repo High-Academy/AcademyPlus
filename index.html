@@ -1,9 +1,9 @@
 <!DOCTYPE html>
-<html lang="ht">
+<html lang="fr">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Boussòl — Fòmasyon Swivi &amp; Evalyasyon Pwojè</title>
+<title>High-Academy — Formation en Suivi &amp; Évaluation de Projets</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600;9..144,700&family=Inter:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
@@ -22,6 +22,12 @@
     --line: #DEDAD0;
     --radius: 14px;
     --shadow: 0 20px 50px -25px rgba(22,34,62,0.35);
+
+    /* Coursera-style blue accents (primary actions / links) */
+    --blue: #0056D2;
+    --blue-deep: #00419E;
+    --blue-tint: #EBF2FF;
+    --lock-grey: #9AA2B4;
   }
 
   *{box-sizing:border-box;}
@@ -85,10 +91,46 @@
   nav.links a:hover{color:var(--navy);}
   nav.links a:hover::after{transform:scaleX(1);}
   .btn-nav{
-    background:var(--navy); color:#fff; padding:10px 20px; border-radius:999px;
+    background:var(--blue); color:#fff; padding:10px 20px; border-radius:6px;
     text-decoration:none; font-weight:600; font-size:0.88rem; white-space:nowrap;
     display:inline-flex; align-items:center;
   }
+  .btn-nav:hover{background:var(--blue-deep);}
+  .btn-login{
+    background:transparent; color:var(--navy); border:1.5px solid var(--line); padding:9px 18px;
+    border-radius:6px; text-decoration:none; font-weight:600; font-size:0.88rem; white-space:nowrap;
+    cursor:pointer; font-family:inherit;
+  }
+  .btn-login:hover{border-color:var(--navy);}
+  .btn-login.is-logged-in{background:var(--teal); color:#fff; border-color:var(--teal);}
+  .nav-search{
+    flex:1; max-width:520px; display:flex; align-items:center; gap:10px;
+    background:#fff; border:1.5px solid var(--line); border-radius:999px;
+    padding:10px 18px; color:var(--ink-soft); font-size:0.92rem;
+  }
+  .nav-search svg{width:17px;height:17px; flex-shrink:0; color:var(--ink-soft);}
+  .nav-search span{overflow:hidden; text-overflow:ellipsis; white-space:nowrap;}
+  .nav-search-btn{
+    background:none; border:none; padding:0; margin:0; display:flex; align-items:center; cursor:pointer; color:var(--ink-soft);
+  }
+  .nav-search-btn:hover{color:var(--navy);}
+  .nav-search-input{
+    flex:1; min-width:0; border:none; outline:none; background:transparent; font-family:inherit;
+    font-size:0.92rem; color:var(--ink);
+  }
+  .nav-search-input::placeholder{color:var(--ink-soft);}
+  .search-no-results{
+    display:none; text-align:center; padding:34px 20px; color:var(--ink-soft); font-size:0.95rem;
+    background:var(--bg-alt); border-radius:14px; margin-top:6px;
+  }
+  .search-no-results.show{display:block;}
+  .card.search-hidden{display:none;}
+  .nav-explore{
+    display:flex; align-items:center; gap:5px; font-weight:600; font-size:0.92rem;
+    color:var(--ink); white-space:nowrap; cursor:default;
+  }
+  .nav-explore svg{width:13px;height:13px;}
+  @media(max-width:900px){ .nav-search{display:none;} .nav-explore{display:none;} }
   .menu-toggle{
     display:none; background:none; border:1px solid var(--line); border-radius:8px;
     width:40px; height:40px; align-items:center; justify-content:center; cursor:pointer;
@@ -107,6 +149,7 @@
     nav.links a:active{background:var(--bg-alt);}
     .menu-toggle{display:inline-flex;}
     .btn-nav{padding:9px 16px; font-size:0.82rem;}
+    .btn-login{display:none;}
   }
 
   /* ---------- HERO ---------- */
@@ -133,12 +176,13 @@
   }
   .hero-cta{display:flex; gap:14px; margin-top:22px; flex-wrap:wrap;}
   .btn-primary{
-    background:var(--gold); color:var(--navy-deep); border:none; padding:15px 28px;
-    border-radius:999px; font-weight:700; font-size:0.98rem; cursor:pointer;
-    box-shadow:0 14px 30px -14px rgba(217,164,65,0.65);
-    transition:transform .15s ease, box-shadow .15s ease;
+    background:var(--blue); color:#fff; border:none; padding:15px 28px;
+    border-radius:6px; font-weight:700; font-size:0.98rem; cursor:pointer;
+    box-shadow:0 14px 30px -14px rgba(0,86,210,0.55);
+    transition:transform .15s ease, box-shadow .15s ease, background .15s ease;
   }
-  .btn-primary:hover{transform:translateY(-1px); box-shadow:0 18px 34px -14px rgba(217,164,65,0.75);}
+  .btn-primary:hover{background:var(--blue-deep); transform:translateY(-1px); box-shadow:0 18px 34px -14px rgba(0,86,210,0.65);}
+  .btn-primary:disabled{background:var(--lock-grey); box-shadow:none; cursor:not-allowed; transform:none;}
   .btn-ghost{
     background:transparent; color:var(--navy); border:1.5px solid var(--line); padding:14px 24px;
     border-radius:999px; font-weight:600; font-size:0.98rem; cursor:pointer; text-decoration:none;
@@ -146,14 +190,26 @@
   }
   .btn-ghost:hover{border-color:var(--navy);}
 
-  .compass-wrap{position:relative; display:flex; align-items:center; justify-content:center;}
-  .compass-wrap svg{width:100%; max-width:380px;}
-  #needle{transform-origin:200px 200px; animation:seek 7s ease-in-out infinite;}
-  @keyframes seek{
-    0%,100%{transform:rotate(-8deg);}
-    50%{transform:rotate(14deg);}
+  .seal-wrap{position:relative; display:flex; align-items:center; justify-content:center;}
+  .seal-wrap svg{width:100%; max-width:380px;}
+  #crestStar{transform-origin:200px 78px; animation:pulse 3.2s ease-in-out infinite;}
+  @keyframes pulse{
+    0%,100%{transform:scale(1);}
+    50%{transform:scale(1.14);}
   }
-  @media (prefers-reduced-motion: reduce){ #needle{animation:none;} }
+  @media (prefers-reduced-motion: reduce){ #crestStar{animation:none;} }
+
+  /* ---------- PILL ROW (style Coursera) ---------- */
+  .pill-row{display:grid; grid-template-columns:repeat(3,1fr); gap:16px; margin-top:6px;}
+  @media(max-width:760px){ .pill-row{grid-template-columns:1fr;} }
+  .pill{
+    background:var(--blue-tint); border-radius:14px; padding:22px 24px; text-decoration:none;
+    display:flex; align-items:center; justify-content:space-between; gap:14px;
+    transition:transform .15s ease, box-shadow .15s ease; position:relative; overflow:hidden;
+  }
+  .pill:hover{transform:translateY(-2px); box-shadow:0 14px 26px -18px rgba(0,86,210,0.45);}
+  .pill span.pill-label{font-weight:700; color:var(--navy); font-size:1.02rem; line-height:1.3;}
+  .pill svg.pill-icon{width:34px; height:34px; color:var(--blue); flex-shrink:0;}
 
   /* ---------- STRIP ---------- */
   .strip{
@@ -173,6 +229,82 @@
 
   /* ---------- COURSES ---------- */
   .courses{background:var(--bg-alt); border-top:1px solid var(--line); border-bottom:1px solid var(--line);}
+  .course-body{display:grid; grid-template-columns:280px 1fr; gap:28px; align-items:start;}
+  @media(max-width:900px){ .course-body{grid-template-columns:1fr;} }
+
+  /* ---------- CURRICULUM SIDEBAR (style Coursera/Udemy) ---------- */
+  .curriculum{
+    position:sticky; top:88px; background:var(--panel); border:1px solid var(--line);
+    border-radius:var(--radius); box-shadow:var(--shadow); overflow:hidden;
+  }
+  @media(max-width:900px){ .curriculum{position:static;} }
+  .curriculum-head{padding:20px 20px 16px; border-bottom:1px solid var(--line);}
+  .curriculum-head span.eyebrow{margin-bottom:8px;}
+  .curriculum-head h3{font-size:1.05rem;}
+  .curriculum-list{list-style:none; margin:0; padding:8px;}
+  .curriculum-list li{margin:2px 0;}
+  .curriculum-list a{
+    display:flex; align-items:center; gap:12px; text-decoration:none; color:var(--ink);
+    padding:11px 12px; border-radius:9px; font-size:0.9rem; font-weight:600; transition:background .15s ease;
+  }
+  .curriculum-list a:hover{background:var(--bg-alt);}
+  .curriculum-list .cnum{
+    flex-shrink:0; width:26px; height:26px; border-radius:50%; background:var(--bg-alt);
+    color:var(--navy); font-family:'IBM Plex Mono', monospace; font-size:0.72rem;
+    display:flex; align-items:center; justify-content:center; font-weight:600;
+    border:1px solid var(--line);
+  }
+  .curriculum-list .clabel{display:flex; flex-direction:column; gap:1px; line-height:1.25;}
+  .curriculum-list .clabel small{font-weight:500; color:var(--ink-soft); font-size:0.74rem;}
+  .curriculum-divider{height:1px; background:var(--line); margin:8px 12px;}
+  .curriculum-cert{
+    display:flex; align-items:center; gap:12px; margin:6px 8px 12px; padding:13px 12px;
+    border-radius:9px; text-decoration:none; background:linear-gradient(135deg, var(--navy), var(--navy-deep));
+    color:#fff; font-weight:700; font-size:0.87rem; transition:transform .15s ease;
+  }
+  .curriculum-cert:hover{transform:translateY(-1px);}
+  .curriculum-cert .cnum{background:var(--gold); border:none; color:var(--navy-deep);}
+  .curriculum-cert small{display:block; color:#B9C0D4; font-weight:500; font-size:0.72rem; margin-top:1px;}
+  .curriculum-cert.cert-ready{background:linear-gradient(135deg, var(--teal), #1c4736);}
+  .curriculum-cert.cert-ready small{color:#CFE6DB;}
+
+  /* ---------- CERTIFICATE GENERATOR ---------- */
+  .cert-grid{display:grid; grid-template-columns:repeat(2,1fr); gap:20px;}
+  @media(max-width:760px){ .cert-grid{grid-template-columns:1fr;} }
+  .cert-generator{
+    background:var(--panel); border:1px solid var(--line); border-radius:var(--radius);
+    box-shadow:var(--shadow); padding:26px; margin-top:8px; display:flex; flex-direction:column; gap:14px;
+  }
+  .cert-generator.cert-final{grid-column:1 / -1; background:linear-gradient(135deg,#fff,var(--blue-tint));}
+  .cert-generator-head{display:flex; align-items:center; gap:10px;}
+  .cert-generator-head .cnum{
+    flex-shrink:0; width:30px; height:30px; border-radius:50%; background:var(--bg-alt);
+    color:var(--navy); font-family:'IBM Plex Mono', monospace; font-size:0.78rem;
+    display:flex; align-items:center; justify-content:center; font-weight:700; border:1px solid var(--line);
+  }
+  .cert-generator-head h3{font-size:1.08rem;}
+  .cert-locked-msg{
+    display:flex; align-items:center; gap:12px; color:var(--ink-soft); font-size:0.9rem;
+    background:var(--bg-alt); border:1px dashed var(--line); border-radius:10px; padding:16px 18px;
+  }
+  .cert-locked-msg svg{width:20px; height:20px; flex-shrink:0; color:var(--gold-deep);}
+  .cert-form{display:flex; flex-wrap:wrap; gap:12px; align-items:flex-end;}
+  .cert-form .form-group{flex:1; min-width:220px; display:flex; flex-direction:column; gap:6px;}
+  .cert-form label{font-size:0.85rem; font-weight:600; color:var(--navy);}
+  .cert-form input{
+    padding:12px 14px; border:1.5px solid var(--line); border-radius:8px; font-size:0.95rem;
+    font-family:inherit; color:var(--ink); background:var(--bg);
+  }
+  .cert-form input:focus{border-color:var(--gold-deep); outline:none;}
+  .cert-form button{white-space:nowrap;}
+  .cert-preview-wrap{margin-top:22px;}
+  .cert-preview-wrap canvas{
+    width:100%; height:auto; display:block; border-radius:10px; border:1px solid var(--line); box-shadow:var(--shadow);
+  }
+  .cert-actions{display:flex; gap:12px; margin-top:16px; flex-wrap:wrap;}
+  .cert-actions a, .cert-actions button{text-decoration:none;}
+  .cert-note-small{font-size:0.78rem; color:var(--ink-soft); margin-top:10px;}
+
   .course-grid{display:grid; grid-template-columns:repeat(2,1fr); gap:18px;}
   @media(max-width:760px){ .course-grid{grid-template-columns:1fr;} }
 
@@ -195,11 +327,41 @@
   .price{font-family:'Fraunces', serif; font-size:1.5rem; font-weight:600; color:var(--navy);}
   .price span{font-size:0.78rem; font-family:'Inter'; color:var(--ink-soft); font-weight:500;}
   .btn-enroll{
-    background:var(--navy); color:#fff; border:none; padding:12px 20px; border-radius:999px;
+    background:var(--blue); color:#fff; border:none; padding:12px 20px; border-radius:6px;
     font-weight:600; font-size:0.85rem; cursor:pointer; transition:background .15s;
     text-decoration:none; display:inline-flex; align-items:center; white-space:nowrap;
   }
-  .btn-enroll:hover{background:var(--navy-deep);}
+  .btn-enroll:hover{background:var(--blue-deep);}
+  .btn-enroll:disabled{background:var(--lock-grey); cursor:not-allowed;}
+
+  /* ---------- COURSE PROGRESS ---------- */
+  .progress-track{height:6px; background:var(--bg-alt); border:1px solid var(--line); border-radius:999px; overflow:hidden; margin-top:2px;}
+  .progress-fill{height:100%; width:0%; background:linear-gradient(90deg, var(--teal), var(--gold)); border-radius:999px; transition:width .35s ease;}
+  .progress-label{display:flex; justify-content:space-between; align-items:baseline; margin-top:6px; font-family:'IBM Plex Mono', monospace; font-size:0.72rem; color:var(--ink-soft);}
+  .progress-label .ppct{font-weight:600; color:var(--teal);}
+  .lesson-toggle{margin-top:2px;}
+  .lesson-toggle summary{
+    cursor:pointer; font-size:0.82rem; font-weight:600; color:var(--navy); padding:4px 0;
+    list-style:none; display:flex; align-items:center; gap:6px; user-select:none;
+  }
+  .lesson-toggle summary::-webkit-details-marker{display:none;}
+  .lesson-toggle summary::before{content:"▸"; color:var(--gold-deep); font-size:0.7rem; transition:transform .15s ease;}
+  .lesson-toggle[open] summary::before{transform:rotate(90deg);}
+  .lesson-list{list-style:none; margin:6px 0 0; padding:10px 12px; display:flex; flex-direction:column; gap:9px; background:var(--bg-alt); border-radius:9px;}
+  .lesson-list li label{display:flex; align-items:flex-start; gap:9px; font-size:0.85rem; color:var(--ink); cursor:pointer; line-height:1.35;}
+  .lesson-list input[type="checkbox"]{width:16px; height:16px; margin-top:1px; accent-color:var(--teal); cursor:pointer; flex-shrink:0;}
+  .lesson-list li:has(input:checked) label{color:var(--ink-soft); text-decoration:line-through; text-decoration-color:var(--line);}
+  .lesson-list input[type="checkbox"]:disabled{cursor:not-allowed; accent-color:var(--lock-grey);}
+  .lesson-list li:has(input:disabled) label{color:var(--lock-grey); cursor:not-allowed;}
+  .lesson-list li .lesson-lock{margin-left:auto; flex-shrink:0; width:14px; height:14px; color:var(--lock-grey);}
+  .lesson-locked{
+    display:none; flex-direction:column; align-items:center; text-align:center; gap:10px;
+    margin:6px 0 0; padding:22px 16px; background:var(--bg-alt); border-radius:9px;
+  }
+  .lesson-locked svg{width:24px; height:24px; color:var(--lock-grey);}
+  .lesson-locked p{font-size:0.84rem; color:var(--ink-soft); margin:0; max-width:34ch;}
+  .lesson-locked-btn{font-size:0.82rem; padding:9px 20px;}
+  .cnum-done{background:var(--teal) !important; color:#fff !important; border-color:var(--teal) !important;}
 
   /* ---------- SIGNUP FORM ---------- */
   .signup-form{
@@ -216,6 +378,30 @@
   }
   .form-group input:focus{border-color:var(--gold-deep); outline:none;}
   .form-note{font-size:0.8rem; color:var(--ink-soft); text-align:center; margin-top:14px;}
+
+  /* ---------- PAYMENT BUTTONS ---------- */
+  .pay-options{display:flex; flex-direction:column; gap:12px; margin-top:4px;}
+  .pay-divider{display:flex; align-items:center; gap:12px; color:var(--ink-soft); font-size:0.78rem; font-family:'IBM Plex Mono', monospace; text-transform:uppercase; letter-spacing:.08em; margin:2px 0;}
+  .pay-divider::before, .pay-divider::after{content:""; flex:1; height:1px; background:var(--line);}
+  .btn-pay{
+    width:100%; display:flex; align-items:center; justify-content:center; gap:10px;
+    border:none; border-radius:12px; padding:15px 18px; font-weight:700; font-size:0.98rem;
+    cursor:pointer; transition:transform .15s ease, box-shadow .15s ease; font-family:inherit;
+  }
+  .btn-pay:hover{transform:translateY(-1px);}
+  .btn-moncash{background:var(--gold); color:var(--navy-deep); box-shadow:0 14px 30px -14px rgba(217,164,65,0.65);}
+  .btn-unibank{background:#0A2C5C; color:#fff; box-shadow:0 14px 30px -14px rgba(10,44,92,0.55);}
+  .pay-logo{flex-shrink:0; display:flex; align-items:center; justify-content:center; border-radius:7px; background:#fff; padding:2px; box-shadow:0 0 0 1px rgba(0,0,0,0.06);}
+  .pay-logo img{display:block; border-radius:5px;}
+  .btn-unibank .unibank-note{font-size:0.72rem; font-weight:500; opacity:0.85; display:block; font-family:'Inter';}
+  .form-note.alt{margin-top:10px;}
+  .pay-account-numbers{
+    margin-top:14px; background:var(--bg-alt); border:1px solid var(--line); border-radius:10px;
+    padding:12px 16px; display:flex; flex-direction:column; gap:8px;
+  }
+  .pay-account-row{display:flex; align-items:center; justify-content:space-between; gap:12px; font-size:0.85rem;}
+  .pay-account-label{color:var(--ink-soft); font-weight:600;}
+  .pay-account-value{color:var(--navy); font-weight:700; letter-spacing:.02em;}
 
   /* ---------- HOW IT WORKS ---------- */
   .steps{display:grid; grid-template-columns:repeat(3,1fr); gap:20px;}
@@ -268,6 +454,7 @@
   .foot-bottom{padding-top:24px; font-size:0.8rem; display:flex; justify-content:space-between; flex-wrap:wrap; gap:10px; color:#7C87A3;}
 
 </style>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
 </head>
 <body>
 
@@ -275,24 +462,37 @@
   <div class="wrap nav">
     <a href="#" class="brand">
       <svg viewBox="0 0 40 40" fill="none">
-        <circle cx="20" cy="20" r="18" stroke="#16223E" stroke-width="1.6"/>
-        <circle cx="20" cy="20" r="2.4" fill="#D9A441"/>
-        <path d="M20 6 L23 20 L20 34 L17 20 Z" fill="#16223E" opacity="0.85"/>
-        <path d="M20 6 L23 20 L20 20 Z" fill="#D9A441"/>
+        <path d="M20 4 L33 9 V19 C33 28 27 34 20 36.5 C13 34 7 28 7 19 V9 Z" stroke="#16223E" stroke-width="1.6" fill="#FAF9F5"/>
+        <path d="M11 17 C14.5 15.5 17.5 15.5 20 17 C22.5 15.5 25.5 15.5 29 17 V26 C25.5 24.5 22.5 24.5 20 26 C17.5 24.5 14.5 24.5 11 26 Z" stroke="#16223E" stroke-width="1.3" fill="none" stroke-linejoin="round"/>
+        <line x1="20" y1="17" x2="20" y2="26" stroke="#16223E" stroke-width="1.3"/>
+        <path d="M20 4 L23 9 L20 9.6 L17 9 Z" fill="#D9A441"/>
       </svg>
       <span class="brand-text">
-        <span class="brand-name">Boussòl</span>
-        <span class="brand-tag">Fòmasyon S&amp;E</span>
+        <span class="brand-name">High-Academy</span>
+        <span class="brand-tag">Formation S&amp;E</span>
       </span>
     </a>
+    <div class="nav-explore">
+      Explorer
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><polyline points="6 9 12 15 18 9"/></svg>
+    </div>
+    <form class="nav-search" role="search" id="siteSearchForm">
+      <button type="submit" class="nav-search-btn" aria-label="Rechercher">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="7"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+      </button>
+      <input type="text" id="siteSearchInput" class="nav-search-input" placeholder="Que voulez-vous apprendre ?" autocomplete="off">
+    </form>
     <nav class="links" id="navLinks">
-      <a href="#kous">Fòmasyon yo</a>
-      <a href="#kous">Enskripsyon</a>
-      <a href="#kontak">Kontak</a>
+      <a href="#kous">Formations</a>
+      <a href="#kous">Inscription</a>
+      <a href="#certificat">Certificats</a>
+      <a href="#kontak">Contact</a>
+      <a href="#" id="loginNavLinkMobile" onclick="openLoginModal(); return false;">Connexion</a>
     </nav>
     <div class="nav-right">
-      <button class="btn-nav" onclick="openEnskriModal()" type="button">Enskri kounye a</button>
-      <button class="menu-toggle" id="menuToggle" type="button" aria-label="Ouvri meni" aria-expanded="false" aria-controls="navLinks">
+      <button type="button" class="btn-login" id="loginNavBtn" onclick="openLoginModal()">Connexion</button>
+      <a class="btn-nav" href="#kous">S'inscrire maintenant</a>
+      <button class="menu-toggle" id="menuToggle" type="button" aria-label="Ouvrir le menu" aria-expanded="false" aria-controls="navLinks">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
       </button>
     </div>
@@ -301,37 +501,44 @@
 
 <section class="hero">
   <div class="wrap hero-grid">
-    <div class="hero-illustration compass-wrap">
+    <div class="hero-illustration seal-wrap">
       <svg viewBox="0 0 400 400" fill="none">
-        <circle cx="200" cy="200" r="170" stroke="#DEDAD0" stroke-width="1.5"/>
-        <circle cx="200" cy="200" r="140" stroke="#DEDAD0" stroke-width="1"/>
-        <g font-family="IBM Plex Mono" font-size="14" fill="#4A5164">
-          <text x="192" y="42">N</text>
-          <text x="192" y="368">S</text>
-          <text x="40" y="206">W</text>
-          <text x="352" y="206">E</text>
+        <circle cx="200" cy="195" r="150" stroke="#DEDAD0" stroke-width="1.5"/>
+        <circle cx="200" cy="195" r="118" stroke="#2F6F52" stroke-width="1" stroke-dasharray="2 6" opacity="0.55"/>
+
+        <g id="laurelLeft" fill="#2F6F52">
+          <path d="M115 262 C100 230 92 190 100 150 C109 118 128 96 158 84" stroke="#2F6F52" stroke-width="1.4" fill="none" stroke-linecap="round" opacity="0.65"/>
+          <ellipse cx="112" cy="255" rx="11" ry="5" transform="rotate(-35 112 255)"/>
+          <ellipse cx="99" cy="225" rx="11" ry="5" transform="rotate(-20 99 225)"/>
+          <ellipse cx="93" cy="193" rx="11" ry="5" transform="rotate(0 93 193)"/>
+          <ellipse cx="97" cy="161" rx="11" ry="5" transform="rotate(20 97 161)"/>
+          <ellipse cx="109" cy="133" rx="11" ry="5" transform="rotate(40 109 133)"/>
+          <ellipse cx="128" cy="110" rx="11" ry="5" transform="rotate(58 128 110)"/>
+          <ellipse cx="153" cy="94" rx="10" ry="5" transform="rotate(72 153 94)"/>
         </g>
-        <g stroke="#DEDAD0" stroke-width="1">
-          <line x1="200" y1="30" x2="200" y2="60"/>
-          <line x1="200" y1="340" x2="200" y2="370"/>
-          <line x1="30" y1="200" x2="60" y2="200"/>
-          <line x1="340" y1="200" x2="370" y2="200"/>
+        <use href="#laurelLeft" transform="matrix(-1,0,0,1,400,0)"/>
+
+        <path d="M200 70 L235 85 V140 C235 175 218 200 200 212 C182 200 165 175 165 140 V85 Z" stroke="#16223E" stroke-width="2.2" fill="#FFFFFF"/>
+        <path d="M178 122 C186 118 194 118 200 122 C206 118 214 118 222 122 V155 C214 151 206 151 200 155 C194 151 186 151 178 155 Z" stroke="#16223E" stroke-width="1.6" fill="none" stroke-linejoin="round"/>
+        <line x1="200" y1="122" x2="200" y2="155" stroke="#16223E" stroke-width="1.6"/>
+        <g id="crestStar">
+          <path d="M200 70 L212 85 L200 90 L188 85 Z" fill="#D9A441"/>
         </g>
-        <circle cx="200" cy="200" r="6" fill="#16223E"/>
-        <g id="needle">
-          <path d="M200 70 L214 200 L200 210 Z" fill="#16223E"/>
-          <path d="M200 330 L186 200 L200 190 Z" fill="#D9A441"/>
+
+        <g id="ribbon">
+          <path d="M138 225 L262 225 L246 245 L262 265 L138 265 L154 245 Z" fill="#16223E"/>
+          <text x="200" y="240" text-anchor="middle" font-family="IBM Plex Mono" font-size="11" fill="#D9A441" letter-spacing="2">HIGH·ACADEMY</text>
+          <text x="200" y="256" text-anchor="middle" font-family="IBM Plex Mono" font-size="8.5" fill="#CBD3E1" letter-spacing="2.5">CERTIFICAT S&amp;E</text>
         </g>
-        <circle cx="200" cy="200" r="90" stroke="#2F6F52" stroke-width="1" stroke-dasharray="2 6" opacity="0.6"/>
       </svg>
     </div>
     <div>
-      <div class="eyebrow">Fòmasyon an liy · Ayiti</div>
-      <h1>Aprann pilote pwojè yo tankou yon pwofesyonèl <em>Swivi &amp; Evalyasyon</em>.</h1>
-      <p class="lead">Boussòl se yon platfòm fòmasyon ki ede jesyonè pwojè, ajan ONG ak kad leta konstwi zouti solid pou swiv, mezire epi rapòte rezilta pwojè yo — nan Kreyòl, oryante pou reyalite Ayiti a.</p>
+      <div class="eyebrow">Académie certifiée · Haïti</div>
+      <h1>Apprenez à piloter des projets comme un professionnel du <em>Suivi &amp; Évaluation</em>.</h1>
+      <p class="lead">High-Academy est une plateforme de formation qui aide les gestionnaires de projets, agents d'ONG et cadres de l'État à construire des outils solides pour suivre, mesurer et rapporter les résultats de leurs projets — pensée pour la réalité haïtienne.</p>
       <div class="hero-cta">
-        <button class="btn-primary" onclick="document.getElementById('kous').scrollIntoView({behavior:'smooth'})">Gade fòmasyon yo</button>
-        <a href="#kijan" class="btn-ghost">Kijan peman an mache →</a>
+        <button class="btn-primary" onclick="document.getElementById('kous').scrollIntoView({behavior:'smooth'})">Voir les formations</button>
+        <a href="#kijan" class="btn-ghost">Comment fonctionne le paiement →</a>
       </div>
     </div>
   </div>
@@ -339,44 +546,61 @@
 
 <div class="strip">
   <div class="wrap">
-    <div class="strip-item"><b>4</b> pakèt fòmasyon</div>
-    <div class="strip-item"><b>100%</b> an liy, a pwòp vitès ou</div>
-    <div class="strip-item"><b>&lt;24h</b> pou konfimasyon aksè</div>
-    <div class="strip-item"><b>MonCash</b> sèl mwayen peman</div>
+    <div class="strip-item"><b>4</b> modules de formation</div>
+    <div class="strip-item"><b>100%</b> en ligne, à votre rythme</div>
+    <div class="strip-item"><b>&lt;24h</b> pour la confirmation d'accès</div>
+    <div class="strip-item"><b>2</b> moyens de paiement</div>
   </div>
 </div>
+
+<section style="padding:44px 0 0;">
+  <div class="wrap pill-row">
+    <a class="pill" href="#kous">
+      <span class="pill-label">Lancer une nouvelle<br>carrière en S&amp;E</span>
+      <svg class="pill-icon" viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M24 6 L38 14 V26 C38 34 32 40 24 43 C16 40 10 34 10 26 V14 Z"/><path d="M24 20 v10 M19 25 h10"/></svg>
+    </a>
+    <a class="pill" href="#kous">
+      <span class="pill-label">Acquérir des<br>compétences pratiques</span>
+      <svg class="pill-icon" viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="1.6"><rect x="8" y="10" width="32" height="24" rx="2"/><path d="M8 18 h32 M16 26 h8"/></svg>
+    </a>
+    <a class="pill" href="#certificat">
+      <span class="pill-label">Obtenir un certificat<br>module par module</span>
+      <svg class="pill-icon" viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="1.6"><circle cx="24" cy="18" r="10"/><path d="M18 27 L15 42 L24 37 L33 42 L30 27"/></svg>
+    </a>
+  </div>
+</section>
 
 <section id="kijan">
   <div class="wrap">
     <div class="sec-head">
-      <div class="eyebrow">Peman</div>
-      <h2>Kijan enskripsyon an mache</h2>
-      <p>Ranpli fòm nan, epi peman an fèt dirèkteman nan app MonCash ou. Senp, san frè kache.</p>
+      <div class="eyebrow">Paiement</div>
+      <h2>Comment fonctionne l'inscription</h2>
+      <p>Remplissez le formulaire, puis choisissez de payer avec MonCash ou avec UNIBANKOnline. Simple, sans frais cachés.</p>
     </div>
     <div class="steps">
       <div class="step">
-        <div class="step-num-tag">Etap</div>
+        <div class="step-num-tag">Étape</div>
         <div class="step-num">01</div>
-        <h3>Klike "Enskri" sou yon modil</h3>
-        <p>Chwazi modil ou vle a epi klike bouton "Enskri" pou ouvri fòm enskripsyon an.</p>
+        <h3>Cliquez sur «S'inscrire» pour un module</h3>
+        <p>Choisissez le module que vous voulez et cliquez sur le bouton «S'inscrire» pour ouvrir le formulaire d'inscription.</p>
       </div>
       <div class="step">
-        <div class="step-num-tag">Etap</div>
+        <div class="step-num-tag">Étape</div>
         <div class="step-num">02</div>
-        <h3>Ranpli fòm nan &amp; klike "PEYE AVEK MONCASH"</h3>
-        <p>Mete non, siyati, telefòn ak imel ou. Nou resevwa enfòmasyon w yo, epi ou redirije otomatikman sou app MonCash.</p>
+        <h3>Remplissez le formulaire &amp; choisissez votre moyen de paiement</h3>
+        <p>Indiquez votre nom, prénom, téléphone et email. Nous recevons vos informations, puis vous êtes redirigé vers MonCash ou vers UNIBANKOnline selon votre choix.</p>
       </div>
       <div class="step">
-        <div class="step-num-tag">Etap</div>
+        <div class="step-num-tag">Étape</div>
         <div class="step-num">03</div>
-        <h3>Fè peman an nan MonCash</h3>
-        <p>Konplete peman an nan app MonCash lan. Ou resevwa aksè nan mwens pase 24è apre nou konfime.</p>
+        <h3>Complétez le paiement</h3>
+        <p>Terminez le paiement dans l'application MonCash ou sur le portail UNIBANKOnline. Vous recevez l'accès en moins de 24h après confirmation.</p>
       </div>
     </div>
 
     <div class="note">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="12" r="9"/><path d="M12 8v5M12 16h.01"/></svg>
-      <p><strong>Enpòtan:</strong> paske peman an fèt sou yon kont MonCash pèsonèl, verifikasyon an fèt manyèlman. Plas ou nan fòmasyon an konfime sèlman apre nou resevwa &amp; verifye peman an — kidonk pa efase okenn mesaj konfimasyon MonCash jiskaske ou resevwa aksè w. Si w gen kesyon, kontakte nou sou WhatsApp.</p>
+      <p><strong>Important :</strong> comme le paiement se fait sur un compte personnel, la vérification est faite manuellement. Votre place dans la formation n'est confirmée qu'après réception &amp; vérification du paiement — ne supprimez donc aucun message de confirmation (MonCash ou UNIBANKOnline) tant que vous n'avez pas reçu votre accès. Pour toute question, contactez-nous sur WhatsApp.</p>
     </div>
   </div>
 </section>
@@ -384,136 +608,929 @@
 <section class="courses" id="kous">
   <div class="wrap">
     <div class="sec-head">
-      <div class="eyebrow">Katalòg</div>
-      <h2>Chwazi fòmasyon ki koresponn ak bezwen w</h2>
-      <p>Chak modil bati sou sa ki anvan l — kòmanse ak fondamantal yo, epi monte jiska rapòte rezilta pwojè.</p>
+      <div class="eyebrow">Catalogue</div>
+      <h2>Choisissez la formation qui correspond à vos besoins</h2>
+      <p>Chaque module s'appuie sur le précédent — en commençant par les fondamentaux, jusqu'au rapport des résultats de projet.</p>
     </div>
 
-    <div class="course-grid">
-
-      <div class="card">
-        <div class="card-top">
-          <h3>Entwodiksyon nan Swivi &amp; Evalyasyon Pwojè</h3>
-          <span class="modnum">MODIL 01</span>
+    <div class="course-body">
+      <aside class="curriculum" aria-label="Plan du cours">
+        <div class="curriculum-head">
+          <div class="eyebrow">Plan du cours</div>
+          <h3>Parcours complet S&amp;E</h3>
         </div>
-        <p>Konprann konsèp debaz S&amp;E a, diferans ant swivi ak evalyasyon, ak wòl yo nan sik yon pwojè.</p>
-        <div class="card-meta"><span>4 leson</span><span>~3h</span><span>Nivo: Debitan</span></div>
-        <div class="card-foot">
-          <div class="price">2 500<span> HTG</span></div>
-          <button type="button" class="btn-enroll" onclick="openEnskriModal('Entwodiksyon nan Swivi &amp; Evalyasyon Pwojè', '2 500 HTG')">Enskri</button>
+        <ul class="curriculum-list">
+          <li><a href="#kous"><span class="cnum" id="cnum-m1" data-num="01">01</span><span class="clabel">Introduction au Suivi &amp; Évaluation<small>4 leçons · Quiz inclus</small></span></a></li>
+          <li><a href="#kous"><span class="cnum" id="cnum-m2" data-num="02">02</span><span class="clabel">Cadre Logique &amp; Indicateurs<small>5 leçons · Quiz inclus</small></span></a></li>
+          <li><a href="#kous"><span class="cnum" id="cnum-m3" data-num="03">03</span><span class="clabel">Collecte &amp; Analyse de Données<small>6 leçons · Quiz inclus</small></span></a></li>
+          <li><a href="#kous"><span class="cnum" id="cnum-m4" data-num="04">04</span><span class="clabel">Rapport des Résultats<small>4 leçons · Quiz inclus</small></span></a></li>
+        </ul>
+        <div class="curriculum-divider"></div>
+        <a href="#certificat" class="curriculum-cert" id="certLink">
+          <span class="cnum">🎓</span>
+          <span class="clabel">Mes certificats<small id="certSub">Un certificat se débloque après chaque module</small></span>
+        </a>
+      </aside>
+
+      <div class="course-grid" id="courseGrid">
+        <p class="search-no-results" id="searchNoResults">Aucun module ne correspond à votre recherche. Essayez un autre mot-clé, par exemple « indicateurs » ou « données ».</p>
+
+        <div class="card" id="card-m1">
+          <div class="card-top">
+            <h3>Introduction au Suivi &amp; Évaluation de Projet</h3>
+            <span class="modnum">MODULE 01</span>
+          </div>
+          <p>Comprenez les concepts de base du S&amp;E, la différence entre suivi et évaluation, et leur rôle dans le cycle d'un projet.</p>
+          <div class="card-meta"><span>4 leçons</span><span>~3h</span><span>Niveau : Débutant</span></div>
+          <div class="progress-track"><div class="progress-fill" id="pf-m1"></div></div>
+          <div class="progress-label"><span id="ptxt-m1">0/4 leçons terminées</span><span class="ppct" id="ppct-m1">0%</span></div>
+          <a href="#cert-m1" id="certmini-m1" style="display:none; font-size:0.8rem; font-weight:700; color:var(--teal); text-decoration:none;">🎓 Certificat du module débloqué — cliquez pour le générer</a>
+          <details class="lesson-toggle">
+            <summary>Voir le contenu du module</summary>
+            <ul class="lesson-list" id="lessonList-m1">
+              <li><label><input type="checkbox" data-module="m1" data-lesson="0"> Qu'est-ce que le Suivi &amp; Évaluation ?</label></li>
+              <li><label><input type="checkbox" data-module="m1" data-lesson="1"> Différence entre suivi et évaluation</label></li>
+              <li><label><input type="checkbox" data-module="m1" data-lesson="2"> Le cycle de vie d'un projet</label></li>
+              <li><label><input type="checkbox" data-module="m1" data-lesson="3"> Quiz — Introduction au S&amp;E</label></li>
+            </ul>
+            <div class="lesson-locked" id="lessonLocked-m1">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="5" y="11" width="14" height="9" rx="1.5"/><path d="M8 11V8a4 4 0 0 1 8 0v3"/></svg>
+              <p>Le contenu détaillé de ce module est réservé aux personnes inscrites. Inscrivez-vous, puis connectez-vous avec le code d'accès reçu après vérification du paiement.</p>
+              <button type="button" class="btn-ghost lesson-locked-btn" onclick="openEnskriModal('Introduction au Suivi &amp; Évaluation de Projet', '2 500 HTG')">S'inscrire pour débloquer</button>
+            </div>
+          </details>
+          <div class="card-foot">
+            <div class="price">2 500<span> HTG</span></div>
+            <button type="button" class="btn-enroll" onclick="openEnskriModal('Introduction au Suivi &amp; Évaluation de Projet', '2 500 HTG')">S'inscrire</button>
+          </div>
+        </div>
+
+        <div class="card" id="card-m2">
+          <div class="card-top">
+            <h3>Cadre Logique &amp; Indicateurs de Performance</h3>
+            <span class="modnum">MODULE 02</span>
+          </div>
+          <p>Apprenez à bâtir un Cadre Logique (logframe), définir des indicateurs SMART et les relier aux objectifs du projet.</p>
+          <div class="card-meta"><span>5 leçons</span><span>~4h</span><span>Niveau : Intermédiaire</span></div>
+          <div class="progress-track"><div class="progress-fill" id="pf-m2"></div></div>
+          <div class="progress-label"><span id="ptxt-m2">0/5 leçons terminées</span><span class="ppct" id="ppct-m2">0%</span></div>
+          <a href="#cert-m2" id="certmini-m2" style="display:none; font-size:0.8rem; font-weight:700; color:var(--teal); text-decoration:none;">🎓 Certificat du module débloqué — cliquez pour le générer</a>
+          <details class="lesson-toggle">
+            <summary>Voir le contenu du module</summary>
+            <ul class="lesson-list" id="lessonList-m2">
+              <li><label><input type="checkbox" data-module="m2" data-lesson="0"> Construire un Cadre Logique (logframe)</label></li>
+              <li><label><input type="checkbox" data-module="m2" data-lesson="1"> Définir des indicateurs SMART</label></li>
+              <li><label><input type="checkbox" data-module="m2" data-lesson="2"> Relier indicateurs et objectifs</label></li>
+              <li><label><input type="checkbox" data-module="m2" data-lesson="3"> Étude de cas pratique</label></li>
+              <li><label><input type="checkbox" data-module="m2" data-lesson="4"> Quiz — Cadre Logique &amp; Indicateurs</label></li>
+            </ul>
+            <div class="lesson-locked" id="lessonLocked-m2">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="5" y="11" width="14" height="9" rx="1.5"/><path d="M8 11V8a4 4 0 0 1 8 0v3"/></svg>
+              <p>Le contenu détaillé de ce module est réservé aux personnes inscrites. Inscrivez-vous, puis connectez-vous avec le code d'accès reçu après vérification du paiement.</p>
+              <button type="button" class="btn-ghost lesson-locked-btn" onclick="openEnskriModal('Cadre Logique &amp; Indicateurs de Performance', '3 000 HTG')">S'inscrire pour débloquer</button>
+            </div>
+          </details>
+          <div class="card-foot">
+            <div class="price">3 000<span> HTG</span></div>
+            <button type="button" class="btn-enroll" onclick="openEnskriModal('Cadre Logique &amp; Indicateurs de Performance', '3 000 HTG')">S'inscrire</button>
+          </div>
+        </div>
+
+        <div class="card" id="card-m3">
+          <div class="card-top">
+            <h3>Collecte &amp; Analyse de Données sur le Terrain</h3>
+            <span class="modnum">MODULE 03</span>
+          </div>
+          <p>Méthodes pour collecter des données fiables sur le terrain, outils numériques gratuits, et bases d'analyse quantitative/qualitative.</p>
+          <div class="card-meta"><span>6 leçons</span><span>~5h</span><span>Niveau : Intermédiaire</span></div>
+          <div class="progress-track"><div class="progress-fill" id="pf-m3"></div></div>
+          <div class="progress-label"><span id="ptxt-m3">0/6 leçons terminées</span><span class="ppct" id="ppct-m3">0%</span></div>
+          <a href="#cert-m3" id="certmini-m3" style="display:none; font-size:0.8rem; font-weight:700; color:var(--teal); text-decoration:none;">🎓 Certificat du module débloqué — cliquez pour le générer</a>
+          <details class="lesson-toggle">
+            <summary>Voir le contenu du module</summary>
+            <ul class="lesson-list" id="lessonList-m3">
+              <li><label><input type="checkbox" data-module="m3" data-lesson="0"> Méthodes de collecte sur le terrain</label></li>
+              <li><label><input type="checkbox" data-module="m3" data-lesson="1"> Outils numériques gratuits (KoboToolbox, ODK)</label></li>
+              <li><label><input type="checkbox" data-module="m3" data-lesson="2"> Échantillonnage et fiabilité des données</label></li>
+              <li><label><input type="checkbox" data-module="m3" data-lesson="3"> Analyse quantitative de base</label></li>
+              <li><label><input type="checkbox" data-module="m3" data-lesson="4"> Analyse qualitative de base</label></li>
+              <li><label><input type="checkbox" data-module="m3" data-lesson="5"> Quiz — Collecte &amp; Analyse de Données</label></li>
+            </ul>
+            <div class="lesson-locked" id="lessonLocked-m3">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="5" y="11" width="14" height="9" rx="1.5"/><path d="M8 11V8a4 4 0 0 1 8 0v3"/></svg>
+              <p>Le contenu détaillé de ce module est réservé aux personnes inscrites. Inscrivez-vous, puis connectez-vous avec le code d'accès reçu après vérification du paiement.</p>
+              <button type="button" class="btn-ghost lesson-locked-btn" onclick="openEnskriModal('Collecte &amp; Analyse de Données sur le Terrain', '3 500 HTG')">S'inscrire pour débloquer</button>
+            </div>
+          </details>
+          <div class="card-foot">
+            <div class="price">3 500<span> HTG</span></div>
+            <button type="button" class="btn-enroll" onclick="openEnskriModal('Collecte &amp; Analyse de Données sur le Terrain', '3 500 HTG')">S'inscrire</button>
+          </div>
+        </div>
+
+        <div class="card" id="card-m4">
+          <div class="card-top">
+            <h3>Rapport des Résultats &amp; Communication avec les Bailleurs</h3>
+            <span class="modnum">MODULE 04</span>
+          </div>
+          <p>Structurez un rapport S&amp;E convaincant, présentez les données clés, et communiquez efficacement l'impact du projet.</p>
+          <div class="card-meta"><span>4 leçons</span><span>~3h</span><span>Niveau : Avancé</span></div>
+          <div class="progress-track"><div class="progress-fill" id="pf-m4"></div></div>
+          <div class="progress-label"><span id="ptxt-m4">0/4 leçons terminées</span><span class="ppct" id="ppct-m4">0%</span></div>
+          <a href="#cert-m4" id="certmini-m4" style="display:none; font-size:0.8rem; font-weight:700; color:var(--teal); text-decoration:none;">🎓 Certificat du module débloqué — cliquez pour le générer</a>
+          <details class="lesson-toggle">
+            <summary>Voir le contenu du module</summary>
+            <ul class="lesson-list" id="lessonList-m4">
+              <li><label><input type="checkbox" data-module="m4" data-lesson="0"> Structurer un rapport S&amp;E</label></li>
+              <li><label><input type="checkbox" data-module="m4" data-lesson="1"> Présenter les données clés</label></li>
+              <li><label><input type="checkbox" data-module="m4" data-lesson="2"> Communiquer l'impact aux bailleurs</label></li>
+              <li><label><input type="checkbox" data-module="m4" data-lesson="3"> Quiz — Rapport des Résultats</label></li>
+            </ul>
+            <div class="lesson-locked" id="lessonLocked-m4">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="5" y="11" width="14" height="9" rx="1.5"/><path d="M8 11V8a4 4 0 0 1 8 0v3"/></svg>
+              <p>Le contenu détaillé de ce module est réservé aux personnes inscrites. Inscrivez-vous, puis connectez-vous avec le code d'accès reçu après vérification du paiement.</p>
+              <button type="button" class="btn-ghost lesson-locked-btn" onclick="openEnskriModal('Rapport des Résultats &amp; Communication avec les Bailleurs', '4 000 HTG')">S'inscrire pour débloquer</button>
+            </div>
+          </details>
+          <div class="card-foot">
+            <div class="price">4 000<span> HTG</span></div>
+            <button type="button" class="btn-enroll" onclick="openEnskriModal('Rapport des Résultats &amp; Communication avec les Bailleurs', '4 000 HTG')">S'inscrire</button>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="certificat">
+  <div class="wrap">
+    <div class="sec-head">
+      <div class="eyebrow">Certification</div>
+      <h2>Un certificat après chaque module</h2>
+      <p>Les 4 modules sont indépendants : vous pouvez suivre celui de votre choix, dans l'ordre qui vous convient. À l'intérieur d'un même module, les leçons se débloquent dans l'ordre — impossible de passer à la leçon suivante avant d'avoir terminé la précédente. Dès qu'un module est complété à 100%, son certificat se débloque immédiatement.</p>
+    </div>
+
+    <div class="cert-grid">
+
+      <div class="cert-generator" id="cert-m1">
+        <div class="cert-generator-head"><span class="cnum">01</span><h3>Introduction au Suivi &amp; Évaluation</h3></div>
+        <p class="cert-locked-msg" id="certLockedMsg-m1">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="5" y="11" width="14" height="9" rx="1.5"/><path d="M8 11V8a4 4 0 0 1 8 0v3"/></svg>
+          <span>Terminez les 4 leçons du module 01 pour débloquer ce certificat. (<span id="certLockedProgress-m1">0/4</span>)</span>
+        </p>
+        <div class="cert-form" id="certForm-m1" style="display:none;">
+          <div class="form-group">
+            <label for="certName-m1">Votre nom complet</label>
+            <input type="text" id="certName-m1" placeholder="Ex: Jean Baptiste">
+          </div>
+          <button type="button" class="btn-primary" id="certGenerateBtn-m1">Générer mon certificat</button>
+        </div>
+        <div class="cert-preview-wrap" id="certPreviewWrap-m1" style="display:none;">
+          <canvas id="certCanvas-m1" width="1200" height="850" aria-label="Aperçu du certificat — module 01"></canvas>
+          <div class="cert-actions">
+            <button type="button" id="certDownloadLink-m1" class="btn-primary">Télécharger (PDF)</button>
+            <button type="button" class="btn-ghost" id="certEditBtn-m1">Modifier le nom</button>
+          </div>
         </div>
       </div>
 
-      <div class="card">
-        <div class="card-top">
-          <h3>Kad Lojik &amp; Endikatè Pèfòmans</h3>
-          <span class="modnum">MODIL 02</span>
+      <div class="cert-generator" id="cert-m2">
+        <div class="cert-generator-head"><span class="cnum">02</span><h3>Cadre Logique &amp; Indicateurs</h3></div>
+        <p class="cert-locked-msg" id="certLockedMsg-m2">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="5" y="11" width="14" height="9" rx="1.5"/><path d="M8 11V8a4 4 0 0 1 8 0v3"/></svg>
+          <span>Terminez les 5 leçons du module 02 pour débloquer ce certificat. (<span id="certLockedProgress-m2">0/5</span>)</span>
+        </p>
+        <div class="cert-form" id="certForm-m2" style="display:none;">
+          <div class="form-group">
+            <label for="certName-m2">Votre nom complet</label>
+            <input type="text" id="certName-m2" placeholder="Ex: Jean Baptiste">
+          </div>
+          <button type="button" class="btn-primary" id="certGenerateBtn-m2">Générer mon certificat</button>
         </div>
-        <p>Aprann bati yon Cadre Logique (logframe), defini endikatè SMART epi mete yo an lyen ak objektif pwojè a.</p>
-        <div class="card-meta"><span>5 leson</span><span>~4h</span><span>Nivo: Entèmedyè</span></div>
-        <div class="card-foot">
-          <div class="price">3 000<span> HTG</span></div>
-          <button type="button" class="btn-enroll" onclick="openEnskriModal('Kad Lojik &amp; Endikatè Pèfòmans', '3 000 HTG')">Enskri</button>
-        </div>
-      </div>
-
-      <div class="card">
-        <div class="card-top">
-          <h3>Kolekt &amp; Analiz Done sou Teren</h3>
-          <span class="modnum">MODIL 03</span>
-        </div>
-        <p>Metòd pou kolekte done fyab sou teren, zouti dijital gratis, ak baz analiz kantitatif/kalitatif.</p>
-        <div class="card-meta"><span>6 leson</span><span>~5h</span><span>Nivo: Entèmedyè</span></div>
-        <div class="card-foot">
-          <div class="price">3 500<span> HTG</span></div>
-          <button type="button" class="btn-enroll" onclick="openEnskriModal('Kolekt &amp; Analiz Done sou Teren', '3 500 HTG')">Enskri</button>
+        <div class="cert-preview-wrap" id="certPreviewWrap-m2" style="display:none;">
+          <canvas id="certCanvas-m2" width="1200" height="850" aria-label="Aperçu du certificat — module 02"></canvas>
+          <div class="cert-actions">
+            <button type="button" id="certDownloadLink-m2" class="btn-primary">Télécharger (PDF)</button>
+            <button type="button" class="btn-ghost" id="certEditBtn-m2">Modifier le nom</button>
+          </div>
         </div>
       </div>
 
-      <div class="card">
-        <div class="card-top">
-          <h3>Rapòte Rezilta &amp; Kominike ak Bayè Fon</h3>
-          <span class="modnum">MODIL 04</span>
+      <div class="cert-generator" id="cert-m3">
+        <div class="cert-generator-head"><span class="cnum">03</span><h3>Collecte &amp; Analyse de Données</h3></div>
+        <p class="cert-locked-msg" id="certLockedMsg-m3">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="5" y="11" width="14" height="9" rx="1.5"/><path d="M8 11V8a4 4 0 0 1 8 0v3"/></svg>
+          <span>Terminez les 6 leçons du module 03 pour débloquer ce certificat. (<span id="certLockedProgress-m3">0/6</span>)</span>
+        </p>
+        <div class="cert-form" id="certForm-m3" style="display:none;">
+          <div class="form-group">
+            <label for="certName-m3">Votre nom complet</label>
+            <input type="text" id="certName-m3" placeholder="Ex: Jean Baptiste">
+          </div>
+          <button type="button" class="btn-primary" id="certGenerateBtn-m3">Générer mon certificat</button>
         </div>
-        <p>Estriktire yon rapò S&amp;E ki konvenk, prezante done kle yo, epi kominike enpak pwojè a byen.</p>
-        <div class="card-meta"><span>4 leson</span><span>~3h</span><span>Nivo: Avanse</span></div>
-        <div class="card-foot">
-          <div class="price">4 000<span> HTG</span></div>
-          <button type="button" class="btn-enroll" onclick="openEnskriModal('Rapòte Rezilta &amp; Kominike ak Bayè Fon', '4 000 HTG')">Enskri</button>
+        <div class="cert-preview-wrap" id="certPreviewWrap-m3" style="display:none;">
+          <canvas id="certCanvas-m3" width="1200" height="850" aria-label="Aperçu du certificat — module 03"></canvas>
+          <div class="cert-actions">
+            <button type="button" id="certDownloadLink-m3" class="btn-primary">Télécharger (PDF)</button>
+            <button type="button" class="btn-ghost" id="certEditBtn-m3">Modifier le nom</button>
+          </div>
         </div>
       </div>
 
+      <div class="cert-generator" id="cert-m4">
+        <div class="cert-generator-head"><span class="cnum">04</span><h3>Rapport des Résultats</h3></div>
+        <p class="cert-locked-msg" id="certLockedMsg-m4">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="5" y="11" width="14" height="9" rx="1.5"/><path d="M8 11V8a4 4 0 0 1 8 0v3"/></svg>
+          <span>Terminez les 4 leçons du module 04 pour débloquer ce certificat. (<span id="certLockedProgress-m4">0/4</span>)</span>
+        </p>
+        <div class="cert-form" id="certForm-m4" style="display:none;">
+          <div class="form-group">
+            <label for="certName-m4">Votre nom complet</label>
+            <input type="text" id="certName-m4" placeholder="Ex: Jean Baptiste">
+          </div>
+          <button type="button" class="btn-primary" id="certGenerateBtn-m4">Générer mon certificat</button>
+        </div>
+        <div class="cert-preview-wrap" id="certPreviewWrap-m4" style="display:none;">
+          <canvas id="certCanvas-m4" width="1200" height="850" aria-label="Aperçu du certificat — module 04"></canvas>
+          <div class="cert-actions">
+            <button type="button" id="certDownloadLink-m4" class="btn-primary">Télécharger (PDF)</button>
+            <button type="button" class="btn-ghost" id="certEditBtn-m4">Modifier le nom</button>
+          </div>
+        </div>
+      </div>
+
+      <div class="cert-generator cert-final" id="cert-final">
+        <div class="cert-generator-head"><span class="cnum" style="background:var(--gold); border-color:var(--gold); color:var(--navy-deep);">🎓</span><h3>Certificat global — parcours complet S&amp;E</h3></div>
+        <p class="cert-locked-msg" id="certLockedMsg-final">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="5" y="11" width="14" height="9" rx="1.5"/><path d="M8 11V8a4 4 0 0 1 8 0v3"/></svg>
+          <span>Terminez les 4 modules (19 leçons au total — chaque module dans l'ordre de ses propres leçons) pour débloquer le certificat global. (<span id="certLockedProgress-final">0/19</span>)</span>
+        </p>
+        <div class="cert-form" id="certForm-final" style="display:none;">
+          <div class="form-group">
+            <label for="certName-final">Votre nom complet</label>
+            <input type="text" id="certName-final" placeholder="Ex: Jean Baptiste">
+          </div>
+          <button type="button" class="btn-primary" id="certGenerateBtn-final">Générer mon certificat global</button>
+        </div>
+        <div class="cert-preview-wrap" id="certPreviewWrap-final" style="display:none;">
+          <canvas id="certCanvas-final" width="1200" height="850" aria-label="Aperçu du certificat global"></canvas>
+          <div class="cert-actions">
+            <button type="button" id="certDownloadLink-final" class="btn-primary">Télécharger (PDF)</button>
+            <button type="button" class="btn-ghost" id="certEditBtn-final">Modifier le nom</button>
+          </div>
+          <p class="cert-note-small">Ce certificat est généré directement dans votre navigateur à partir du nom que vous avez saisi. Conservez le fichier téléchargé — c'est votre certificat officiel.</p>
+        </div>
+      </div>
+
+    </div>
+
+    <div class="note" style="margin-top:20px;">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="12" r="9"/><path d="M12 8v5M12 16h.01"/></svg>
+      <p><strong>Besoin d'aide :</strong> si vous rencontrez un problème pour déverrouiller ou télécharger un certificat, contactez-nous sur WhatsApp avec votre nom et le module concerné.</p>
     </div>
   </div>
 </section>
 
 <div class="modal-overlay" id="enskriModal" aria-hidden="true">
   <div class="modal-box" role="dialog" aria-modal="true" aria-labelledby="modalTitle">
-    <button type="button" class="modal-close" onclick="closeEnskriModal()" aria-label="Fèmen">
+    <button type="button" class="modal-close" onclick="closeEnskriModal()" aria-label="Fermer">
       <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><line x1="4" y1="4" x2="20" y2="20"/><line x1="20" y1="4" x2="4" y2="20"/></svg>
     </button>
-    <div class="modal-eyebrow">Fòm enskripsyon</div>
-    <h3 id="modalTitle">Enskri nan fòmasyon an</h3>
+    <div class="modal-eyebrow">Formulaire d'inscription</div>
+    <h3 id="modalTitle">S'inscrire à la formation</h3>
     <div class="modal-price" id="modalPrice" style="display:none;"></div>
 
-    <form class="signup-form" action="https://formsubmit.co/micherlamour300@gmail.com" method="POST">
-      <input type="hidden" name="_subject" value="Nouvo enskripsyon — Boussòl Academy">
+    <form class="signup-form" id="enskriForm" action="https://formsubmit.co/micherlamour300@gmail.com" method="POST">
+      <input type="hidden" name="_subject" value="Nouvelle inscription — High-Academy">
       <input type="hidden" name="_captcha" value="false">
-      <input type="hidden" name="_next" value="https://play.google.com/store/apps/details?id=com.useboom.htwallet">
+      <input type="hidden" name="_next" id="nextField" value="https://play.google.com/store/apps/details?id=com.useboom.htwallet">
       <input type="hidden" name="_template" value="table">
-      <input type="hidden" name="Modil" id="modilField" value="Fòmasyon jeneral">
+      <input type="hidden" name="Modil" id="modilField" value="Formation générale">
+      <input type="hidden" name="Moyen_de_paiement" id="payMethodField" value="MonCash">
 
       <div class="form-row">
         <div class="form-group">
-          <label for="non">Non</label>
-          <input type="text" id="non" name="Non" placeholder="Non ou" required>
+          <label for="non">Prénom</label>
+          <input type="text" id="non" name="Prenom" placeholder="Votre prénom" required>
         </div>
         <div class="form-group">
-          <label for="siyati">Siyati</label>
-          <input type="text" id="siyati" name="Siyati" placeholder="Siyati ou" required>
+          <label for="siyati">Nom</label>
+          <input type="text" id="siyati" name="Nom" placeholder="Votre nom" required>
         </div>
       </div>
 
       <div class="form-row">
         <div class="form-group">
-          <label for="telefon">Telefòn</label>
-          <input type="tel" id="telefon" name="Telefon" placeholder="+509 XXXX XXXX" required>
+          <label for="telefon">Téléphone</label>
+          <input type="tel" id="telefon" name="Telephone" placeholder="+509 XXXX XXXX" required>
         </div>
         <div class="form-group">
           <label for="email">Email</label>
-          <input type="email" id="email" name="Email" placeholder="imel@egzanp.com" required>
+          <input type="email" id="email" name="Email" placeholder="email@exemple.com" required>
         </div>
       </div>
 
-      <button type="submit" class="btn-primary" style="width:100%;">PEYE AVEK MONCASH</button>
-      <p class="form-note">Apre ou fin ranpli fòm nan, enfòmasyon w yo ap voye ban nou epi w ap redirije sou app MonCash pou w kapab fè peman an.</p>
+      <div class="pay-options">
+        <button type="submit" class="btn-pay btn-moncash" onclick="setPaymentMethod('moncash')">
+          <span class="pay-logo">
+            <img src="https://play-lh.googleusercontent.com/gh5vciO93wEDR2OvjkZk62Pdbn9PODYI7QXRSLl6MBIo8qE898cj8hcmmDqgbTOMGMselKMkeF1KZvHoGZ48bQ=w96-h96" width="26" height="26" alt="MonCash" style="border-radius:6px;">
+          </span>
+          PAYER AVEC MONCASH
+        </button>
+
+        <div class="pay-divider">ou</div>
+
+        <button type="submit" class="btn-pay btn-unibank" onclick="setPaymentMethod('unibank')">
+          <span class="pay-logo">
+            <img src="https://play-lh.googleusercontent.com/sLw2U55Ewpegt19KfdHWPoL55fqHhCnqinbKfbqMt_47i7wXgQ_7jotyAPWeIHqfUupTrvqZy-TS-ERlY5oiInE=w96-h96" width="26" height="26" alt="UNIBANK Online" style="border-radius:6px;">
+          </span>
+          <span>PAYER AVEC UNIBANK ONLINE</span>
+        </button>
+      </div>
+
+      <div class="pay-account-numbers">
+        <div class="pay-account-row">
+          <span class="pay-account-label">MonCash</span>
+          <span class="pay-account-value mono">48 21 9522</span>
+        </div>
+        <div class="pay-account-row">
+          <span class="pay-account-label">Compte bancaire (UNIBANK)</span>
+          <span class="pay-account-value mono">270-2015-25791574</span>
+        </div>
+      </div>
+
+      <p class="form-note">Après avoir rempli le formulaire, vos informations nous seront envoyées, puis vous serez redirigé vers MonCash ou vers le portail UNIBANKOnline (pour vous connecter à votre compte) selon le bouton choisi.</p>
     </form>
   </div>
 </div>
 
+<div class="modal-overlay" id="loginModal" aria-hidden="true">
+  <div class="modal-box" role="dialog" aria-modal="true" aria-labelledby="loginModalTitle">
+    <button type="button" class="modal-close" onclick="closeLoginModal()" aria-label="Fermer">
+      <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><line x1="4" y1="4" x2="20" y2="20"/><line x1="20" y1="4" x2="4" y2="20"/></svg>
+    </button>
+    <div class="modal-eyebrow">Espace étudiant</div>
+    <h3 id="loginModalTitle">Connexion</h3>
+
+    <form class="signup-form" id="loginForm">
+      <div class="form-group" style="margin-bottom:16px;">
+        <label for="loginEmail">Email utilisé à l'inscription</label>
+        <input type="email" id="loginEmail" placeholder="email@exemple.com" required>
+      </div>
+      <div class="form-group" style="margin-bottom:6px;">
+        <label for="loginCode">Code d'accès</label>
+        <input type="text" id="loginCode" placeholder="Reçu par WhatsApp après vérification du paiement" required>
+      </div>
+      <p class="form-note" id="loginError" style="display:none; color:#B3261E; margin-top:10px;">Code d'accès incorrect. Vérifiez le code reçu, ou contactez-nous sur WhatsApp.</p>
+      <button type="submit" class="btn-primary" style="width:100%; margin-top:14px;">Se connecter</button>
+      <p class="form-note">Pas encore inscrit(e) ? <a href="#kous" onclick="closeLoginModal()" style="color:var(--blue); font-weight:600; text-decoration:none;">Voir les formations</a></p>
+    </form>
+  </div>
+</div>
 
 <footer id="kontak">
   <div class="wrap">
     <div class="foot-top">
       <div>
-        <span class="brand-name display" style="font-size:1.3rem;">Boussòl</span>
-        <p style="max-width:32ch; color:#8892AC; font-size:0.9rem; margin-top:10px;">Fòmasyon Swivi &amp; Evalyasyon pou pwofesyonèl pwojè ann Ayiti.</p>
+        <span class="brand-name display" style="font-size:1.3rem;">High-Academy</span>
+        <p style="max-width:32ch; color:#8892AC; font-size:0.9rem; margin-top:10px;">Formation en Suivi &amp; Évaluation pour les professionnels de projet en Haïti.</p>
       </div>
       <div class="foot-contact">
-        <span style="color:#fff; font-weight:600; font-size:0.85rem; text-transform:uppercase; letter-spacing:.06em; margin-bottom:4px;">Kontak</span>
+        <span style="color:#fff; font-weight:600; font-size:0.85rem; text-transform:uppercase; letter-spacing:.06em; margin-bottom:4px;">Contact</span>
         <a href="https://wa.me/50947655002" target="_blank" rel="noopener">WhatsApp — +509 4765 5002</a>
         <span class="mono" style="color:#8892AC;">MonCash — 48 21 9522</span>
       </div>
     </div>
     <div class="foot-bottom">
-      <span>© 2026 Boussòl Academy. Tout dwa rezève.</span>
-      <span>Fèt ak swen ann Ayiti 🇭🇹</span>
+      <span>© 2026 High-Academy. Tous droits réservés.</span>
+      <span>Fait avec soin en Haïti 🇭🇹</span>
     </div>
   </div>
 </footer>
 
 <script>
-  // ---- Modal enskripsyon ----
+  // ---- Moyens de paiement ----
+  var PAY_REDIRECTS = {
+    moncash: 'https://play.google.com/store/apps/details?id=com.useboom.htwallet',
+    unibank: 'https://www.unibankhaiti.com/'
+  };
+  var nextField = document.getElementById('nextField');
+  var payMethodField = document.getElementById('payMethodField');
+
+  function setPaymentMethod(method){
+    payMethodField.value = (method === 'unibank') ? 'UNIBANK Online' : 'MonCash';
+    nextField.value = PAY_REDIRECTS[method] || PAY_REDIRECTS.moncash;
+    // Le formulaire continue sa soumission normale vers le même email,
+    // seule la redirection finale change selon le bouton choisi.
+  }
+
+  // ---- Progression des cours (sauvegardée dans ce navigateur) ----
+  function lsGet(key){ try{ return localStorage.getItem(key); }catch(e){ return null; } }
+  function lsSet(key, val){ try{ localStorage.setItem(key, val); }catch(e){} }
+
+  var MODULES = ['m1','m2','m3','m4'];
+
+  // Renvoie les cases à cocher d'un module, triées dans l'ordre des leçons (0,1,2...)
+  function getModuleBoxes(mod){
+    return Array.prototype.slice.call(document.querySelectorAll('input[type="checkbox"][data-module="'+mod+'"]'))
+      .sort(function(a,b){ return (+a.dataset.lesson) - (+b.dataset.lesson); });
+  }
+
+  function isModuleComplete(mod){
+    var boxes = getModuleBoxes(mod);
+    if(!boxes.length) return false;
+    return boxes.every(function(cb){ return cb.checked; });
+  }
+
+  // Les modules sont indépendants : aucun module n'est bloqué par un autre.
+  // Seule la progression À L'INTÉRIEUR d'un module est verrouillée (ordre des leçons).
+  function isModuleUnlocked(mod){
+    return true;
+  }
+
+  // Applique le verrouillage séquentiel à l'intérieur de chaque module :
+  // impossible de cocher la leçon N+1 avant d'avoir terminé la leçon N.
+  function applyLocks(){
+    MODULES.forEach(function(mod){
+      var boxes = getModuleBoxes(mod);
+      boxes.forEach(function(cb, i){
+        var sequentialOk = (i === 0) || boxes[i - 1].checked;
+        cb.disabled = !sequentialOk;
+      });
+    });
+  }
+
+  // Nettoyage de cohérence (ne s'applique plus qu'en théorie, gardé par sécurité)
+  function normalizeLockedState(){}
+
+  function updateModuleProgress(mod){
+    var boxes = getModuleBoxes(mod);
+    var total = boxes.length, done = 0;
+    boxes.forEach(function(cb){ if(cb.checked) done++; });
+    var pct = total ? Math.round((done / total) * 100) : 0;
+
+    var fill = document.getElementById('pf-' + mod);
+    if(fill){ fill.style.width = pct + '%'; }
+    var txt = document.getElementById('ptxt-' + mod);
+    if(txt){ txt.textContent = done + '/' + total + ' leçons terminées'; }
+    var pctEl = document.getElementById('ppct-' + mod);
+    if(pctEl){ pctEl.textContent = pct + '%'; }
+
+    var cnum = document.getElementById('cnum-' + mod);
+    if(cnum){
+      if(pct === 100){
+        cnum.textContent = '✓';
+        cnum.classList.add('cnum-done');
+      } else {
+        cnum.textContent = cnum.getAttribute('data-num');
+        cnum.classList.remove('cnum-done');
+      }
+    }
+
+    var miniLink = document.getElementById('certmini-' + mod);
+    if(miniLink){ miniLink.style.display = (pct === 100) ? 'block' : 'none'; }
+  }
+
+  function refreshAll(){
+    applyLocks();
+    MODULES.forEach(updateModuleProgress);
+    applyLocks(); // ré-applique après mise à jour (une case décochée peut reverrouiller la suite)
+    MODULES.forEach(updateCertUnlockState);
+    updateFinalCertState();
+  }
+
+  function handleCheckboxChange(cb){
+    var mod = cb.dataset.module, idx = +cb.dataset.lesson;
+    var boxes = getModuleBoxes(mod);
+
+    // Si on décoche une leçon, toute leçon suivante déjà cochée doit être décochée aussi
+    // (on ne peut pas rester "en avance" sur une leçon non validée).
+    if(!cb.checked){
+      boxes.forEach(function(b){
+        if(+b.dataset.lesson > idx && b.checked){
+          b.checked = false;
+          lsSet('ha_progress_' + mod + '_' + b.dataset.lesson, '0');
+        }
+      });
+    }
+    lsSet('ha_progress_' + mod + '_' + idx, cb.checked ? '1' : '0');
+    refreshAll();
+  }
+
+  document.querySelectorAll('.lesson-list input[type="checkbox"]').forEach(function(cb){
+    var key = 'ha_progress_' + cb.dataset.module + '_' + cb.dataset.lesson;
+    cb.checked = lsGet(key) === '1';
+    cb.addEventListener('change', function(){ handleCheckboxChange(cb); });
+  });
+
+  normalizeLockedState();
+  refreshAll();
+
+  // ---- Certificats par module + certificat global ----
+  var MODULE_CERT_TITLES = {
+    m1: 'Introduction au Suivi & Évaluation de Projet',
+    m2: 'Cadre Logique & Indicateurs de Performance',
+    m3: 'Collecte & Analyse de Données sur le Terrain',
+    m4: 'Rapport des Résultats & Communication avec les Bailleurs'
+  };
+  var MODULE_CERT_TAGS = {
+    m1: 'Module 01 — Introduction au S&E',
+    m2: 'Module 02 — Cadre Logique & Indicateurs',
+    m3: 'Module 03 — Collecte & Analyse de Données',
+    m4: 'Module 04 — Rapport des Résultats'
+  };
+
+  function updateCertUnlockState(mod){
+    var boxes = getModuleBoxes(mod);
+    var total = boxes.length, done = 0;
+    boxes.forEach(function(cb){ if(cb.checked) done++; });
+    var isReady = isModuleComplete(mod);
+
+    var lockedProgress = document.getElementById('certLockedProgress-' + mod);
+    if(lockedProgress){ lockedProgress.textContent = done + '/' + total; }
+
+    var lockedMsg = document.getElementById('certLockedMsg-' + mod);
+    var certForm = document.getElementById('certForm-' + mod);
+    if(lockedMsg && certForm){
+      if(isReady){
+        lockedMsg.style.display = 'none';
+        certForm.style.display = 'flex';
+      } else {
+        lockedMsg.style.display = 'flex';
+        certForm.style.display = 'none';
+        var previewWrap = document.getElementById('certPreviewWrap-' + mod);
+        if(previewWrap){ previewWrap.style.display = 'none'; }
+      }
+    }
+  }
+
+  function updateFinalCertState(){
+    var allBoxes = document.querySelectorAll('.lesson-list input[type="checkbox"]');
+    var total = allBoxes.length, done = 0;
+    allBoxes.forEach(function(cb){ if(cb.checked) done++; });
+    var isReady = MODULES.every(isModuleComplete);
+
+    var certLink = document.getElementById('certLink');
+    var certSub = document.getElementById('certSub');
+    if(certLink){
+      certLink.classList.toggle('cert-ready', isReady);
+      if(certSub){ certSub.textContent = isReady ? 'Tous les modules sont réussis — cliquez pour vos certificats 🎉' : (done + '/' + total + ' leçons terminées au total'); }
+    }
+
+    var lockedProgress = document.getElementById('certLockedProgress-final');
+    if(lockedProgress){ lockedProgress.textContent = done + '/' + total; }
+
+    var lockedMsg = document.getElementById('certLockedMsg-final');
+    var certForm = document.getElementById('certForm-final');
+    if(lockedMsg && certForm){
+      if(isReady){
+        lockedMsg.style.display = 'none';
+        certForm.style.display = 'flex';
+      } else {
+        lockedMsg.style.display = 'flex';
+        certForm.style.display = 'none';
+        var previewWrap = document.getElementById('certPreviewWrap-final');
+        if(previewWrap){ previewWrap.style.display = 'none'; }
+      }
+    }
+  }
+
+  // ---- Génération du certificat personnalisé ----
+  function getOrCreateCertId(key){
+    var storeKey = 'ha_cert_id_' + key;
+    var id = lsGet(storeKey);
+    if(!id){
+      var year = new Date().getFullYear();
+      var rand = Math.random().toString(36).slice(2, 8).toUpperCase();
+      var tag = (key === 'final') ? 'GLOBAL' : ('M' + key.replace('m',''));
+      id = 'HA-' + tag + '-' + year + '-' + rand;
+      lsSet(storeKey, id);
+    }
+    return id;
+  }
+
+  function wrapCanvasText(ctx, text, x, y, maxWidth, lineHeight){
+    var words = text.split(' ');
+    var line = '';
+    var lines = [];
+    for(var i = 0; i < words.length; i++){
+      var testLine = line + words[i] + ' ';
+      if(ctx.measureText(testLine).width > maxWidth && i > 0){
+        lines.push(line);
+        line = words[i] + ' ';
+      } else {
+        line = testLine;
+      }
+    }
+    lines.push(line);
+    var startY = y - ((lines.length - 1) * lineHeight) / 2;
+    for(var j = 0; j < lines.length; j++){
+      ctx.fillText(lines[j].trim(), x, startY + j * lineHeight);
+    }
+  }
+
+  function drawCertificate(name, key){
+    var canvas = document.getElementById('certCanvas-' + key);
+    if(!canvas) return;
+    var ctx = canvas.getContext('2d');
+    var W = canvas.width, H = canvas.height;
+    var navy = '#16223E', navyDeep = '#0E1729', gold = '#D9A441', goldDeep = '#B9852A',
+        teal = '#2F6F52', ink = '#1C2333', inkSoft = '#4A5164', cream = '#FAF9F5';
+
+    ctx.clearRect(0, 0, W, H);
+    ctx.fillStyle = cream;
+    ctx.fillRect(0, 0, W, H);
+
+    // Outer + inner border
+    ctx.strokeStyle = navy;
+    ctx.lineWidth = 6;
+    ctx.strokeRect(28, 28, W - 56, H - 56);
+    ctx.strokeStyle = gold;
+    ctx.lineWidth = 2;
+    ctx.strokeRect(42, 42, W - 84, H - 84);
+
+    // Corner flourish dots
+    [[42,42],[W-42,42],[42,H-42],[W-42,H-42]].forEach(function(p){
+      ctx.beginPath();
+      ctx.arc(p[0], p[1], 5, 0, Math.PI * 2);
+      ctx.fillStyle = gold;
+      ctx.fill();
+    });
+
+    // Seal / crest
+    var cx = W / 2, cy = 130;
+    ctx.beginPath();
+    ctx.arc(cx, cy, 46, 0, Math.PI * 2);
+    ctx.fillStyle = navy;
+    ctx.fill();
+    ctx.beginPath();
+    ctx.arc(cx, cy, 46, 0, Math.PI * 2);
+    ctx.strokeStyle = gold;
+    ctx.lineWidth = 3;
+    ctx.stroke();
+    ctx.beginPath();
+    ctx.arc(cx, cy, 37, 0, Math.PI * 2);
+    ctx.strokeStyle = gold;
+    ctx.lineWidth = 1;
+    ctx.stroke();
+    ctx.fillStyle = gold;
+    ctx.textAlign = 'center';
+    ctx.textBaseline = 'middle';
+    ctx.font = '700 34px Fraunces, serif';
+    ctx.fillText('HA', cx, cy + 3);
+
+    // Wordmark
+    ctx.fillStyle = navy;
+    ctx.textBaseline = 'alphabetic';
+    ctx.font = '700 40px Fraunces, serif';
+    ctx.fillText('HIGH-ACADEMY', cx, 225);
+
+    ctx.font = '500 15px "IBM Plex Mono", monospace';
+    ctx.fillStyle = goldDeep;
+    ctx.save();
+    ctx.letterSpacing = '4px';
+    ctx.fillText(key === 'final' ? 'CERTIFICAT DE RÉUSSITE — PARCOURS COMPLET' : 'CERTIFICAT DE RÉUSSITE — MODULE', cx, 255);
+    ctx.restore();
+
+    // Divider
+    ctx.strokeStyle = gold;
+    ctx.lineWidth = 1;
+    ctx.beginPath();
+    ctx.moveTo(cx - 130, 280);
+    ctx.lineTo(cx - 14, 280);
+    ctx.moveTo(cx + 14, 280);
+    ctx.lineTo(cx + 130, 280);
+    ctx.stroke();
+    ctx.beginPath();
+    ctx.moveTo(cx, 273);
+    ctx.lineTo(cx + 7, 280);
+    ctx.lineTo(cx, 287);
+    ctx.lineTo(cx - 7, 280);
+    ctx.closePath();
+    ctx.fillStyle = gold;
+    ctx.fill();
+
+    // "Décerné à"
+    ctx.fillStyle = inkSoft;
+    ctx.font = '500 18px Inter, sans-serif';
+    ctx.fillText('est décerné à', cx, 325);
+
+    // Name
+    var displayName = (name || 'Étudiant(e)').trim();
+    var nameSize = displayName.length > 26 ? 48 : 60;
+    ctx.fillStyle = navyDeep;
+    ctx.font = '600 ' + nameSize + 'px Fraunces, serif';
+    ctx.fillText(displayName, cx, 390);
+    ctx.strokeStyle = gold;
+    ctx.lineWidth = 1.5;
+    ctx.beginPath();
+    ctx.moveTo(cx - 210, 408);
+    ctx.lineTo(cx + 210, 408);
+    ctx.stroke();
+
+    // Body text
+    ctx.fillStyle = ink;
+    ctx.font = '400 19px Inter, sans-serif';
+    var bodyText = (key === 'final')
+      ? 'pour avoir complété avec succès le parcours complet en Suivi & Évaluation de Projet — Introduction au S&E, Cadre Logique & Indicateurs, Collecte & Analyse de Données, et Rapport des Résultats — incluant les quiz de chaque module, réalisés dans l\'ordre.'
+      : 'pour avoir complété avec succès toutes les leçons et le quiz du module « ' + (MODULE_CERT_TITLES[key] || '') + ' », dans le cadre de la formation High-Academy en Suivi & Évaluation de Projet.';
+    wrapCanvasText(ctx, bodyText, cx, 460, 760, 28);
+
+    // Footer: date / signature / cert id
+    var footerY = H - 100;
+    ctx.textAlign = 'left';
+    ctx.font = '600 15px Inter, sans-serif';
+    ctx.fillStyle = navy;
+    var dateStr = new Date().toLocaleDateString('fr-FR', { day: 'numeric', month: 'long', year: 'numeric' });
+    ctx.fillText('Délivré le', 110, footerY);
+    ctx.font = '400 15px Inter, sans-serif';
+    ctx.fillStyle = inkSoft;
+    ctx.fillText(dateStr, 110, footerY + 22);
+
+    ctx.textAlign = 'center';
+    ctx.strokeStyle = inkSoft;
+    ctx.lineWidth = 1;
+    ctx.beginPath();
+    ctx.moveTo(cx - 120, footerY - 6);
+    ctx.lineTo(cx + 120, footerY - 6);
+    ctx.stroke();
+    ctx.font = 'italic 600 22px Fraunces, serif';
+    ctx.fillStyle = navy;
+    ctx.fillText('High-Academy', cx, footerY - 16);
+    ctx.font = '500 13px "IBM Plex Mono", monospace';
+    ctx.fillStyle = inkSoft;
+    ctx.fillText('Direction pédagogique', cx, footerY + 12);
+
+    ctx.textAlign = 'right';
+    ctx.font = '600 15px Inter, sans-serif';
+    ctx.fillStyle = navy;
+    ctx.fillText('N° de certificat', W - 110, footerY);
+    ctx.font = '400 15px "IBM Plex Mono", monospace';
+    ctx.fillStyle = inkSoft;
+    ctx.fillText(getOrCreateCertId(key), W - 110, footerY + 22);
+
+    ctx.textAlign = 'left';
+    ctx.textBaseline = 'alphabetic';
+  }
+
+  var CERT_NAMES = {};
+
+  function downloadCertPDF(key){
+    var canvas = document.getElementById('certCanvas-' + key);
+    if(!canvas || !window.jspdf){ return; }
+    var name = CERT_NAMES[key] || 'etudiant';
+    var fileSafe = name.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '').replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)/g, '');
+    var fileTag = (key === 'final') ? 'global' : ('module-' + key.replace('m',''));
+    var imgData = canvas.toDataURL('image/png', 1.0);
+    var doc = new window.jspdf.jsPDF({ orientation:'landscape', unit:'px', format:[canvas.width, canvas.height] });
+    doc.addImage(imgData, 'PNG', 0, 0, canvas.width, canvas.height);
+    doc.save('certificat-high-academy-' + fileTag + '-' + (fileSafe || 'etudiant') + '.pdf');
+  }
+
+  function renderCertificate(key){
+    var nameInput = document.getElementById('certName-' + key);
+    var name = nameInput ? nameInput.value.trim() : '';
+    if(!name){
+      if(nameInput){ nameInput.focus(); }
+      return;
+    }
+    lsSet('ha_cert_name_' + key, name);
+    CERT_NAMES[key] = name;
+
+    var fonts = ['700 40px Fraunces', '600 60px Fraunces', 'italic 600 22px Fraunces', '500 15px "IBM Plex Mono"'];
+    var loaders = fonts.map(function(f){
+      try{ return document.fonts.load(f); }catch(e){ return Promise.resolve(); }
+    });
+    Promise.all(loaders).then(function(){
+      drawCertificate(name, key);
+      var previewWrap = document.getElementById('certPreviewWrap-' + key);
+      var certForm = document.getElementById('certForm-' + key);
+      if(previewWrap){ previewWrap.style.display = 'block'; }
+      if(certForm){ certForm.style.display = 'none'; }
+    });
+  }
+
+  ['m1','m2','m3','m4','final'].forEach(function(key){
+    var nameInput = document.getElementById('certName-' + key);
+    if(nameInput){
+      var savedName = lsGet('ha_cert_name_' + key);
+      if(savedName){ nameInput.value = savedName; }
+      nameInput.addEventListener('keydown', function(e){
+        if(e.key === 'Enter'){ e.preventDefault(); renderCertificate(key); }
+      });
+    }
+    var genBtn = document.getElementById('certGenerateBtn-' + key);
+    if(genBtn){ genBtn.addEventListener('click', function(){ renderCertificate(key); }); }
+
+    var downloadBtn = document.getElementById('certDownloadLink-' + key);
+    if(downloadBtn){ downloadBtn.addEventListener('click', function(){ downloadCertPDF(key); }); }
+
+    var editBtn = document.getElementById('certEditBtn-' + key);
+    if(editBtn){
+      editBtn.addEventListener('click', function(){
+        var previewWrap = document.getElementById('certPreviewWrap-' + key);
+        var certForm = document.getElementById('certForm-' + key);
+        if(previewWrap){ previewWrap.style.display = 'none'; }
+        if(certForm){ certForm.style.display = 'flex'; }
+        if(nameInput){ nameInput.focus(); }
+      });
+    }
+  });
+
+  // ---- Connexion & accès aux contenus des modules ----
+  // NOTE: il s'agit d'un contrôle d'accès simple côté navigateur (pas d'un vrai compte
+  // sécurisé avec base de données). Le "code d'accès" ci-dessous doit être communiqué
+  // uniquement aux personnes dont le paiement a été vérifié manuellement (WhatsApp/email),
+  // et peut être changé à tout moment en modifiant la valeur ACCESS_CODE dans ce fichier.
+  var ACCESS_CODE = 'HA-2026';
+
+  var loginModal = document.getElementById('loginModal');
+  var loginForm = document.getElementById('loginForm');
+  var loginError = document.getElementById('loginError');
+  var loginNavBtn = document.getElementById('loginNavBtn');
+  var loginNavLinkMobile = document.getElementById('loginNavLinkMobile');
+
+  function isLoggedIn(){ return lsGet('ha_access_granted') === 'true'; }
+
+  function openLoginModal(){
+    if(isLoggedIn()){
+      logoutUser();
+      return;
+    }
+    lastFocused = document.activeElement;
+    loginModal.classList.add('open');
+    loginModal.setAttribute('aria-hidden', 'false');
+    document.body.style.overflow = 'hidden';
+    if(loginError){ loginError.style.display = 'none'; }
+    var firstInput = loginModal.querySelector('input');
+    if(firstInput){ firstInput.focus(); }
+  }
+
+  function closeLoginModal(){
+    loginModal.classList.remove('open');
+    loginModal.setAttribute('aria-hidden', 'true');
+    document.body.style.overflow = '';
+    if(lastFocused){ lastFocused.focus(); }
+  }
+
+  function logoutUser(){
+    try{ localStorage.removeItem('ha_access_granted'); }catch(e){}
+    applyAccessGate();
+    updateLoginButton();
+  }
+
+  function updateLoginButton(){
+    var logged = isLoggedIn();
+    if(loginNavBtn){
+      loginNavBtn.textContent = logged ? 'Déconnexion' : 'Connexion';
+      loginNavBtn.classList.toggle('is-logged-in', logged);
+    }
+    if(loginNavLinkMobile){
+      loginNavLinkMobile.textContent = logged ? 'Déconnexion' : 'Connexion';
+    }
+  }
+
+  function applyAccessGate(){
+    var granted = isLoggedIn();
+    MODULES.forEach(function(mod){
+      var list = document.getElementById('lessonList-' + mod);
+      var locked = document.getElementById('lessonLocked-' + mod);
+      if(list){ list.style.display = granted ? '' : 'none'; }
+      if(locked){ locked.style.display = granted ? 'none' : 'flex'; }
+    });
+  }
+
+  if(loginForm){
+    loginForm.addEventListener('submit', function(e){
+      e.preventDefault();
+      var code = document.getElementById('loginCode').value.trim();
+      var email = document.getElementById('loginEmail').value.trim();
+      if(email && code === ACCESS_CODE){
+        lsSet('ha_access_granted', 'true');
+        lsSet('ha_access_email', email);
+        closeLoginModal();
+        applyAccessGate();
+        updateLoginButton();
+      } else if(loginError){
+        loginError.style.display = 'block';
+      }
+    });
+  }
+
+  loginModal.addEventListener('click', function(e){
+    if(e.target === loginModal){ closeLoginModal(); }
+  });
+
+  document.addEventListener('keydown', function(e){
+    if(e.key === 'Escape' && loginModal.classList.contains('open')){ closeLoginModal(); }
+  });
+
+  applyAccessGate();
+  updateLoginButton();
+
+  // ---- Modal d'inscription ----
   var modal = document.getElementById('enskriModal');
   var modalTitle = document.getElementById('modalTitle');
   var modalPrice = document.getElementById('modalPrice');
@@ -525,8 +1542,8 @@
       modalTitle.textContent = nomModil;
       modilField.value = nomModil;
     } else {
-      modalTitle.textContent = 'Enskri nan fòmasyon an';
-      modilField.value = 'Fòmasyon jeneral';
+      modalTitle.textContent = "S'inscrire à la formation";
+      modilField.value = 'Formation générale';
     }
     if(pri){
       modalPrice.textContent = pri;
@@ -557,7 +1574,1666 @@
     if(e.key === 'Escape' && modal.classList.contains('open')){ closeEnskriModal(); }
   });
 
-  // ---- Meni mobil ----
+  // ---- Recherche des modules ----
+  var searchForm = document.getElementById('siteSearchForm');
+  var searchInput = document.getElementById('siteSearchInput');
+  var searchNoResults = document.getElementById('searchNoResults');
+  var courseCards = Array.prototype.slice.call(document.querySelectorAll('#courseGrid .card'));
+
+  function normalizeText(str){
+    return (str || '').toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '');
+  }
+
+  function runSiteSearch(){
+    var query = normalizeText(searchInput.value.trim());
+    var visibleCount = 0;
+    courseCards.forEach(function(card){
+      var haystack = normalizeText(card.textContent);
+      var match = !query || haystack.indexOf(query) !== -1;
+      card.classList.toggle('search-hidden', !match);
+      if(match){ visibleCount++; }
+    });
+    if(searchNoResults){ searchNoResults.classList.toggle('show', visibleCount === 0); }
+  }
+
+  if(searchForm){
+    searchForm.addEventListener('submit', function(e){
+      e.preventDefault();
+      runSiteSearch();
+      document.getElementById('kous').scrollIntoView({behavior:'smooth'});
+    });
+  }
+  if(searchInput){
+    searchInput.addEventListener('input', runSiteSearch);
+  }
+
+  // ---- Menu mobile ----
+  var menuToggle = document.getElementById('menuToggle');
+  var navLinks = document.getElementById('navLinks');
+
+  menuToggle.addEventListener('click', function(){
+    var isOpen = navLinks.classList.toggle('open');
+    menuToggle.setAttribute('aria-expanded', isOpen ? 'true' : 'false');
+  });
+
+  navLinks.addEventListener('click', function(e){
+    if(e.target.tagName === 'A'){
+      navLinks.classList.remove('open');
+      menuToggle.setAttribute('aria-expanded', 'false');
+    }
+  });
+</script>
+</body>
+</html><!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>High-Academy — Formation en Suivi &amp; Évaluation de Projets</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600;9..144,700&family=Inter:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg: #FAF9F5;
+    --bg-alt: #F0EEE6;
+    --panel: #FFFFFF;
+    --ink: #1C2333;
+    --ink-soft: #4A5164;
+    --navy: #16223E;
+    --navy-deep: #0E1729;
+    --gold: #D9A441;
+    --gold-deep: #B9852A;
+    --teal: #2F6F52;
+    --line: #DEDAD0;
+    --radius: 14px;
+    --shadow: 0 20px 50px -25px rgba(22,34,62,0.35);
+
+    /* Coursera-style blue accents (primary actions / links) */
+    --blue: #0056D2;
+    --blue-deep: #00419E;
+    --blue-tint: #EBF2FF;
+    --lock-grey: #9AA2B4;
+  }
+
+  *{box-sizing:border-box;}
+  html{scroll-behavior:smooth;}
+  body{
+    margin:0;
+    background:var(--bg);
+    color:var(--ink);
+    font-family:'Inter', sans-serif;
+    line-height:1.55;
+    -webkit-font-smoothing:antialiased;
+  }
+  h1,h2,h3,.display{
+    font-family:'Fraunces', serif;
+    font-weight:600;
+    letter-spacing:-0.01em;
+    color:var(--navy);
+    margin:0;
+  }
+  .mono{
+    font-family:'IBM Plex Mono', monospace;
+  }
+  a{color:inherit;}
+  img,svg{display:block;max-width:100%;}
+  button{font-family:inherit;}
+  :focus-visible{outline:2px solid var(--gold-deep); outline-offset:3px;}
+
+  .wrap{
+    max-width:1120px;
+    margin:0 auto;
+    padding:0 28px;
+  }
+
+  /* ---------- HEADER ---------- */
+  header{
+    position:sticky; top:0; z-index:40;
+    background:rgba(250,249,245,0.88);
+    backdrop-filter:blur(10px);
+    border-bottom:1px solid var(--line);
+  }
+  .nav{
+    display:flex; align-items:center; justify-content:space-between;
+    padding:18px 0; gap:16px;
+  }
+  .nav-right{display:flex; align-items:center; gap:12px;}
+  .brand{display:flex; align-items:center; gap:10px; text-decoration:none; line-height:1;}
+  .brand svg{width:34px;height:34px; flex-shrink:0;}
+  .brand-text{display:flex; flex-direction:column; justify-content:center; gap:2px;}
+  .brand-name{font-family:'Fraunces', serif; font-weight:700; font-size:1.3rem; color:var(--navy); line-height:1;}
+  .brand-tag{font-family:'IBM Plex Mono', monospace; font-size:0.62rem; letter-spacing:.12em; text-transform:uppercase; color:var(--ink-soft); display:block; line-height:1;}
+  nav.links{display:flex; align-items:center; gap:36px; font-size:0.96rem; font-weight:600;}
+  nav.links a{
+    text-decoration:none; color:var(--ink-soft); transition:color .2s ease;
+    position:relative; padding:8px 2px; letter-spacing:.01em;
+  }
+  nav.links a::after{
+    content:""; position:absolute; left:2px; right:2px; bottom:2px; height:2px;
+    background:var(--gold-deep); border-radius:2px;
+    transform:scaleX(0); transform-origin:left; transition:transform .25s ease;
+  }
+  nav.links a:hover{color:var(--navy);}
+  nav.links a:hover::after{transform:scaleX(1);}
+  .btn-nav{
+    background:var(--blue); color:#fff; padding:10px 20px; border-radius:6px;
+    text-decoration:none; font-weight:600; font-size:0.88rem; white-space:nowrap;
+    display:inline-flex; align-items:center;
+  }
+  .btn-nav:hover{background:var(--blue-deep);}
+  .btn-login{
+    background:transparent; color:var(--navy); border:1.5px solid var(--line); padding:9px 18px;
+    border-radius:6px; text-decoration:none; font-weight:600; font-size:0.88rem; white-space:nowrap;
+    cursor:pointer; font-family:inherit;
+  }
+  .btn-login:hover{border-color:var(--navy);}
+  .btn-login.is-logged-in{background:var(--teal); color:#fff; border-color:var(--teal);}
+  .nav-search{
+    flex:1; max-width:520px; display:flex; align-items:center; gap:10px;
+    background:#fff; border:1.5px solid var(--line); border-radius:999px;
+    padding:10px 18px; color:var(--ink-soft); font-size:0.92rem;
+  }
+  .nav-search svg{width:17px;height:17px; flex-shrink:0; color:var(--ink-soft);}
+  .nav-search span{overflow:hidden; text-overflow:ellipsis; white-space:nowrap;}
+  .nav-search-btn{
+    background:none; border:none; padding:0; margin:0; display:flex; align-items:center; cursor:pointer; color:var(--ink-soft);
+  }
+  .nav-search-btn:hover{color:var(--navy);}
+  .nav-search-input{
+    flex:1; min-width:0; border:none; outline:none; background:transparent; font-family:inherit;
+    font-size:0.92rem; color:var(--ink);
+  }
+  .nav-search-input::placeholder{color:var(--ink-soft);}
+  .search-no-results{
+    display:none; text-align:center; padding:34px 20px; color:var(--ink-soft); font-size:0.95rem;
+    background:var(--bg-alt); border-radius:14px; margin-top:6px;
+  }
+  .search-no-results.show{display:block;}
+  .card.search-hidden{display:none;}
+  .nav-explore{
+    display:flex; align-items:center; gap:5px; font-weight:600; font-size:0.92rem;
+    color:var(--ink); white-space:nowrap; cursor:default;
+  }
+  .nav-explore svg{width:13px;height:13px;}
+  @media(max-width:900px){ .nav-search{display:none;} .nav-explore{display:none;} }
+  .menu-toggle{
+    display:none; background:none; border:1px solid var(--line); border-radius:8px;
+    width:40px; height:40px; align-items:center; justify-content:center; cursor:pointer;
+  }
+  .menu-toggle svg{width:20px;height:20px;}
+  @media(max-width:760px){
+    .nav{position:relative;}
+    nav.links{
+      display:none; position:absolute; top:100%; left:0; right:0; background:var(--panel);
+      flex-direction:column; align-items:flex-start; gap:0; border-bottom:1px solid var(--line);
+      box-shadow:var(--shadow);
+    }
+    nav.links.open{display:flex;}
+    nav.links a{padding:14px 28px; width:100%; border-top:1px solid var(--line);}
+    nav.links a::after{display:none;}
+    nav.links a:active{background:var(--bg-alt);}
+    .menu-toggle{display:inline-flex;}
+    .btn-nav{padding:9px 16px; font-size:0.82rem;}
+    .btn-login{display:none;}
+  }
+
+  /* ---------- HERO ---------- */
+  .hero{
+    padding:28px 0 48px;
+  }
+  .hero-grid{
+    display:grid; grid-template-columns:0.85fr 1.15fr; gap:44px; align-items:center;
+  }
+  @media(max-width:760px){
+    .hero-grid{grid-template-columns:1fr; gap:28px;}
+    .hero-grid .hero-illustration{order:2; max-width:220px; margin:0 auto;}
+    .hero-grid > div:not(.hero-illustration){order:1;}
+  }
+  .eyebrow{
+    font-family:'IBM Plex Mono', monospace; font-size:0.72rem; letter-spacing:.16em;
+    text-transform:uppercase; color:var(--teal); margin-bottom:12px; display:flex; gap:10px; align-items:center;
+  }
+  .eyebrow::before{content:""; width:26px; height:1px; background:var(--teal);}
+  .hero h1{font-size:clamp(2rem, 3.4vw, 2.85rem); line-height:1.14; max-width:20ch;}
+  .hero h1 em{font-style:normal; color:var(--gold-deep);}
+  .hero p.lead{
+    margin-top:14px; font-size:1.08rem; color:var(--ink-soft); max-width:46ch;
+  }
+  .hero-cta{display:flex; gap:14px; margin-top:22px; flex-wrap:wrap;}
+  .btn-primary{
+    background:var(--blue); color:#fff; border:none; padding:15px 28px;
+    border-radius:6px; font-weight:700; font-size:0.98rem; cursor:pointer;
+    box-shadow:0 14px 30px -14px rgba(0,86,210,0.55);
+    transition:transform .15s ease, box-shadow .15s ease, background .15s ease;
+  }
+  .btn-primary:hover{background:var(--blue-deep); transform:translateY(-1px); box-shadow:0 18px 34px -14px rgba(0,86,210,0.65);}
+  .btn-primary:disabled{background:var(--lock-grey); box-shadow:none; cursor:not-allowed; transform:none;}
+  .btn-ghost{
+    background:transparent; color:var(--navy); border:1.5px solid var(--line); padding:14px 24px;
+    border-radius:999px; font-weight:600; font-size:0.98rem; cursor:pointer; text-decoration:none;
+    display:inline-flex; align-items:center;
+  }
+  .btn-ghost:hover{border-color:var(--navy);}
+
+  .seal-wrap{position:relative; display:flex; align-items:center; justify-content:center;}
+  .seal-wrap svg{width:100%; max-width:380px;}
+  #crestStar{transform-origin:200px 78px; animation:pulse 3.2s ease-in-out infinite;}
+  @keyframes pulse{
+    0%,100%{transform:scale(1);}
+    50%{transform:scale(1.14);}
+  }
+  @media (prefers-reduced-motion: reduce){ #crestStar{animation:none;} }
+
+  /* ---------- PILL ROW (style Coursera) ---------- */
+  .pill-row{display:grid; grid-template-columns:repeat(3,1fr); gap:16px; margin-top:6px;}
+  @media(max-width:760px){ .pill-row{grid-template-columns:1fr;} }
+  .pill{
+    background:var(--blue-tint); border-radius:14px; padding:22px 24px; text-decoration:none;
+    display:flex; align-items:center; justify-content:space-between; gap:14px;
+    transition:transform .15s ease, box-shadow .15s ease; position:relative; overflow:hidden;
+  }
+  .pill:hover{transform:translateY(-2px); box-shadow:0 14px 26px -18px rgba(0,86,210,0.45);}
+  .pill span.pill-label{font-weight:700; color:var(--navy); font-size:1.02rem; line-height:1.3;}
+  .pill svg.pill-icon{width:34px; height:34px; color:var(--blue); flex-shrink:0;}
+
+  /* ---------- STRIP ---------- */
+  .strip{
+    background:var(--navy); color:#fff; padding:14px 0;
+  }
+  .strip .wrap{display:flex; justify-content:space-between; flex-wrap:wrap; gap:18px;}
+  .strip-item{display:flex; align-items:baseline; gap:8px; font-size:0.9rem; color:#CBD3E1;}
+  .strip-item b{font-family:'Fraunces', serif; color:#fff; font-size:1.15rem; font-weight:600;}
+
+  /* ---------- SECTION HEADS ---------- */
+  section{padding:52px 0;}
+  .sec-head{max-width:640px; margin-bottom:30px;}
+  .sec-head .eyebrow{color:var(--gold-deep);}
+  .sec-head .eyebrow::before{background:var(--gold-deep);}
+  .sec-head h2{font-size:clamp(1.8rem,3vw,2.4rem);}
+  .sec-head p{color:var(--ink-soft); margin-top:14px; font-size:1.04rem;}
+
+  /* ---------- COURSES ---------- */
+  .courses{background:var(--bg-alt); border-top:1px solid var(--line); border-bottom:1px solid var(--line);}
+  .course-body{display:grid; grid-template-columns:280px 1fr; gap:28px; align-items:start;}
+  @media(max-width:900px){ .course-body{grid-template-columns:1fr;} }
+
+  /* ---------- CURRICULUM SIDEBAR (style Coursera/Udemy) ---------- */
+  .curriculum{
+    position:sticky; top:88px; background:var(--panel); border:1px solid var(--line);
+    border-radius:var(--radius); box-shadow:var(--shadow); overflow:hidden;
+  }
+  @media(max-width:900px){ .curriculum{position:static;} }
+  .curriculum-head{padding:20px 20px 16px; border-bottom:1px solid var(--line);}
+  .curriculum-head span.eyebrow{margin-bottom:8px;}
+  .curriculum-head h3{font-size:1.05rem;}
+  .curriculum-list{list-style:none; margin:0; padding:8px;}
+  .curriculum-list li{margin:2px 0;}
+  .curriculum-list a{
+    display:flex; align-items:center; gap:12px; text-decoration:none; color:var(--ink);
+    padding:11px 12px; border-radius:9px; font-size:0.9rem; font-weight:600; transition:background .15s ease;
+  }
+  .curriculum-list a:hover{background:var(--bg-alt);}
+  .curriculum-list .cnum{
+    flex-shrink:0; width:26px; height:26px; border-radius:50%; background:var(--bg-alt);
+    color:var(--navy); font-family:'IBM Plex Mono', monospace; font-size:0.72rem;
+    display:flex; align-items:center; justify-content:center; font-weight:600;
+    border:1px solid var(--line);
+  }
+  .curriculum-list .clabel{display:flex; flex-direction:column; gap:1px; line-height:1.25;}
+  .curriculum-list .clabel small{font-weight:500; color:var(--ink-soft); font-size:0.74rem;}
+  .curriculum-divider{height:1px; background:var(--line); margin:8px 12px;}
+  .curriculum-cert{
+    display:flex; align-items:center; gap:12px; margin:6px 8px 12px; padding:13px 12px;
+    border-radius:9px; text-decoration:none; background:linear-gradient(135deg, var(--navy), var(--navy-deep));
+    color:#fff; font-weight:700; font-size:0.87rem; transition:transform .15s ease;
+  }
+  .curriculum-cert:hover{transform:translateY(-1px);}
+  .curriculum-cert .cnum{background:var(--gold); border:none; color:var(--navy-deep);}
+  .curriculum-cert small{display:block; color:#B9C0D4; font-weight:500; font-size:0.72rem; margin-top:1px;}
+  .curriculum-cert.cert-ready{background:linear-gradient(135deg, var(--teal), #1c4736);}
+  .curriculum-cert.cert-ready small{color:#CFE6DB;}
+
+  /* ---------- CERTIFICATE GENERATOR ---------- */
+  .cert-grid{display:grid; grid-template-columns:repeat(2,1fr); gap:20px;}
+  @media(max-width:760px){ .cert-grid{grid-template-columns:1fr;} }
+  .cert-generator{
+    background:var(--panel); border:1px solid var(--line); border-radius:var(--radius);
+    box-shadow:var(--shadow); padding:26px; margin-top:8px; display:flex; flex-direction:column; gap:14px;
+  }
+  .cert-generator.cert-final{grid-column:1 / -1; background:linear-gradient(135deg,#fff,var(--blue-tint));}
+  .cert-generator-head{display:flex; align-items:center; gap:10px;}
+  .cert-generator-head .cnum{
+    flex-shrink:0; width:30px; height:30px; border-radius:50%; background:var(--bg-alt);
+    color:var(--navy); font-family:'IBM Plex Mono', monospace; font-size:0.78rem;
+    display:flex; align-items:center; justify-content:center; font-weight:700; border:1px solid var(--line);
+  }
+  .cert-generator-head h3{font-size:1.08rem;}
+  .cert-locked-msg{
+    display:flex; align-items:center; gap:12px; color:var(--ink-soft); font-size:0.9rem;
+    background:var(--bg-alt); border:1px dashed var(--line); border-radius:10px; padding:16px 18px;
+  }
+  .cert-locked-msg svg{width:20px; height:20px; flex-shrink:0; color:var(--gold-deep);}
+  .cert-form{display:flex; flex-wrap:wrap; gap:12px; align-items:flex-end;}
+  .cert-form .form-group{flex:1; min-width:220px; display:flex; flex-direction:column; gap:6px;}
+  .cert-form label{font-size:0.85rem; font-weight:600; color:var(--navy);}
+  .cert-form input{
+    padding:12px 14px; border:1.5px solid var(--line); border-radius:8px; font-size:0.95rem;
+    font-family:inherit; color:var(--ink); background:var(--bg);
+  }
+  .cert-form input:focus{border-color:var(--gold-deep); outline:none;}
+  .cert-form button{white-space:nowrap;}
+  .cert-preview-wrap{margin-top:22px;}
+  .cert-preview-wrap canvas{
+    width:100%; height:auto; display:block; border-radius:10px; border:1px solid var(--line); box-shadow:var(--shadow);
+  }
+  .cert-actions{display:flex; gap:12px; margin-top:16px; flex-wrap:wrap;}
+  .cert-actions a, .cert-actions button{text-decoration:none;}
+  .cert-note-small{font-size:0.78rem; color:var(--ink-soft); margin-top:10px;}
+
+  .course-grid{display:grid; grid-template-columns:repeat(2,1fr); gap:18px;}
+  @media(max-width:760px){ .course-grid{grid-template-columns:1fr;} }
+
+  .card{
+    background:var(--panel); border-radius:var(--radius); padding:24px;
+    border:1px solid var(--line); box-shadow:var(--shadow); display:flex; flex-direction:column; gap:14px;
+  }
+  .card-top{display:flex; justify-content:space-between; align-items:flex-start; gap:12px;}
+  .modnum{
+    font-family:'IBM Plex Mono', monospace; font-size:0.72rem; color:var(--teal);
+    border:1px solid var(--teal); border-radius:999px; padding:4px 10px; white-space:nowrap;
+  }
+  .card h3{font-size:1.28rem; line-height:1.25;}
+  .card p{color:var(--ink-soft); font-size:0.95rem; margin:0;}
+  .card-meta{display:flex; gap:16px; font-size:0.82rem; color:var(--ink-soft); font-family:'IBM Plex Mono', monospace;}
+  .card-foot{
+    margin-top:auto; display:flex; align-items:center; justify-content:space-between;
+    padding-top:18px; border-top:1px dashed var(--line);
+  }
+  .price{font-family:'Fraunces', serif; font-size:1.5rem; font-weight:600; color:var(--navy);}
+  .price span{font-size:0.78rem; font-family:'Inter'; color:var(--ink-soft); font-weight:500;}
+  .btn-enroll{
+    background:var(--blue); color:#fff; border:none; padding:12px 20px; border-radius:6px;
+    font-weight:600; font-size:0.85rem; cursor:pointer; transition:background .15s;
+    text-decoration:none; display:inline-flex; align-items:center; white-space:nowrap;
+  }
+  .btn-enroll:hover{background:var(--blue-deep);}
+  .btn-enroll:disabled{background:var(--lock-grey); cursor:not-allowed;}
+
+  /* ---------- COURSE PROGRESS ---------- */
+  .progress-track{height:6px; background:var(--bg-alt); border:1px solid var(--line); border-radius:999px; overflow:hidden; margin-top:2px;}
+  .progress-fill{height:100%; width:0%; background:linear-gradient(90deg, var(--teal), var(--gold)); border-radius:999px; transition:width .35s ease;}
+  .progress-label{display:flex; justify-content:space-between; align-items:baseline; margin-top:6px; font-family:'IBM Plex Mono', monospace; font-size:0.72rem; color:var(--ink-soft);}
+  .progress-label .ppct{font-weight:600; color:var(--teal);}
+  .lesson-toggle{margin-top:2px;}
+  .lesson-toggle summary{
+    cursor:pointer; font-size:0.82rem; font-weight:600; color:var(--navy); padding:4px 0;
+    list-style:none; display:flex; align-items:center; gap:6px; user-select:none;
+  }
+  .lesson-toggle summary::-webkit-details-marker{display:none;}
+  .lesson-toggle summary::before{content:"▸"; color:var(--gold-deep); font-size:0.7rem; transition:transform .15s ease;}
+  .lesson-toggle[open] summary::before{transform:rotate(90deg);}
+  .lesson-list{list-style:none; margin:6px 0 0; padding:10px 12px; display:flex; flex-direction:column; gap:9px; background:var(--bg-alt); border-radius:9px;}
+  .lesson-list li label{display:flex; align-items:flex-start; gap:9px; font-size:0.85rem; color:var(--ink); cursor:pointer; line-height:1.35;}
+  .lesson-list input[type="checkbox"]{width:16px; height:16px; margin-top:1px; accent-color:var(--teal); cursor:pointer; flex-shrink:0;}
+  .lesson-list li:has(input:checked) label{color:var(--ink-soft); text-decoration:line-through; text-decoration-color:var(--line);}
+  .lesson-list input[type="checkbox"]:disabled{cursor:not-allowed; accent-color:var(--lock-grey);}
+  .lesson-list li:has(input:disabled) label{color:var(--lock-grey); cursor:not-allowed;}
+  .lesson-list li .lesson-lock{margin-left:auto; flex-shrink:0; width:14px; height:14px; color:var(--lock-grey);}
+  .lesson-locked{
+    display:none; flex-direction:column; align-items:center; text-align:center; gap:10px;
+    margin:6px 0 0; padding:22px 16px; background:var(--bg-alt); border-radius:9px;
+  }
+  .lesson-locked svg{width:24px; height:24px; color:var(--lock-grey);}
+  .lesson-locked p{font-size:0.84rem; color:var(--ink-soft); margin:0; max-width:34ch;}
+  .lesson-locked-btn{font-size:0.82rem; padding:9px 20px;}
+  .cnum-done{background:var(--teal) !important; color:#fff !important; border-color:var(--teal) !important;}
+
+  /* ---------- SIGNUP FORM ---------- */
+  .signup-form{
+    max-width:640px; background:var(--panel); border:1px solid var(--line); border-radius:var(--radius);
+    padding:30px; box-shadow:var(--shadow);
+  }
+  .form-row{display:flex; gap:16px; margin-bottom:16px;}
+  @media(max-width:600px){ .form-row{flex-direction:column; gap:16px;} }
+  .form-group{flex:1; display:flex; flex-direction:column; gap:6px;}
+  .form-group label{font-size:0.85rem; font-weight:600; color:var(--navy);}
+  .form-group input{
+    padding:12px 14px; border:1.5px solid var(--line); border-radius:8px;
+    font-size:0.95rem; font-family:inherit; color:var(--ink); background:var(--bg);
+  }
+  .form-group input:focus{border-color:var(--gold-deep); outline:none;}
+  .form-note{font-size:0.8rem; color:var(--ink-soft); text-align:center; margin-top:14px;}
+
+  /* ---------- PAYMENT BUTTONS ---------- */
+  .pay-options{display:flex; flex-direction:column; gap:12px; margin-top:4px;}
+  .pay-divider{display:flex; align-items:center; gap:12px; color:var(--ink-soft); font-size:0.78rem; font-family:'IBM Plex Mono', monospace; text-transform:uppercase; letter-spacing:.08em; margin:2px 0;}
+  .pay-divider::before, .pay-divider::after{content:""; flex:1; height:1px; background:var(--line);}
+  .btn-pay{
+    width:100%; display:flex; align-items:center; justify-content:center; gap:10px;
+    border:none; border-radius:12px; padding:15px 18px; font-weight:700; font-size:0.98rem;
+    cursor:pointer; transition:transform .15s ease, box-shadow .15s ease; font-family:inherit;
+  }
+  .btn-pay:hover{transform:translateY(-1px);}
+  .btn-moncash{background:var(--gold); color:var(--navy-deep); box-shadow:0 14px 30px -14px rgba(217,164,65,0.65);}
+  .btn-unibank{background:#0A2C5C; color:#fff; box-shadow:0 14px 30px -14px rgba(10,44,92,0.55);}
+  .pay-logo{flex-shrink:0; display:flex; align-items:center; justify-content:center; border-radius:7px; background:#fff; padding:2px; box-shadow:0 0 0 1px rgba(0,0,0,0.06);}
+  .pay-logo img{display:block; border-radius:5px;}
+  .btn-unibank .unibank-note{font-size:0.72rem; font-weight:500; opacity:0.85; display:block; font-family:'Inter';}
+  .form-note.alt{margin-top:10px;}
+  .pay-account-numbers{
+    margin-top:14px; background:var(--bg-alt); border:1px solid var(--line); border-radius:10px;
+    padding:12px 16px; display:flex; flex-direction:column; gap:8px;
+  }
+  .pay-account-row{display:flex; align-items:center; justify-content:space-between; gap:12px; font-size:0.85rem;}
+  .pay-account-label{color:var(--ink-soft); font-weight:600;}
+  .pay-account-value{color:var(--navy); font-weight:700; letter-spacing:.02em;}
+
+  /* ---------- HOW IT WORKS ---------- */
+  .steps{display:grid; grid-template-columns:repeat(3,1fr); gap:20px;}
+  @media(max-width:760px){ .steps{grid-template-columns:1fr;} }
+  .step{position:relative; padding-top:8px;}
+  .step-num{
+    font-family:'Fraunces', serif; font-size:2.6rem; color:var(--gold); font-weight:600; line-height:1;
+  }
+  .step h3{margin-top:14px; font-size:1.1rem;}
+  .step p{color:var(--ink-soft); font-size:0.94rem; margin-top:8px;}
+  .step-num-tag{font-family:'IBM Plex Mono',monospace; font-size:.7rem; color:var(--ink-soft); text-transform:uppercase; letter-spacing:.1em;}
+
+  /* ---------- TRUST NOTE ---------- */
+  .note{
+    background:#FFF9EC; border:1px solid #EAD9AE; border-radius:var(--radius);
+    padding:26px 28px; display:flex; gap:16px; align-items:flex-start; margin-top:16px;
+  }
+  .note svg{width:22px;height:22px; flex-shrink:0; margin-top:2px; color:var(--gold-deep);}
+  .note p{margin:0; font-size:0.92rem; color:var(--ink-soft);}
+  .note strong{color:var(--navy);}
+
+  /* ---------- MODAL ---------- */
+  .modal-overlay{
+    position:fixed; inset:0; background:rgba(14,23,41,0.55); backdrop-filter:blur(2px);
+    display:none; align-items:center; justify-content:center; z-index:100; padding:20px;
+  }
+  .modal-overlay.open{display:flex;}
+  .modal-box{
+    background:var(--panel); border-radius:var(--radius); max-width:520px; width:100%;
+    padding:30px; box-shadow:var(--shadow); position:relative; max-height:90vh; overflow-y:auto;
+  }
+  .modal-close{
+    position:absolute; top:16px; right:16px; background:var(--bg-alt); border:none; border-radius:999px;
+    width:34px; height:34px; display:flex; align-items:center; justify-content:center; cursor:pointer;
+    color:var(--ink-soft);
+  }
+  .modal-close:hover{color:var(--navy); background:var(--line);}
+  .modal-eyebrow{font-family:'IBM Plex Mono', monospace; font-size:0.7rem; letter-spacing:.14em; text-transform:uppercase; color:var(--teal); margin-bottom:6px;}
+  .modal-box h3{font-size:1.35rem; padding-right:30px;}
+  .modal-price{font-family:'Fraunces', serif; font-size:1.15rem; color:var(--gold-deep); font-weight:600; margin-top:6px;}
+  .modal-box .signup-form{box-shadow:none; border:none; padding:0; margin-top:20px; max-width:none;}
+
+  /* ---------- FOOTER ---------- */
+  footer{background:var(--navy-deep); color:#B9C0D4; padding:36px 0 22px;}
+  .foot-top{display:flex; justify-content:space-between; flex-wrap:wrap; gap:24px; padding-bottom:24px; border-bottom:1px solid rgba(255,255,255,0.1);}
+  footer .brand-name{color:#fff;}
+  .foot-contact{display:flex; flex-direction:column; gap:8px; font-size:0.92rem;}
+  .foot-contact a{color:#B9C0D4; text-decoration:none;}
+  .foot-contact a:hover{color:#fff;}
+  .foot-bottom{padding-top:24px; font-size:0.8rem; display:flex; justify-content:space-between; flex-wrap:wrap; gap:10px; color:#7C87A3;}
+
+</style>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+</head>
+<body>
+
+<header>
+  <div class="wrap nav">
+    <a href="#" class="brand">
+      <svg viewBox="0 0 40 40" fill="none">
+        <path d="M20 4 L33 9 V19 C33 28 27 34 20 36.5 C13 34 7 28 7 19 V9 Z" stroke="#16223E" stroke-width="1.6" fill="#FAF9F5"/>
+        <path d="M11 17 C14.5 15.5 17.5 15.5 20 17 C22.5 15.5 25.5 15.5 29 17 V26 C25.5 24.5 22.5 24.5 20 26 C17.5 24.5 14.5 24.5 11 26 Z" stroke="#16223E" stroke-width="1.3" fill="none" stroke-linejoin="round"/>
+        <line x1="20" y1="17" x2="20" y2="26" stroke="#16223E" stroke-width="1.3"/>
+        <path d="M20 4 L23 9 L20 9.6 L17 9 Z" fill="#D9A441"/>
+      </svg>
+      <span class="brand-text">
+        <span class="brand-name">High-Academy</span>
+        <span class="brand-tag">Formation S&amp;E</span>
+      </span>
+    </a>
+    <div class="nav-explore">
+      Explorer
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><polyline points="6 9 12 15 18 9"/></svg>
+    </div>
+    <form class="nav-search" role="search" id="siteSearchForm">
+      <button type="submit" class="nav-search-btn" aria-label="Rechercher">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="7"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+      </button>
+      <input type="text" id="siteSearchInput" class="nav-search-input" placeholder="Que voulez-vous apprendre ?" autocomplete="off">
+    </form>
+    <nav class="links" id="navLinks">
+      <a href="#kous">Formations</a>
+      <a href="#kous">Inscription</a>
+      <a href="#certificat">Certificats</a>
+      <a href="#kontak">Contact</a>
+      <a href="#" id="loginNavLinkMobile" onclick="openLoginModal(); return false;">Connexion</a>
+    </nav>
+    <div class="nav-right">
+      <button type="button" class="btn-login" id="loginNavBtn" onclick="openLoginModal()">Connexion</button>
+      <a class="btn-nav" href="#kous">S'inscrire maintenant</a>
+      <button class="menu-toggle" id="menuToggle" type="button" aria-label="Ouvrir le menu" aria-expanded="false" aria-controls="navLinks">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
+      </button>
+    </div>
+  </div>
+</header>
+
+<section class="hero">
+  <div class="wrap hero-grid">
+    <div class="hero-illustration seal-wrap">
+      <svg viewBox="0 0 400 400" fill="none">
+        <circle cx="200" cy="195" r="150" stroke="#DEDAD0" stroke-width="1.5"/>
+        <circle cx="200" cy="195" r="118" stroke="#2F6F52" stroke-width="1" stroke-dasharray="2 6" opacity="0.55"/>
+
+        <g id="laurelLeft" fill="#2F6F52">
+          <path d="M115 262 C100 230 92 190 100 150 C109 118 128 96 158 84" stroke="#2F6F52" stroke-width="1.4" fill="none" stroke-linecap="round" opacity="0.65"/>
+          <ellipse cx="112" cy="255" rx="11" ry="5" transform="rotate(-35 112 255)"/>
+          <ellipse cx="99" cy="225" rx="11" ry="5" transform="rotate(-20 99 225)"/>
+          <ellipse cx="93" cy="193" rx="11" ry="5" transform="rotate(0 93 193)"/>
+          <ellipse cx="97" cy="161" rx="11" ry="5" transform="rotate(20 97 161)"/>
+          <ellipse cx="109" cy="133" rx="11" ry="5" transform="rotate(40 109 133)"/>
+          <ellipse cx="128" cy="110" rx="11" ry="5" transform="rotate(58 128 110)"/>
+          <ellipse cx="153" cy="94" rx="10" ry="5" transform="rotate(72 153 94)"/>
+        </g>
+        <use href="#laurelLeft" transform="matrix(-1,0,0,1,400,0)"/>
+
+        <path d="M200 70 L235 85 V140 C235 175 218 200 200 212 C182 200 165 175 165 140 V85 Z" stroke="#16223E" stroke-width="2.2" fill="#FFFFFF"/>
+        <path d="M178 122 C186 118 194 118 200 122 C206 118 214 118 222 122 V155 C214 151 206 151 200 155 C194 151 186 151 178 155 Z" stroke="#16223E" stroke-width="1.6" fill="none" stroke-linejoin="round"/>
+        <line x1="200" y1="122" x2="200" y2="155" stroke="#16223E" stroke-width="1.6"/>
+        <g id="crestStar">
+          <path d="M200 70 L212 85 L200 90 L188 85 Z" fill="#D9A441"/>
+        </g>
+
+        <g id="ribbon">
+          <path d="M138 225 L262 225 L246 245 L262 265 L138 265 L154 245 Z" fill="#16223E"/>
+          <text x="200" y="240" text-anchor="middle" font-family="IBM Plex Mono" font-size="11" fill="#D9A441" letter-spacing="2">HIGH·ACADEMY</text>
+          <text x="200" y="256" text-anchor="middle" font-family="IBM Plex Mono" font-size="8.5" fill="#CBD3E1" letter-spacing="2.5">CERTIFICAT S&amp;E</text>
+        </g>
+      </svg>
+    </div>
+    <div>
+      <div class="eyebrow">Académie certifiée · Haïti</div>
+      <h1>Apprenez à piloter des projets comme un professionnel du <em>Suivi &amp; Évaluation</em>.</h1>
+      <p class="lead">High-Academy est une plateforme de formation qui aide les gestionnaires de projets, agents d'ONG et cadres de l'État à construire des outils solides pour suivre, mesurer et rapporter les résultats de leurs projets — pensée pour la réalité haïtienne.</p>
+      <div class="hero-cta">
+        <button class="btn-primary" onclick="document.getElementById('kous').scrollIntoView({behavior:'smooth'})">Voir les formations</button>
+        <a href="#kijan" class="btn-ghost">Comment fonctionne le paiement →</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="strip">
+  <div class="wrap">
+    <div class="strip-item"><b>4</b> modules de formation</div>
+    <div class="strip-item"><b>100%</b> en ligne, à votre rythme</div>
+    <div class="strip-item"><b>&lt;24h</b> pour la confirmation d'accès</div>
+    <div class="strip-item"><b>2</b> moyens de paiement</div>
+  </div>
+</div>
+
+<section style="padding:44px 0 0;">
+  <div class="wrap pill-row">
+    <a class="pill" href="#kous">
+      <span class="pill-label">Lancer une nouvelle<br>carrière en S&amp;E</span>
+      <svg class="pill-icon" viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M24 6 L38 14 V26 C38 34 32 40 24 43 C16 40 10 34 10 26 V14 Z"/><path d="M24 20 v10 M19 25 h10"/></svg>
+    </a>
+    <a class="pill" href="#kous">
+      <span class="pill-label">Acquérir des<br>compétences pratiques</span>
+      <svg class="pill-icon" viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="1.6"><rect x="8" y="10" width="32" height="24" rx="2"/><path d="M8 18 h32 M16 26 h8"/></svg>
+    </a>
+    <a class="pill" href="#certificat">
+      <span class="pill-label">Obtenir un certificat<br>module par module</span>
+      <svg class="pill-icon" viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="1.6"><circle cx="24" cy="18" r="10"/><path d="M18 27 L15 42 L24 37 L33 42 L30 27"/></svg>
+    </a>
+  </div>
+</section>
+
+<section id="kijan">
+  <div class="wrap">
+    <div class="sec-head">
+      <div class="eyebrow">Paiement</div>
+      <h2>Comment fonctionne l'inscription</h2>
+      <p>Remplissez le formulaire, puis choisissez de payer avec MonCash ou avec UNIBANKOnline. Simple, sans frais cachés.</p>
+    </div>
+    <div class="steps">
+      <div class="step">
+        <div class="step-num-tag">Étape</div>
+        <div class="step-num">01</div>
+        <h3>Cliquez sur «S'inscrire» pour un module</h3>
+        <p>Choisissez le module que vous voulez et cliquez sur le bouton «S'inscrire» pour ouvrir le formulaire d'inscription.</p>
+      </div>
+      <div class="step">
+        <div class="step-num-tag">Étape</div>
+        <div class="step-num">02</div>
+        <h3>Remplissez le formulaire &amp; choisissez votre moyen de paiement</h3>
+        <p>Indiquez votre nom, prénom, téléphone et email. Nous recevons vos informations, puis vous êtes redirigé vers MonCash ou vers UNIBANKOnline selon votre choix.</p>
+      </div>
+      <div class="step">
+        <div class="step-num-tag">Étape</div>
+        <div class="step-num">03</div>
+        <h3>Complétez le paiement</h3>
+        <p>Terminez le paiement dans l'application MonCash ou sur le portail UNIBANKOnline. Vous recevez l'accès en moins de 24h après confirmation.</p>
+      </div>
+    </div>
+
+    <div class="note">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="12" r="9"/><path d="M12 8v5M12 16h.01"/></svg>
+      <p><strong>Important :</strong> comme le paiement se fait sur un compte personnel, la vérification est faite manuellement. Votre place dans la formation n'est confirmée qu'après réception &amp; vérification du paiement — ne supprimez donc aucun message de confirmation (MonCash ou UNIBANKOnline) tant que vous n'avez pas reçu votre accès. Pour toute question, contactez-nous sur WhatsApp.</p>
+    </div>
+  </div>
+</section>
+
+<section class="courses" id="kous">
+  <div class="wrap">
+    <div class="sec-head">
+      <div class="eyebrow">Catalogue</div>
+      <h2>Choisissez la formation qui correspond à vos besoins</h2>
+      <p>Chaque module s'appuie sur le précédent — en commençant par les fondamentaux, jusqu'au rapport des résultats de projet.</p>
+    </div>
+
+    <div class="course-body">
+      <aside class="curriculum" aria-label="Plan du cours">
+        <div class="curriculum-head">
+          <div class="eyebrow">Plan du cours</div>
+          <h3>Parcours complet S&amp;E</h3>
+        </div>
+        <ul class="curriculum-list">
+          <li><a href="#kous"><span class="cnum" id="cnum-m1" data-num="01">01</span><span class="clabel">Introduction au Suivi &amp; Évaluation<small>4 leçons · Quiz inclus</small></span></a></li>
+          <li><a href="#kous"><span class="cnum" id="cnum-m2" data-num="02">02</span><span class="clabel">Cadre Logique &amp; Indicateurs<small>5 leçons · Quiz inclus</small></span></a></li>
+          <li><a href="#kous"><span class="cnum" id="cnum-m3" data-num="03">03</span><span class="clabel">Collecte &amp; Analyse de Données<small>6 leçons · Quiz inclus</small></span></a></li>
+          <li><a href="#kous"><span class="cnum" id="cnum-m4" data-num="04">04</span><span class="clabel">Rapport des Résultats<small>4 leçons · Quiz inclus</small></span></a></li>
+        </ul>
+        <div class="curriculum-divider"></div>
+        <a href="#certificat" class="curriculum-cert" id="certLink">
+          <span class="cnum">🎓</span>
+          <span class="clabel">Mes certificats<small id="certSub">Un certificat se débloque après chaque module</small></span>
+        </a>
+      </aside>
+
+      <div class="course-grid" id="courseGrid">
+        <p class="search-no-results" id="searchNoResults">Aucun module ne correspond à votre recherche. Essayez un autre mot-clé, par exemple « indicateurs » ou « données ».</p>
+
+        <div class="card" id="card-m1">
+          <div class="card-top">
+            <h3>Introduction au Suivi &amp; Évaluation de Projet</h3>
+            <span class="modnum">MODULE 01</span>
+          </div>
+          <p>Comprenez les concepts de base du S&amp;E, la différence entre suivi et évaluation, et leur rôle dans le cycle d'un projet.</p>
+          <div class="card-meta"><span>4 leçons</span><span>~3h</span><span>Niveau : Débutant</span></div>
+          <div class="progress-track"><div class="progress-fill" id="pf-m1"></div></div>
+          <div class="progress-label"><span id="ptxt-m1">0/4 leçons terminées</span><span class="ppct" id="ppct-m1">0%</span></div>
+          <a href="#cert-m1" id="certmini-m1" style="display:none; font-size:0.8rem; font-weight:700; color:var(--teal); text-decoration:none;">🎓 Certificat du module débloqué — cliquez pour le générer</a>
+          <details class="lesson-toggle">
+            <summary>Voir le contenu du module</summary>
+            <ul class="lesson-list" id="lessonList-m1">
+              <li><label><input type="checkbox" data-module="m1" data-lesson="0"> Qu'est-ce que le Suivi &amp; Évaluation ?</label></li>
+              <li><label><input type="checkbox" data-module="m1" data-lesson="1"> Différence entre suivi et évaluation</label></li>
+              <li><label><input type="checkbox" data-module="m1" data-lesson="2"> Le cycle de vie d'un projet</label></li>
+              <li><label><input type="checkbox" data-module="m1" data-lesson="3"> Quiz — Introduction au S&amp;E</label></li>
+            </ul>
+            <div class="lesson-locked" id="lessonLocked-m1">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="5" y="11" width="14" height="9" rx="1.5"/><path d="M8 11V8a4 4 0 0 1 8 0v3"/></svg>
+              <p>Le contenu détaillé de ce module est réservé aux personnes inscrites. Inscrivez-vous, puis connectez-vous avec le code d'accès reçu après vérification du paiement.</p>
+              <button type="button" class="btn-ghost lesson-locked-btn" onclick="openEnskriModal('Introduction au Suivi &amp; Évaluation de Projet', '2 500 HTG')">S'inscrire pour débloquer</button>
+            </div>
+          </details>
+          <div class="card-foot">
+            <div class="price">2 500<span> HTG</span></div>
+            <button type="button" class="btn-enroll" onclick="openEnskriModal('Introduction au Suivi &amp; Évaluation de Projet', '2 500 HTG')">S'inscrire</button>
+          </div>
+        </div>
+
+        <div class="card" id="card-m2">
+          <div class="card-top">
+            <h3>Cadre Logique &amp; Indicateurs de Performance</h3>
+            <span class="modnum">MODULE 02</span>
+          </div>
+          <p>Apprenez à bâtir un Cadre Logique (logframe), définir des indicateurs SMART et les relier aux objectifs du projet.</p>
+          <div class="card-meta"><span>5 leçons</span><span>~4h</span><span>Niveau : Intermédiaire</span></div>
+          <div class="progress-track"><div class="progress-fill" id="pf-m2"></div></div>
+          <div class="progress-label"><span id="ptxt-m2">0/5 leçons terminées</span><span class="ppct" id="ppct-m2">0%</span></div>
+          <a href="#cert-m2" id="certmini-m2" style="display:none; font-size:0.8rem; font-weight:700; color:var(--teal); text-decoration:none;">🎓 Certificat du module débloqué — cliquez pour le générer</a>
+          <details class="lesson-toggle">
+            <summary>Voir le contenu du module</summary>
+            <ul class="lesson-list" id="lessonList-m2">
+              <li><label><input type="checkbox" data-module="m2" data-lesson="0"> Construire un Cadre Logique (logframe)</label></li>
+              <li><label><input type="checkbox" data-module="m2" data-lesson="1"> Définir des indicateurs SMART</label></li>
+              <li><label><input type="checkbox" data-module="m2" data-lesson="2"> Relier indicateurs et objectifs</label></li>
+              <li><label><input type="checkbox" data-module="m2" data-lesson="3"> Étude de cas pratique</label></li>
+              <li><label><input type="checkbox" data-module="m2" data-lesson="4"> Quiz — Cadre Logique &amp; Indicateurs</label></li>
+            </ul>
+            <div class="lesson-locked" id="lessonLocked-m2">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="5" y="11" width="14" height="9" rx="1.5"/><path d="M8 11V8a4 4 0 0 1 8 0v3"/></svg>
+              <p>Le contenu détaillé de ce module est réservé aux personnes inscrites. Inscrivez-vous, puis connectez-vous avec le code d'accès reçu après vérification du paiement.</p>
+              <button type="button" class="btn-ghost lesson-locked-btn" onclick="openEnskriModal('Cadre Logique &amp; Indicateurs de Performance', '3 000 HTG')">S'inscrire pour débloquer</button>
+            </div>
+          </details>
+          <div class="card-foot">
+            <div class="price">3 000<span> HTG</span></div>
+            <button type="button" class="btn-enroll" onclick="openEnskriModal('Cadre Logique &amp; Indicateurs de Performance', '3 000 HTG')">S'inscrire</button>
+          </div>
+        </div>
+
+        <div class="card" id="card-m3">
+          <div class="card-top">
+            <h3>Collecte &amp; Analyse de Données sur le Terrain</h3>
+            <span class="modnum">MODULE 03</span>
+          </div>
+          <p>Méthodes pour collecter des données fiables sur le terrain, outils numériques gratuits, et bases d'analyse quantitative/qualitative.</p>
+          <div class="card-meta"><span>6 leçons</span><span>~5h</span><span>Niveau : Intermédiaire</span></div>
+          <div class="progress-track"><div class="progress-fill" id="pf-m3"></div></div>
+          <div class="progress-label"><span id="ptxt-m3">0/6 leçons terminées</span><span class="ppct" id="ppct-m3">0%</span></div>
+          <a href="#cert-m3" id="certmini-m3" style="display:none; font-size:0.8rem; font-weight:700; color:var(--teal); text-decoration:none;">🎓 Certificat du module débloqué — cliquez pour le générer</a>
+          <details class="lesson-toggle">
+            <summary>Voir le contenu du module</summary>
+            <ul class="lesson-list" id="lessonList-m3">
+              <li><label><input type="checkbox" data-module="m3" data-lesson="0"> Méthodes de collecte sur le terrain</label></li>
+              <li><label><input type="checkbox" data-module="m3" data-lesson="1"> Outils numériques gratuits (KoboToolbox, ODK)</label></li>
+              <li><label><input type="checkbox" data-module="m3" data-lesson="2"> Échantillonnage et fiabilité des données</label></li>
+              <li><label><input type="checkbox" data-module="m3" data-lesson="3"> Analyse quantitative de base</label></li>
+              <li><label><input type="checkbox" data-module="m3" data-lesson="4"> Analyse qualitative de base</label></li>
+              <li><label><input type="checkbox" data-module="m3" data-lesson="5"> Quiz — Collecte &amp; Analyse de Données</label></li>
+            </ul>
+            <div class="lesson-locked" id="lessonLocked-m3">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="5" y="11" width="14" height="9" rx="1.5"/><path d="M8 11V8a4 4 0 0 1 8 0v3"/></svg>
+              <p>Le contenu détaillé de ce module est réservé aux personnes inscrites. Inscrivez-vous, puis connectez-vous avec le code d'accès reçu après vérification du paiement.</p>
+              <button type="button" class="btn-ghost lesson-locked-btn" onclick="openEnskriModal('Collecte &amp; Analyse de Données sur le Terrain', '3 500 HTG')">S'inscrire pour débloquer</button>
+            </div>
+          </details>
+          <div class="card-foot">
+            <div class="price">3 500<span> HTG</span></div>
+            <button type="button" class="btn-enroll" onclick="openEnskriModal('Collecte &amp; Analyse de Données sur le Terrain', '3 500 HTG')">S'inscrire</button>
+          </div>
+        </div>
+
+        <div class="card" id="card-m4">
+          <div class="card-top">
+            <h3>Rapport des Résultats &amp; Communication avec les Bailleurs</h3>
+            <span class="modnum">MODULE 04</span>
+          </div>
+          <p>Structurez un rapport S&amp;E convaincant, présentez les données clés, et communiquez efficacement l'impact du projet.</p>
+          <div class="card-meta"><span>4 leçons</span><span>~3h</span><span>Niveau : Avancé</span></div>
+          <div class="progress-track"><div class="progress-fill" id="pf-m4"></div></div>
+          <div class="progress-label"><span id="ptxt-m4">0/4 leçons terminées</span><span class="ppct" id="ppct-m4">0%</span></div>
+          <a href="#cert-m4" id="certmini-m4" style="display:none; font-size:0.8rem; font-weight:700; color:var(--teal); text-decoration:none;">🎓 Certificat du module débloqué — cliquez pour le générer</a>
+          <details class="lesson-toggle">
+            <summary>Voir le contenu du module</summary>
+            <ul class="lesson-list" id="lessonList-m4">
+              <li><label><input type="checkbox" data-module="m4" data-lesson="0"> Structurer un rapport S&amp;E</label></li>
+              <li><label><input type="checkbox" data-module="m4" data-lesson="1"> Présenter les données clés</label></li>
+              <li><label><input type="checkbox" data-module="m4" data-lesson="2"> Communiquer l'impact aux bailleurs</label></li>
+              <li><label><input type="checkbox" data-module="m4" data-lesson="3"> Quiz — Rapport des Résultats</label></li>
+            </ul>
+            <div class="lesson-locked" id="lessonLocked-m4">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="5" y="11" width="14" height="9" rx="1.5"/><path d="M8 11V8a4 4 0 0 1 8 0v3"/></svg>
+              <p>Le contenu détaillé de ce module est réservé aux personnes inscrites. Inscrivez-vous, puis connectez-vous avec le code d'accès reçu après vérification du paiement.</p>
+              <button type="button" class="btn-ghost lesson-locked-btn" onclick="openEnskriModal('Rapport des Résultats &amp; Communication avec les Bailleurs', '4 000 HTG')">S'inscrire pour débloquer</button>
+            </div>
+          </details>
+          <div class="card-foot">
+            <div class="price">4 000<span> HTG</span></div>
+            <button type="button" class="btn-enroll" onclick="openEnskriModal('Rapport des Résultats &amp; Communication avec les Bailleurs', '4 000 HTG')">S'inscrire</button>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="certificat">
+  <div class="wrap">
+    <div class="sec-head">
+      <div class="eyebrow">Certification</div>
+      <h2>Un certificat après chaque module</h2>
+      <p>Les 4 modules sont indépendants : vous pouvez suivre celui de votre choix, dans l'ordre qui vous convient. À l'intérieur d'un même module, les leçons se débloquent dans l'ordre — impossible de passer à la leçon suivante avant d'avoir terminé la précédente. Dès qu'un module est complété à 100%, son certificat se débloque immédiatement.</p>
+    </div>
+
+    <div class="cert-grid">
+
+      <div class="cert-generator" id="cert-m1">
+        <div class="cert-generator-head"><span class="cnum">01</span><h3>Introduction au Suivi &amp; Évaluation</h3></div>
+        <p class="cert-locked-msg" id="certLockedMsg-m1">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="5" y="11" width="14" height="9" rx="1.5"/><path d="M8 11V8a4 4 0 0 1 8 0v3"/></svg>
+          <span>Terminez les 4 leçons du module 01 pour débloquer ce certificat. (<span id="certLockedProgress-m1">0/4</span>)</span>
+        </p>
+        <div class="cert-form" id="certForm-m1" style="display:none;">
+          <div class="form-group">
+            <label for="certName-m1">Votre nom complet</label>
+            <input type="text" id="certName-m1" placeholder="Ex: Jean Baptiste">
+          </div>
+          <button type="button" class="btn-primary" id="certGenerateBtn-m1">Générer mon certificat</button>
+        </div>
+        <div class="cert-preview-wrap" id="certPreviewWrap-m1" style="display:none;">
+          <canvas id="certCanvas-m1" width="1200" height="850" aria-label="Aperçu du certificat — module 01"></canvas>
+          <div class="cert-actions">
+            <button type="button" id="certDownloadLink-m1" class="btn-primary">Télécharger (PDF)</button>
+            <button type="button" class="btn-ghost" id="certEditBtn-m1">Modifier le nom</button>
+          </div>
+        </div>
+      </div>
+
+      <div class="cert-generator" id="cert-m2">
+        <div class="cert-generator-head"><span class="cnum">02</span><h3>Cadre Logique &amp; Indicateurs</h3></div>
+        <p class="cert-locked-msg" id="certLockedMsg-m2">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="5" y="11" width="14" height="9" rx="1.5"/><path d="M8 11V8a4 4 0 0 1 8 0v3"/></svg>
+          <span>Terminez les 5 leçons du module 02 pour débloquer ce certificat. (<span id="certLockedProgress-m2">0/5</span>)</span>
+        </p>
+        <div class="cert-form" id="certForm-m2" style="display:none;">
+          <div class="form-group">
+            <label for="certName-m2">Votre nom complet</label>
+            <input type="text" id="certName-m2" placeholder="Ex: Jean Baptiste">
+          </div>
+          <button type="button" class="btn-primary" id="certGenerateBtn-m2">Générer mon certificat</button>
+        </div>
+        <div class="cert-preview-wrap" id="certPreviewWrap-m2" style="display:none;">
+          <canvas id="certCanvas-m2" width="1200" height="850" aria-label="Aperçu du certificat — module 02"></canvas>
+          <div class="cert-actions">
+            <button type="button" id="certDownloadLink-m2" class="btn-primary">Télécharger (PDF)</button>
+            <button type="button" class="btn-ghost" id="certEditBtn-m2">Modifier le nom</button>
+          </div>
+        </div>
+      </div>
+
+      <div class="cert-generator" id="cert-m3">
+        <div class="cert-generator-head"><span class="cnum">03</span><h3>Collecte &amp; Analyse de Données</h3></div>
+        <p class="cert-locked-msg" id="certLockedMsg-m3">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="5" y="11" width="14" height="9" rx="1.5"/><path d="M8 11V8a4 4 0 0 1 8 0v3"/></svg>
+          <span>Terminez les 6 leçons du module 03 pour débloquer ce certificat. (<span id="certLockedProgress-m3">0/6</span>)</span>
+        </p>
+        <div class="cert-form" id="certForm-m3" style="display:none;">
+          <div class="form-group">
+            <label for="certName-m3">Votre nom complet</label>
+            <input type="text" id="certName-m3" placeholder="Ex: Jean Baptiste">
+          </div>
+          <button type="button" class="btn-primary" id="certGenerateBtn-m3">Générer mon certificat</button>
+        </div>
+        <div class="cert-preview-wrap" id="certPreviewWrap-m3" style="display:none;">
+          <canvas id="certCanvas-m3" width="1200" height="850" aria-label="Aperçu du certificat — module 03"></canvas>
+          <div class="cert-actions">
+            <button type="button" id="certDownloadLink-m3" class="btn-primary">Télécharger (PDF)</button>
+            <button type="button" class="btn-ghost" id="certEditBtn-m3">Modifier le nom</button>
+          </div>
+        </div>
+      </div>
+
+      <div class="cert-generator" id="cert-m4">
+        <div class="cert-generator-head"><span class="cnum">04</span><h3>Rapport des Résultats</h3></div>
+        <p class="cert-locked-msg" id="certLockedMsg-m4">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="5" y="11" width="14" height="9" rx="1.5"/><path d="M8 11V8a4 4 0 0 1 8 0v3"/></svg>
+          <span>Terminez les 4 leçons du module 04 pour débloquer ce certificat. (<span id="certLockedProgress-m4">0/4</span>)</span>
+        </p>
+        <div class="cert-form" id="certForm-m4" style="display:none;">
+          <div class="form-group">
+            <label for="certName-m4">Votre nom complet</label>
+            <input type="text" id="certName-m4" placeholder="Ex: Jean Baptiste">
+          </div>
+          <button type="button" class="btn-primary" id="certGenerateBtn-m4">Générer mon certificat</button>
+        </div>
+        <div class="cert-preview-wrap" id="certPreviewWrap-m4" style="display:none;">
+          <canvas id="certCanvas-m4" width="1200" height="850" aria-label="Aperçu du certificat — module 04"></canvas>
+          <div class="cert-actions">
+            <button type="button" id="certDownloadLink-m4" class="btn-primary">Télécharger (PDF)</button>
+            <button type="button" class="btn-ghost" id="certEditBtn-m4">Modifier le nom</button>
+          </div>
+        </div>
+      </div>
+
+      <div class="cert-generator cert-final" id="cert-final">
+        <div class="cert-generator-head"><span class="cnum" style="background:var(--gold); border-color:var(--gold); color:var(--navy-deep);">🎓</span><h3>Certificat global — parcours complet S&amp;E</h3></div>
+        <p class="cert-locked-msg" id="certLockedMsg-final">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="5" y="11" width="14" height="9" rx="1.5"/><path d="M8 11V8a4 4 0 0 1 8 0v3"/></svg>
+          <span>Terminez les 4 modules (19 leçons au total — chaque module dans l'ordre de ses propres leçons) pour débloquer le certificat global. (<span id="certLockedProgress-final">0/19</span>)</span>
+        </p>
+        <div class="cert-form" id="certForm-final" style="display:none;">
+          <div class="form-group">
+            <label for="certName-final">Votre nom complet</label>
+            <input type="text" id="certName-final" placeholder="Ex: Jean Baptiste">
+          </div>
+          <button type="button" class="btn-primary" id="certGenerateBtn-final">Générer mon certificat global</button>
+        </div>
+        <div class="cert-preview-wrap" id="certPreviewWrap-final" style="display:none;">
+          <canvas id="certCanvas-final" width="1200" height="850" aria-label="Aperçu du certificat global"></canvas>
+          <div class="cert-actions">
+            <button type="button" id="certDownloadLink-final" class="btn-primary">Télécharger (PDF)</button>
+            <button type="button" class="btn-ghost" id="certEditBtn-final">Modifier le nom</button>
+          </div>
+          <p class="cert-note-small">Ce certificat est généré directement dans votre navigateur à partir du nom que vous avez saisi. Conservez le fichier téléchargé — c'est votre certificat officiel.</p>
+        </div>
+      </div>
+
+    </div>
+
+    <div class="note" style="margin-top:20px;">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="12" r="9"/><path d="M12 8v5M12 16h.01"/></svg>
+      <p><strong>Besoin d'aide :</strong> si vous rencontrez un problème pour déverrouiller ou télécharger un certificat, contactez-nous sur WhatsApp avec votre nom et le module concerné.</p>
+    </div>
+  </div>
+</section>
+
+<div class="modal-overlay" id="enskriModal" aria-hidden="true">
+  <div class="modal-box" role="dialog" aria-modal="true" aria-labelledby="modalTitle">
+    <button type="button" class="modal-close" onclick="closeEnskriModal()" aria-label="Fermer">
+      <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><line x1="4" y1="4" x2="20" y2="20"/><line x1="20" y1="4" x2="4" y2="20"/></svg>
+    </button>
+    <div class="modal-eyebrow">Formulaire d'inscription</div>
+    <h3 id="modalTitle">S'inscrire à la formation</h3>
+    <div class="modal-price" id="modalPrice" style="display:none;"></div>
+
+    <form class="signup-form" id="enskriForm" action="https://formsubmit.co/micherlamour300@gmail.com" method="POST">
+      <input type="hidden" name="_subject" value="Nouvelle inscription — High-Academy">
+      <input type="hidden" name="_captcha" value="false">
+      <input type="hidden" name="_next" id="nextField" value="https://play.google.com/store/apps/details?id=com.useboom.htwallet">
+      <input type="hidden" name="_template" value="table">
+      <input type="hidden" name="Modil" id="modilField" value="Formation générale">
+      <input type="hidden" name="Moyen_de_paiement" id="payMethodField" value="MonCash">
+
+      <div class="form-row">
+        <div class="form-group">
+          <label for="non">Prénom</label>
+          <input type="text" id="non" name="Prenom" placeholder="Votre prénom" required>
+        </div>
+        <div class="form-group">
+          <label for="siyati">Nom</label>
+          <input type="text" id="siyati" name="Nom" placeholder="Votre nom" required>
+        </div>
+      </div>
+
+      <div class="form-row">
+        <div class="form-group">
+          <label for="telefon">Téléphone</label>
+          <input type="tel" id="telefon" name="Telephone" placeholder="+509 XXXX XXXX" required>
+        </div>
+        <div class="form-group">
+          <label for="email">Email</label>
+          <input type="email" id="email" name="Email" placeholder="email@exemple.com" required>
+        </div>
+      </div>
+
+      <div class="pay-options">
+        <button type="submit" class="btn-pay btn-moncash" onclick="setPaymentMethod('moncash')">
+          <span class="pay-logo">
+            <img src="https://play-lh.googleusercontent.com/gh5vciO93wEDR2OvjkZk62Pdbn9PODYI7QXRSLl6MBIo8qE898cj8hcmmDqgbTOMGMselKMkeF1KZvHoGZ48bQ=w96-h96" width="26" height="26" alt="MonCash" style="border-radius:6px;">
+          </span>
+          PAYER AVEC MONCASH
+        </button>
+
+        <div class="pay-divider">ou</div>
+
+        <button type="submit" class="btn-pay btn-unibank" onclick="setPaymentMethod('unibank')">
+          <span class="pay-logo">
+            <img src="https://play-lh.googleusercontent.com/sLw2U55Ewpegt19KfdHWPoL55fqHhCnqinbKfbqMt_47i7wXgQ_7jotyAPWeIHqfUupTrvqZy-TS-ERlY5oiInE=w96-h96" width="26" height="26" alt="UNIBANK Online" style="border-radius:6px;">
+          </span>
+          <span>PAYER AVEC UNIBANK ONLINE</span>
+        </button>
+      </div>
+
+      <div class="pay-account-numbers">
+        <div class="pay-account-row">
+          <span class="pay-account-label">MonCash</span>
+          <span class="pay-account-value mono">48 21 9522</span>
+        </div>
+        <div class="pay-account-row">
+          <span class="pay-account-label">Compte bancaire (UNIBANK)</span>
+          <span class="pay-account-value mono">270-2015-25791574</span>
+        </div>
+      </div>
+
+      <p class="form-note">Après avoir rempli le formulaire, vos informations nous seront envoyées, puis vous serez redirigé vers MonCash ou vers le portail UNIBANKOnline (pour vous connecter à votre compte) selon le bouton choisi.</p>
+    </form>
+  </div>
+</div>
+
+<div class="modal-overlay" id="loginModal" aria-hidden="true">
+  <div class="modal-box" role="dialog" aria-modal="true" aria-labelledby="loginModalTitle">
+    <button type="button" class="modal-close" onclick="closeLoginModal()" aria-label="Fermer">
+      <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><line x1="4" y1="4" x2="20" y2="20"/><line x1="20" y1="4" x2="4" y2="20"/></svg>
+    </button>
+    <div class="modal-eyebrow">Espace étudiant</div>
+    <h3 id="loginModalTitle">Connexion</h3>
+
+    <form class="signup-form" id="loginForm">
+      <div class="form-group" style="margin-bottom:16px;">
+        <label for="loginEmail">Email utilisé à l'inscription</label>
+        <input type="email" id="loginEmail" placeholder="email@exemple.com" required>
+      </div>
+      <div class="form-group" style="margin-bottom:6px;">
+        <label for="loginCode">Code d'accès</label>
+        <input type="text" id="loginCode" placeholder="Reçu par WhatsApp après vérification du paiement" required>
+      </div>
+      <p class="form-note" id="loginError" style="display:none; color:#B3261E; margin-top:10px;">Code d'accès incorrect. Vérifiez le code reçu, ou contactez-nous sur WhatsApp.</p>
+      <button type="submit" class="btn-primary" style="width:100%; margin-top:14px;">Se connecter</button>
+      <p class="form-note">Pas encore inscrit(e) ? <a href="#kous" onclick="closeLoginModal()" style="color:var(--blue); font-weight:600; text-decoration:none;">Voir les formations</a></p>
+    </form>
+  </div>
+</div>
+
+<footer id="kontak">
+  <div class="wrap">
+    <div class="foot-top">
+      <div>
+        <span class="brand-name display" style="font-size:1.3rem;">High-Academy</span>
+        <p style="max-width:32ch; color:#8892AC; font-size:0.9rem; margin-top:10px;">Formation en Suivi &amp; Évaluation pour les professionnels de projet en Haïti.</p>
+      </div>
+      <div class="foot-contact">
+        <span style="color:#fff; font-weight:600; font-size:0.85rem; text-transform:uppercase; letter-spacing:.06em; margin-bottom:4px;">Contact</span>
+        <a href="https://wa.me/50947655002" target="_blank" rel="noopener">WhatsApp — +509 4765 5002</a>
+        <span class="mono" style="color:#8892AC;">MonCash — 48 21 9522</span>
+      </div>
+    </div>
+    <div class="foot-bottom">
+      <span>© 2026 High-Academy. Tous droits réservés.</span>
+      <span>Fait avec soin en Haïti 🇭🇹</span>
+    </div>
+  </div>
+</footer>
+
+<script>
+  // ---- Moyens de paiement ----
+  var PAY_REDIRECTS = {
+    moncash: 'https://play.google.com/store/apps/details?id=com.useboom.htwallet',
+    unibank: 'https://www.unibankhaiti.com/'
+  };
+  var nextField = document.getElementById('nextField');
+  var payMethodField = document.getElementById('payMethodField');
+
+  function setPaymentMethod(method){
+    payMethodField.value = (method === 'unibank') ? 'UNIBANK Online' : 'MonCash';
+    nextField.value = PAY_REDIRECTS[method] || PAY_REDIRECTS.moncash;
+    // Le formulaire continue sa soumission normale vers le même email,
+    // seule la redirection finale change selon le bouton choisi.
+  }
+
+  // ---- Progression des cours (sauvegardée dans ce navigateur) ----
+  function lsGet(key){ try{ return localStorage.getItem(key); }catch(e){ return null; } }
+  function lsSet(key, val){ try{ localStorage.setItem(key, val); }catch(e){} }
+
+  var MODULES = ['m1','m2','m3','m4'];
+
+  // Renvoie les cases à cocher d'un module, triées dans l'ordre des leçons (0,1,2...)
+  function getModuleBoxes(mod){
+    return Array.prototype.slice.call(document.querySelectorAll('input[type="checkbox"][data-module="'+mod+'"]'))
+      .sort(function(a,b){ return (+a.dataset.lesson) - (+b.dataset.lesson); });
+  }
+
+  function isModuleComplete(mod){
+    var boxes = getModuleBoxes(mod);
+    if(!boxes.length) return false;
+    return boxes.every(function(cb){ return cb.checked; });
+  }
+
+  // Les modules sont indépendants : aucun module n'est bloqué par un autre.
+  // Seule la progression À L'INTÉRIEUR d'un module est verrouillée (ordre des leçons).
+  function isModuleUnlocked(mod){
+    return true;
+  }
+
+  // Applique le verrouillage séquentiel à l'intérieur de chaque module :
+  // impossible de cocher la leçon N+1 avant d'avoir terminé la leçon N.
+  function applyLocks(){
+    MODULES.forEach(function(mod){
+      var boxes = getModuleBoxes(mod);
+      boxes.forEach(function(cb, i){
+        var sequentialOk = (i === 0) || boxes[i - 1].checked;
+        cb.disabled = !sequentialOk;
+      });
+    });
+  }
+
+  // Nettoyage de cohérence (ne s'applique plus qu'en théorie, gardé par sécurité)
+  function normalizeLockedState(){}
+
+  function updateModuleProgress(mod){
+    var boxes = getModuleBoxes(mod);
+    var total = boxes.length, done = 0;
+    boxes.forEach(function(cb){ if(cb.checked) done++; });
+    var pct = total ? Math.round((done / total) * 100) : 0;
+
+    var fill = document.getElementById('pf-' + mod);
+    if(fill){ fill.style.width = pct + '%'; }
+    var txt = document.getElementById('ptxt-' + mod);
+    if(txt){ txt.textContent = done + '/' + total + ' leçons terminées'; }
+    var pctEl = document.getElementById('ppct-' + mod);
+    if(pctEl){ pctEl.textContent = pct + '%'; }
+
+    var cnum = document.getElementById('cnum-' + mod);
+    if(cnum){
+      if(pct === 100){
+        cnum.textContent = '✓';
+        cnum.classList.add('cnum-done');
+      } else {
+        cnum.textContent = cnum.getAttribute('data-num');
+        cnum.classList.remove('cnum-done');
+      }
+    }
+
+    var miniLink = document.getElementById('certmini-' + mod);
+    if(miniLink){ miniLink.style.display = (pct === 100) ? 'block' : 'none'; }
+  }
+
+  function refreshAll(){
+    applyLocks();
+    MODULES.forEach(updateModuleProgress);
+    applyLocks(); // ré-applique après mise à jour (une case décochée peut reverrouiller la suite)
+    MODULES.forEach(updateCertUnlockState);
+    updateFinalCertState();
+  }
+
+  function handleCheckboxChange(cb){
+    var mod = cb.dataset.module, idx = +cb.dataset.lesson;
+    var boxes = getModuleBoxes(mod);
+
+    // Si on décoche une leçon, toute leçon suivante déjà cochée doit être décochée aussi
+    // (on ne peut pas rester "en avance" sur une leçon non validée).
+    if(!cb.checked){
+      boxes.forEach(function(b){
+        if(+b.dataset.lesson > idx && b.checked){
+          b.checked = false;
+          lsSet('ha_progress_' + mod + '_' + b.dataset.lesson, '0');
+        }
+      });
+    }
+    lsSet('ha_progress_' + mod + '_' + idx, cb.checked ? '1' : '0');
+    refreshAll();
+  }
+
+  document.querySelectorAll('.lesson-list input[type="checkbox"]').forEach(function(cb){
+    var key = 'ha_progress_' + cb.dataset.module + '_' + cb.dataset.lesson;
+    cb.checked = lsGet(key) === '1';
+    cb.addEventListener('change', function(){ handleCheckboxChange(cb); });
+  });
+
+  normalizeLockedState();
+  refreshAll();
+
+  // ---- Certificats par module + certificat global ----
+  var MODULE_CERT_TITLES = {
+    m1: 'Introduction au Suivi & Évaluation de Projet',
+    m2: 'Cadre Logique & Indicateurs de Performance',
+    m3: 'Collecte & Analyse de Données sur le Terrain',
+    m4: 'Rapport des Résultats & Communication avec les Bailleurs'
+  };
+  var MODULE_CERT_TAGS = {
+    m1: 'Module 01 — Introduction au S&E',
+    m2: 'Module 02 — Cadre Logique & Indicateurs',
+    m3: 'Module 03 — Collecte & Analyse de Données',
+    m4: 'Module 04 — Rapport des Résultats'
+  };
+
+  function updateCertUnlockState(mod){
+    var boxes = getModuleBoxes(mod);
+    var total = boxes.length, done = 0;
+    boxes.forEach(function(cb){ if(cb.checked) done++; });
+    var isReady = isModuleComplete(mod);
+
+    var lockedProgress = document.getElementById('certLockedProgress-' + mod);
+    if(lockedProgress){ lockedProgress.textContent = done + '/' + total; }
+
+    var lockedMsg = document.getElementById('certLockedMsg-' + mod);
+    var certForm = document.getElementById('certForm-' + mod);
+    if(lockedMsg && certForm){
+      if(isReady){
+        lockedMsg.style.display = 'none';
+        certForm.style.display = 'flex';
+      } else {
+        lockedMsg.style.display = 'flex';
+        certForm.style.display = 'none';
+        var previewWrap = document.getElementById('certPreviewWrap-' + mod);
+        if(previewWrap){ previewWrap.style.display = 'none'; }
+      }
+    }
+  }
+
+  function updateFinalCertState(){
+    var allBoxes = document.querySelectorAll('.lesson-list input[type="checkbox"]');
+    var total = allBoxes.length, done = 0;
+    allBoxes.forEach(function(cb){ if(cb.checked) done++; });
+    var isReady = MODULES.every(isModuleComplete);
+
+    var certLink = document.getElementById('certLink');
+    var certSub = document.getElementById('certSub');
+    if(certLink){
+      certLink.classList.toggle('cert-ready', isReady);
+      if(certSub){ certSub.textContent = isReady ? 'Tous les modules sont réussis — cliquez pour vos certificats 🎉' : (done + '/' + total + ' leçons terminées au total'); }
+    }
+
+    var lockedProgress = document.getElementById('certLockedProgress-final');
+    if(lockedProgress){ lockedProgress.textContent = done + '/' + total; }
+
+    var lockedMsg = document.getElementById('certLockedMsg-final');
+    var certForm = document.getElementById('certForm-final');
+    if(lockedMsg && certForm){
+      if(isReady){
+        lockedMsg.style.display = 'none';
+        certForm.style.display = 'flex';
+      } else {
+        lockedMsg.style.display = 'flex';
+        certForm.style.display = 'none';
+        var previewWrap = document.getElementById('certPreviewWrap-final');
+        if(previewWrap){ previewWrap.style.display = 'none'; }
+      }
+    }
+  }
+
+  // ---- Génération du certificat personnalisé ----
+  function getOrCreateCertId(key){
+    var storeKey = 'ha_cert_id_' + key;
+    var id = lsGet(storeKey);
+    if(!id){
+      var year = new Date().getFullYear();
+      var rand = Math.random().toString(36).slice(2, 8).toUpperCase();
+      var tag = (key === 'final') ? 'GLOBAL' : ('M' + key.replace('m',''));
+      id = 'HA-' + tag + '-' + year + '-' + rand;
+      lsSet(storeKey, id);
+    }
+    return id;
+  }
+
+  function wrapCanvasText(ctx, text, x, y, maxWidth, lineHeight){
+    var words = text.split(' ');
+    var line = '';
+    var lines = [];
+    for(var i = 0; i < words.length; i++){
+      var testLine = line + words[i] + ' ';
+      if(ctx.measureText(testLine).width > maxWidth && i > 0){
+        lines.push(line);
+        line = words[i] + ' ';
+      } else {
+        line = testLine;
+      }
+    }
+    lines.push(line);
+    var startY = y - ((lines.length - 1) * lineHeight) / 2;
+    for(var j = 0; j < lines.length; j++){
+      ctx.fillText(lines[j].trim(), x, startY + j * lineHeight);
+    }
+  }
+
+  function drawCertificate(name, key){
+    var canvas = document.getElementById('certCanvas-' + key);
+    if(!canvas) return;
+    var ctx = canvas.getContext('2d');
+    var W = canvas.width, H = canvas.height;
+    var navy = '#16223E', navyDeep = '#0E1729', gold = '#D9A441', goldDeep = '#B9852A',
+        teal = '#2F6F52', ink = '#1C2333', inkSoft = '#4A5164', cream = '#FAF9F5';
+
+    ctx.clearRect(0, 0, W, H);
+    ctx.fillStyle = cream;
+    ctx.fillRect(0, 0, W, H);
+
+    // Outer + inner border
+    ctx.strokeStyle = navy;
+    ctx.lineWidth = 6;
+    ctx.strokeRect(28, 28, W - 56, H - 56);
+    ctx.strokeStyle = gold;
+    ctx.lineWidth = 2;
+    ctx.strokeRect(42, 42, W - 84, H - 84);
+
+    // Corner flourish dots
+    [[42,42],[W-42,42],[42,H-42],[W-42,H-42]].forEach(function(p){
+      ctx.beginPath();
+      ctx.arc(p[0], p[1], 5, 0, Math.PI * 2);
+      ctx.fillStyle = gold;
+      ctx.fill();
+    });
+
+    // Seal / crest
+    var cx = W / 2, cy = 130;
+    ctx.beginPath();
+    ctx.arc(cx, cy, 46, 0, Math.PI * 2);
+    ctx.fillStyle = navy;
+    ctx.fill();
+    ctx.beginPath();
+    ctx.arc(cx, cy, 46, 0, Math.PI * 2);
+    ctx.strokeStyle = gold;
+    ctx.lineWidth = 3;
+    ctx.stroke();
+    ctx.beginPath();
+    ctx.arc(cx, cy, 37, 0, Math.PI * 2);
+    ctx.strokeStyle = gold;
+    ctx.lineWidth = 1;
+    ctx.stroke();
+    ctx.fillStyle = gold;
+    ctx.textAlign = 'center';
+    ctx.textBaseline = 'middle';
+    ctx.font = '700 34px Fraunces, serif';
+    ctx.fillText('HA', cx, cy + 3);
+
+    // Wordmark
+    ctx.fillStyle = navy;
+    ctx.textBaseline = 'alphabetic';
+    ctx.font = '700 40px Fraunces, serif';
+    ctx.fillText('HIGH-ACADEMY', cx, 225);
+
+    ctx.font = '500 15px "IBM Plex Mono", monospace';
+    ctx.fillStyle = goldDeep;
+    ctx.save();
+    ctx.letterSpacing = '4px';
+    ctx.fillText(key === 'final' ? 'CERTIFICAT DE RÉUSSITE — PARCOURS COMPLET' : 'CERTIFICAT DE RÉUSSITE — MODULE', cx, 255);
+    ctx.restore();
+
+    // Divider
+    ctx.strokeStyle = gold;
+    ctx.lineWidth = 1;
+    ctx.beginPath();
+    ctx.moveTo(cx - 130, 280);
+    ctx.lineTo(cx - 14, 280);
+    ctx.moveTo(cx + 14, 280);
+    ctx.lineTo(cx + 130, 280);
+    ctx.stroke();
+    ctx.beginPath();
+    ctx.moveTo(cx, 273);
+    ctx.lineTo(cx + 7, 280);
+    ctx.lineTo(cx, 287);
+    ctx.lineTo(cx - 7, 280);
+    ctx.closePath();
+    ctx.fillStyle = gold;
+    ctx.fill();
+
+    // "Décerné à"
+    ctx.fillStyle = inkSoft;
+    ctx.font = '500 18px Inter, sans-serif';
+    ctx.fillText('est décerné à', cx, 325);
+
+    // Name
+    var displayName = (name || 'Étudiant(e)').trim();
+    var nameSize = displayName.length > 26 ? 48 : 60;
+    ctx.fillStyle = navyDeep;
+    ctx.font = '600 ' + nameSize + 'px Fraunces, serif';
+    ctx.fillText(displayName, cx, 390);
+    ctx.strokeStyle = gold;
+    ctx.lineWidth = 1.5;
+    ctx.beginPath();
+    ctx.moveTo(cx - 210, 408);
+    ctx.lineTo(cx + 210, 408);
+    ctx.stroke();
+
+    // Body text
+    ctx.fillStyle = ink;
+    ctx.font = '400 19px Inter, sans-serif';
+    var bodyText = (key === 'final')
+      ? 'pour avoir complété avec succès le parcours complet en Suivi & Évaluation de Projet — Introduction au S&E, Cadre Logique & Indicateurs, Collecte & Analyse de Données, et Rapport des Résultats — incluant les quiz de chaque module, réalisés dans l\'ordre.'
+      : 'pour avoir complété avec succès toutes les leçons et le quiz du module « ' + (MODULE_CERT_TITLES[key] || '') + ' », dans le cadre de la formation High-Academy en Suivi & Évaluation de Projet.';
+    wrapCanvasText(ctx, bodyText, cx, 460, 760, 28);
+
+    // Footer: date / signature / cert id
+    var footerY = H - 100;
+    ctx.textAlign = 'left';
+    ctx.font = '600 15px Inter, sans-serif';
+    ctx.fillStyle = navy;
+    var dateStr = new Date().toLocaleDateString('fr-FR', { day: 'numeric', month: 'long', year: 'numeric' });
+    ctx.fillText('Délivré le', 110, footerY);
+    ctx.font = '400 15px Inter, sans-serif';
+    ctx.fillStyle = inkSoft;
+    ctx.fillText(dateStr, 110, footerY + 22);
+
+    ctx.textAlign = 'center';
+    ctx.strokeStyle = inkSoft;
+    ctx.lineWidth = 1;
+    ctx.beginPath();
+    ctx.moveTo(cx - 120, footerY - 6);
+    ctx.lineTo(cx + 120, footerY - 6);
+    ctx.stroke();
+    ctx.font = 'italic 600 22px Fraunces, serif';
+    ctx.fillStyle = navy;
+    ctx.fillText('High-Academy', cx, footerY - 16);
+    ctx.font = '500 13px "IBM Plex Mono", monospace';
+    ctx.fillStyle = inkSoft;
+    ctx.fillText('Direction pédagogique', cx, footerY + 12);
+
+    ctx.textAlign = 'right';
+    ctx.font = '600 15px Inter, sans-serif';
+    ctx.fillStyle = navy;
+    ctx.fillText('N° de certificat', W - 110, footerY);
+    ctx.font = '400 15px "IBM Plex Mono", monospace';
+    ctx.fillStyle = inkSoft;
+    ctx.fillText(getOrCreateCertId(key), W - 110, footerY + 22);
+
+    ctx.textAlign = 'left';
+    ctx.textBaseline = 'alphabetic';
+  }
+
+  var CERT_NAMES = {};
+
+  function downloadCertPDF(key){
+    var canvas = document.getElementById('certCanvas-' + key);
+    if(!canvas || !window.jspdf){ return; }
+    var name = CERT_NAMES[key] || 'etudiant';
+    var fileSafe = name.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '').replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)/g, '');
+    var fileTag = (key === 'final') ? 'global' : ('module-' + key.replace('m',''));
+    var imgData = canvas.toDataURL('image/png', 1.0);
+    var doc = new window.jspdf.jsPDF({ orientation:'landscape', unit:'px', format:[canvas.width, canvas.height] });
+    doc.addImage(imgData, 'PNG', 0, 0, canvas.width, canvas.height);
+    doc.save('certificat-high-academy-' + fileTag + '-' + (fileSafe || 'etudiant') + '.pdf');
+  }
+
+  function renderCertificate(key){
+    var nameInput = document.getElementById('certName-' + key);
+    var name = nameInput ? nameInput.value.trim() : '';
+    if(!name){
+      if(nameInput){ nameInput.focus(); }
+      return;
+    }
+    lsSet('ha_cert_name_' + key, name);
+    CERT_NAMES[key] = name;
+
+    var fonts = ['700 40px Fraunces', '600 60px Fraunces', 'italic 600 22px Fraunces', '500 15px "IBM Plex Mono"'];
+    var loaders = fonts.map(function(f){
+      try{ return document.fonts.load(f); }catch(e){ return Promise.resolve(); }
+    });
+    Promise.all(loaders).then(function(){
+      drawCertificate(name, key);
+      var previewWrap = document.getElementById('certPreviewWrap-' + key);
+      var certForm = document.getElementById('certForm-' + key);
+      if(previewWrap){ previewWrap.style.display = 'block'; }
+      if(certForm){ certForm.style.display = 'none'; }
+    });
+  }
+
+  ['m1','m2','m3','m4','final'].forEach(function(key){
+    var nameInput = document.getElementById('certName-' + key);
+    if(nameInput){
+      var savedName = lsGet('ha_cert_name_' + key);
+      if(savedName){ nameInput.value = savedName; }
+      nameInput.addEventListener('keydown', function(e){
+        if(e.key === 'Enter'){ e.preventDefault(); renderCertificate(key); }
+      });
+    }
+    var genBtn = document.getElementById('certGenerateBtn-' + key);
+    if(genBtn){ genBtn.addEventListener('click', function(){ renderCertificate(key); }); }
+
+    var downloadBtn = document.getElementById('certDownloadLink-' + key);
+    if(downloadBtn){ downloadBtn.addEventListener('click', function(){ downloadCertPDF(key); }); }
+
+    var editBtn = document.getElementById('certEditBtn-' + key);
+    if(editBtn){
+      editBtn.addEventListener('click', function(){
+        var previewWrap = document.getElementById('certPreviewWrap-' + key);
+        var certForm = document.getElementById('certForm-' + key);
+        if(previewWrap){ previewWrap.style.display = 'none'; }
+        if(certForm){ certForm.style.display = 'flex'; }
+        if(nameInput){ nameInput.focus(); }
+      });
+    }
+  });
+
+  // ---- Connexion & accès aux contenus des modules ----
+  // NOTE: il s'agit d'un contrôle d'accès simple côté navigateur (pas d'un vrai compte
+  // sécurisé avec base de données). Le "code d'accès" ci-dessous doit être communiqué
+  // uniquement aux personnes dont le paiement a été vérifié manuellement (WhatsApp/email),
+  // et peut être changé à tout moment en modifiant la valeur ACCESS_CODE dans ce fichier.
+  var ACCESS_CODE = 'HA-2026';
+
+  var loginModal = document.getElementById('loginModal');
+  var loginForm = document.getElementById('loginForm');
+  var loginError = document.getElementById('loginError');
+  var loginNavBtn = document.getElementById('loginNavBtn');
+  var loginNavLinkMobile = document.getElementById('loginNavLinkMobile');
+
+  function isLoggedIn(){ return lsGet('ha_access_granted') === 'true'; }
+
+  function openLoginModal(){
+    if(isLoggedIn()){
+      logoutUser();
+      return;
+    }
+    lastFocused = document.activeElement;
+    loginModal.classList.add('open');
+    loginModal.setAttribute('aria-hidden', 'false');
+    document.body.style.overflow = 'hidden';
+    if(loginError){ loginError.style.display = 'none'; }
+    var firstInput = loginModal.querySelector('input');
+    if(firstInput){ firstInput.focus(); }
+  }
+
+  function closeLoginModal(){
+    loginModal.classList.remove('open');
+    loginModal.setAttribute('aria-hidden', 'true');
+    document.body.style.overflow = '';
+    if(lastFocused){ lastFocused.focus(); }
+  }
+
+  function logoutUser(){
+    try{ localStorage.removeItem('ha_access_granted'); }catch(e){}
+    applyAccessGate();
+    updateLoginButton();
+  }
+
+  function updateLoginButton(){
+    var logged = isLoggedIn();
+    if(loginNavBtn){
+      loginNavBtn.textContent = logged ? 'Déconnexion' : 'Connexion';
+      loginNavBtn.classList.toggle('is-logged-in', logged);
+    }
+    if(loginNavLinkMobile){
+      loginNavLinkMobile.textContent = logged ? 'Déconnexion' : 'Connexion';
+    }
+  }
+
+  function applyAccessGate(){
+    var granted = isLoggedIn();
+    MODULES.forEach(function(mod){
+      var list = document.getElementById('lessonList-' + mod);
+      var locked = document.getElementById('lessonLocked-' + mod);
+      if(list){ list.style.display = granted ? '' : 'none'; }
+      if(locked){ locked.style.display = granted ? 'none' : 'flex'; }
+    });
+  }
+
+  if(loginForm){
+    loginForm.addEventListener('submit', function(e){
+      e.preventDefault();
+      var code = document.getElementById('loginCode').value.trim();
+      var email = document.getElementById('loginEmail').value.trim();
+      if(email && code === ACCESS_CODE){
+        lsSet('ha_access_granted', 'true');
+        lsSet('ha_access_email', email);
+        closeLoginModal();
+        applyAccessGate();
+        updateLoginButton();
+      } else if(loginError){
+        loginError.style.display = 'block';
+      }
+    });
+  }
+
+  loginModal.addEventListener('click', function(e){
+    if(e.target === loginModal){ closeLoginModal(); }
+  });
+
+  document.addEventListener('keydown', function(e){
+    if(e.key === 'Escape' && loginModal.classList.contains('open')){ closeLoginModal(); }
+  });
+
+  applyAccessGate();
+  updateLoginButton();
+
+  // ---- Modal d'inscription ----
+  var modal = document.getElementById('enskriModal');
+  var modalTitle = document.getElementById('modalTitle');
+  var modalPrice = document.getElementById('modalPrice');
+  var modilField = document.getElementById('modilField');
+  var lastFocused = null;
+
+  function openEnskriModal(nomModil, pri){
+    if(nomModil){
+      modalTitle.textContent = nomModil;
+      modilField.value = nomModil;
+    } else {
+      modalTitle.textContent = "S'inscrire à la formation";
+      modilField.value = 'Formation générale';
+    }
+    if(pri){
+      modalPrice.textContent = pri;
+      modalPrice.style.display = 'block';
+    } else {
+      modalPrice.style.display = 'none';
+    }
+    lastFocused = document.activeElement;
+    modal.classList.add('open');
+    modal.setAttribute('aria-hidden', 'false');
+    document.body.style.overflow = 'hidden';
+    var firstInput = modal.querySelector('input');
+    if(firstInput){ firstInput.focus(); }
+  }
+
+  function closeEnskriModal(){
+    modal.classList.remove('open');
+    modal.setAttribute('aria-hidden', 'true');
+    document.body.style.overflow = '';
+    if(lastFocused){ lastFocused.focus(); }
+  }
+
+  modal.addEventListener('click', function(e){
+    if(e.target === modal){ closeEnskriModal(); }
+  });
+
+  document.addEventListener('keydown', function(e){
+    if(e.key === 'Escape' && modal.classList.contains('open')){ closeEnskriModal(); }
+  });
+
+  // ---- Recherche des modules ----
+  var searchForm = document.getElementById('siteSearchForm');
+  var searchInput = document.getElementById('siteSearchInput');
+  var searchNoResults = document.getElementById('searchNoResults');
+  var courseCards = Array.prototype.slice.call(document.querySelectorAll('#courseGrid .card'));
+
+  function normalizeText(str){
+    return (str || '').toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '');
+  }
+
+  function runSiteSearch(){
+    var query = normalizeText(searchInput.value.trim());
+    var visibleCount = 0;
+    courseCards.forEach(function(card){
+      var haystack = normalizeText(card.textContent);
+      var match = !query || haystack.indexOf(query) !== -1;
+      card.classList.toggle('search-hidden', !match);
+      if(match){ visibleCount++; }
+    });
+    if(searchNoResults){ searchNoResults.classList.toggle('show', visibleCount === 0); }
+  }
+
+  if(searchForm){
+    searchForm.addEventListener('submit', function(e){
+      e.preventDefault();
+      runSiteSearch();
+      document.getElementById('kous').scrollIntoView({behavior:'smooth'});
+    });
+  }
+  if(searchInput){
+    searchInput.addEventListener('input', runSiteSearch);
+  }
+
+  // ---- Menu mobile ----
   var menuToggle = document.getElementById('menuToggle');
   var navLinks = document.getElementById('navLinks');
 
