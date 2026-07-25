@@ -654,10 +654,13 @@
   textarea.profile-bio:focus{outline:none; border-color:var(--blue);}
 
   /* ================= CORRECTION DÉBORDEMENT / RESPONSIVE ================= */
-  html, body{ overflow-x:hidden; max-width:100%; }
+  /* NOTE : overflow-x:hidden sur html/body casse position:sticky (l'en-tête et le plan
+     du cours à gauche). On protège plutôt chaque élément susceptible de déborder. */
+  html{ width:100%; }
+  body{ max-width:100%; }
   .wrap{ max-width:1120px; }
   img, svg, video, iframe{ max-width:100%; height:auto; }
-  table{ max-width:100%; }
+  table{ max-width:100%; display:block; overflow-x:auto; }
 
   /* ================= THÈME (clair / sombre) ================= */
   body.theme-dark{
@@ -769,7 +772,7 @@
     </form>
     <nav class="links" id="navLinks">
       <a href="#kous">Formations</a>
-      <a href="#kous">Inscription</a>
+      
       <a href="#certificat">Certificats</a>
       <a href="#kontak">Contact</a>
       <a href="#dashboard" class="mobile-auth-link" id="mobileDashboardLink">
