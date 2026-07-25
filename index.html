@@ -520,6 +520,139 @@
   .foot-pay-row .mono{color:#fff;}
   .foot-bottom{padding-top:24px; font-size:0.8rem; display:flex; justify-content:space-between; flex-wrap:wrap; gap:10px; color:#7C87A3;}
 
+  /* ================= INTERACTIVITÉ GÉNÉRALE (v.pro) ================= */
+  .card, .pill, .cert-card, .step-card, .foot-contact a, .btn-primary, .btn-ghost, .btn-nav, .btn-login,
+  .user-chip, .menu-toggle, .nav-search, .dash-card, .dash-quick-btn, .profile-avatar-edit{
+    transition:transform .18s ease, box-shadow .18s ease, background .18s ease, border-color .18s ease, color .18s ease;
+  }
+  .card{cursor:default;}
+  .card:hover{transform:translateY(-4px); box-shadow:0 20px 40px -22px rgba(22,34,62,0.28);}
+  .pill:hover{transform:translateY(-3px); box-shadow:0 14px 28px -16px rgba(22,34,62,0.3);}
+  .menu-toggle:hover{border-color:var(--navy); background:var(--bg-alt);}
+  .nav-search:focus-within{border-color:var(--blue); box-shadow:0 0 0 3px rgba(0,86,210,0.12);}
+  nav.links a{position:relative;}
+
+  /* ================= USER CHIP (nav, après connexion) ================= */
+  .user-chip{
+    display:none; align-items:center; gap:9px; background:transparent; border:1.5px solid var(--line);
+    border-radius:999px; padding:5px 14px 5px 5px; cursor:pointer; font-family:inherit; position:relative;
+  }
+  .user-chip.active{display:inline-flex;}
+  .user-chip:hover{border-color:var(--navy); background:var(--bg-alt);}
+  .user-chip-avatar{
+    width:32px; height:32px; border-radius:50%; background:var(--blue); color:#fff; display:flex;
+    align-items:center; justify-content:center; font-weight:700; font-size:0.85rem; flex-shrink:0; overflow:hidden;
+  }
+  .user-chip-avatar img{width:100%; height:100%; object-fit:cover;}
+  .user-chip-name{font-weight:600; font-size:0.88rem; color:var(--navy); max-width:120px; overflow:hidden; text-overflow:ellipsis; white-space:nowrap;}
+  .user-chip-caret{width:11px; height:11px; color:var(--ink-soft); transition:transform .18s ease;}
+  .user-chip[aria-expanded="true"] .user-chip-caret{transform:rotate(180deg);}
+
+  .user-dropdown{
+    display:none; position:absolute; top:calc(100% + 10px); right:0; min-width:240px; background:var(--panel);
+    border:1px solid var(--line); border-radius:14px; box-shadow:var(--shadow); padding:8px; z-index:60;
+  }
+  .user-dropdown.open{display:block;}
+  .user-dropdown-head{padding:10px 12px 12px; border-bottom:1px solid var(--line); margin-bottom:6px;}
+  .user-dropdown-head strong{display:block; font-size:0.94rem; color:var(--navy);}
+  .user-dropdown-head span{font-size:0.78rem; color:var(--ink-soft);}
+  .user-dropdown button{
+    width:100%; display:flex; align-items:center; gap:10px; text-align:left; background:none; border:none;
+    padding:10px 12px; border-radius:9px; cursor:pointer; font-family:inherit; font-size:0.9rem; color:var(--ink); font-weight:600;
+  }
+  .user-dropdown button svg{width:17px; height:17px; color:var(--ink-soft); flex-shrink:0;}
+  .user-dropdown button:hover{background:var(--bg-alt); color:var(--navy);}
+  .user-dropdown button.danger{color:#B3261E;}
+  .user-dropdown button.danger svg{color:#B3261E;}
+  .user-dropdown button.danger:hover{background:#FCEBEA;}
+
+  /* Liens mobiles réservés aux élèves connectés (profil / tableau de bord / déconnexion) */
+  nav.links a.mobile-auth-link{display:none;}
+  nav.links.user-logged-in a.mobile-auth-link{display:flex; align-items:center; gap:10px;}
+  nav.links a.mobile-auth-link svg{width:17px; height:17px; color:var(--ink-soft); flex-shrink:0;}
+  nav.links a.mobile-auth-link.danger{color:#B3261E;}
+  nav.links a.mobile-auth-link.danger svg{color:#B3261E;}
+
+  /* ================= COURS ACHETÉ (bouton) ================= */
+  .btn-enroll-owned{
+    background:#EAF6EF !important; color:#2F6F52 !important; cursor:default !important; box-shadow:none !important;
+    display:inline-flex; align-items:center; gap:9px; border:1.5px solid #BFE3CC;
+  }
+  .btn-enroll-owned:hover{transform:none;}
+  .owned-check{
+    width:19px; height:19px; border-radius:5px; background:#2F6F52; display:flex; align-items:center;
+    justify-content:center; flex-shrink:0;
+  }
+  .owned-check svg{width:12px; height:12px; stroke:#fff;}
+
+  /* ================= TABLEAU DE BORD UTILISATEUR ================= */
+  .dashboard{display:none; padding:34px 0 6px;}
+  .dashboard.active{display:block;}
+  .dashboard .wrap{display:flex; flex-direction:column; gap:18px;}
+  .dash-head{display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:10px;}
+  .dash-head h2{font-size:1.35rem;}
+  .dash-head .eyebrow{margin-bottom:0;}
+  .dash-stats{display:grid; grid-template-columns:repeat(3,1fr); gap:16px;}
+  @media(max-width:760px){ .dash-stats{grid-template-columns:1fr;} }
+  .dash-card{
+    background:var(--panel); border:1px solid var(--line); border-radius:16px; padding:20px 22px;
+    display:flex; align-items:center; gap:14px;
+  }
+  .dash-card:hover{transform:translateY(-3px); box-shadow:0 16px 30px -18px rgba(22,34,62,0.25);}
+  .dash-card-icon{
+    width:46px; height:46px; border-radius:12px; display:flex; align-items:center; justify-content:center; flex-shrink:0;
+  }
+  .dash-card-icon svg{width:23px; height:23px;}
+  .dash-card.dash-time .dash-card-icon{background:var(--blue-tint); color:var(--blue);}
+  .dash-card.dash-avg .dash-card-icon{background:#FCEFDA; color:var(--gold-deep);}
+  .dash-card.dash-resume .dash-card-icon{background:#E4F3EC; color:var(--teal);}
+  .dash-card-value{font-family:'Fraunces', serif; font-size:1.32rem; color:var(--navy); font-weight:600; line-height:1.15;}
+  .dash-card-label{font-size:0.78rem; color:var(--ink-soft); font-weight:600; text-transform:uppercase; letter-spacing:.04em;}
+  .dash-quick-btn{
+    margin-top:4px; display:inline-flex; align-items:center; gap:7px; background:var(--teal); color:#fff;
+    border:none; padding:8px 14px; border-radius:8px; font-weight:700; font-size:0.8rem; cursor:pointer;
+  }
+  .dash-quick-btn svg{width:13px; height:13px;}
+  .dash-quick-btn:hover{background:#255a41; transform:translateY(-1px);}
+  .dash-quick-empty{font-size:0.82rem; color:var(--ink-soft); font-style:italic;}
+
+  .dash-courses{display:grid; grid-template-columns:repeat(auto-fit,minmax(230px,1fr)); gap:14px;}
+  .dash-course-card{
+    background:var(--panel); border:1px solid var(--line); border-radius:14px; padding:16px 18px;
+  }
+  .dash-course-card:hover{transform:translateY(-3px); box-shadow:0 14px 26px -16px rgba(22,34,62,0.22);}
+  .dash-course-top{display:flex; align-items:center; justify-content:space-between; gap:8px; margin-bottom:8px;}
+  .dash-course-top span:first-child{font-weight:700; font-size:0.88rem; color:var(--navy);}
+  .dash-course-pct{font-family:'IBM Plex Mono', monospace; font-size:0.82rem; color:var(--teal); font-weight:700;}
+  .dash-course-pct.done{color:#2F6F52;}
+
+  /* ================= MODAL PROFIL ================= */
+  .profile-form-grid{display:grid; grid-template-columns:1fr 1fr; gap:14px 16px;}
+  @media(max-width:520px){ .profile-form-grid{grid-template-columns:1fr;} }
+  .profile-form-grid .form-row.full{grid-column:1 / -1;}
+  .profile-section-label{
+    grid-column:1 / -1; font-family:'IBM Plex Mono', monospace; font-size:0.7rem; letter-spacing:.12em;
+    text-transform:uppercase; color:var(--teal); margin-top:6px; display:flex; align-items:center; gap:8px;
+  }
+  .profile-section-label:first-child{margin-top:0;}
+  .profile-section-label svg{width:14px; height:14px;}
+  .profile-avatar-row{grid-column:1 / -1; display:flex; align-items:center; gap:16px; margin-bottom:2px;}
+  .profile-avatar-preview{
+    width:64px; height:64px; border-radius:50%; background:var(--blue); color:#fff; display:flex;
+    align-items:center; justify-content:center; font-weight:700; font-size:1.3rem; overflow:hidden; flex-shrink:0;
+  }
+  .profile-avatar-preview img{width:100%; height:100%; object-fit:cover;}
+  .profile-avatar-edit{
+    background:transparent; border:1.5px solid var(--line); border-radius:8px; padding:8px 14px;
+    font-weight:600; font-size:0.82rem; cursor:pointer; color:var(--navy); font-family:inherit;
+  }
+  .profile-avatar-edit:hover{border-color:var(--navy); background:var(--bg-alt);}
+  textarea.profile-bio{
+    width:100%; font-family:inherit; font-size:0.92rem; border:1.5px solid var(--line); border-radius:8px;
+    padding:10px 12px; resize:vertical; min-height:70px; color:var(--ink);
+  }
+  textarea.profile-bio:focus{outline:none; border-color:var(--blue);}
+
 </style>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
@@ -549,11 +682,48 @@
       <a href="#kous">Formations</a>
       <a href="#kous">Inscription</a>
       <a href="#certificat">Certificats</a>
-      <a href="#kontak">Contact</a> 
+      <a href="#kontak">Contact</a>
+      <a href="#dashboard" class="mobile-auth-link" id="mobileDashboardLink">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3" y="3" width="7" height="9" rx="1.5"/><rect x="14" y="3" width="7" height="5" rx="1.5"/><rect x="14" y="12" width="7" height="9" rx="1.5"/><rect x="3" y="16" width="7" height="5" rx="1.5"/></svg>
+        Tableau de bord
+      </a>
+      <a href="#" class="mobile-auth-link" id="mobileProfileLink" onclick="openProfileModal(); return false;">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="8" r="4"/><path d="M4 20c1.5-4 5-6 8-6s6.5 2 8 6"/></svg>
+        Mon profil
+      </a>
+      <a href="#" class="mobile-auth-link danger" id="mobileLogoutLink" onclick="logoutUser(); return false;">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>
+        Déconnexion
+      </a>
     </nav>
 	
     <div class="nav-right">
       <button type="button" class="btn-login" id="loginNavBtn" onclick="openLoginModal()">Connexion</button>
+      <div class="user-chip-wrap" id="userChipWrap" style="position:relative;">
+        <button type="button" class="user-chip" id="userChip" aria-haspopup="true" aria-expanded="false" onclick="toggleUserDropdown()">
+          <span class="user-chip-avatar" id="userChipAvatar">É</span>
+          <span class="user-chip-name" id="userChipName">Élève</span>
+          <svg class="user-chip-caret" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><polyline points="6 9 12 15 18 9"/></svg>
+        </button>
+        <div class="user-dropdown" id="userDropdown">
+          <div class="user-dropdown-head">
+            <strong id="userDropdownName">Élève</strong>
+            <span id="userDropdownEmail">email@exemple.com</span>
+          </div>
+          <button type="button" onclick="scrollToDashboard();">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3" y="3" width="7" height="9" rx="1.5"/><rect x="14" y="3" width="7" height="5" rx="1.5"/><rect x="14" y="12" width="7" height="9" rx="1.5"/><rect x="3" y="16" width="7" height="5" rx="1.5"/></svg>
+            Tableau de bord
+          </button>
+          <button type="button" onclick="openProfileModal();">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="8" r="4"/><path d="M4 20c1.5-4 5-6 8-6s6.5 2 8 6"/></svg>
+            Mon profil
+          </button>
+          <button type="button" class="danger" onclick="logoutUser();">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>
+            Déconnexion
+          </button>
+        </div>
+      </div>
       <a class="btn-nav" href="#" onclick="openRegisterModal(); return false;">S'inscrire maintenant</a>
       <button class="menu-toggle" id="menuToggle" type="button" aria-label="Ouvrir le menu" aria-expanded="false" aria-controls="navLinks">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
@@ -604,6 +774,56 @@
         <a href="#kijan" class="btn-ghost">Comment fonctionne le paiement →</a>
       </div>
     </div>
+  </div>
+</section>
+
+<section class="dashboard" id="dashboard">
+  <div class="wrap">
+    <div class="dash-head">
+      <div>
+        <div class="eyebrow">Mon espace</div>
+        <h2>Tableau de bord</h2>
+      </div>
+    </div>
+
+    <div class="dash-stats">
+      <div class="dash-card dash-resume">
+        <div class="dash-card-icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><polygon points="6 3 20 12 6 21 6 3"/></svg>
+        </div>
+        <div>
+          <div class="dash-card-label">Reprendre</div>
+          <div class="dash-card-value" id="dashResumeTitle">—</div>
+          <button type="button" class="dash-quick-btn" id="dashResumeBtn" style="display:none;">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><polygon points="5 3 19 12 5 21 5 3"/></svg>
+            Reprendre le cours
+          </button>
+          <div class="dash-quick-empty" id="dashResumeEmpty">Aucune leçon commencée</div>
+        </div>
+      </div>
+
+      <div class="dash-card dash-time">
+        <div class="dash-card-icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><polyline points="12 7 12 12 15 14"/></svg>
+        </div>
+        <div>
+          <div class="dash-card-label">Temps total d'apprentissage</div>
+          <div class="dash-card-value" id="dashTotalTime">0 min</div>
+        </div>
+      </div>
+
+      <div class="dash-card dash-avg">
+        <div class="dash-card-icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 20V10"/><path d="M18 20V4"/><path d="M6 20v-6"/></svg>
+        </div>
+        <div>
+          <div class="dash-card-label">Progression moyenne</div>
+          <div class="dash-card-value" id="dashAvgPct">0%</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="dash-courses" id="dashCourseList"></div>
   </div>
 </section>
 
@@ -741,7 +961,7 @@
           
           <div class="card-foot">
             <div class="price">2 500<span> HTG</span></div>
-            <button type="button" class="btn-enroll" onclick="openEnskriModal('Introduction au Suivi &amp; Évaluation de Projet', '2 500 HTG', 'm1')">Acheter le cours</button>
+            <button type="button" class="btn-enroll" id="enrollBtn-m1" onclick="openEnskriModal('Introduction au Suivi &amp; Évaluation de Projet', '2 500 HTG', 'm1')">Acheter le cours</button>
           </div>
         </div>
 
@@ -789,7 +1009,7 @@
           
           <div class="card-foot">
             <div class="price">3 000<span> HTG</span></div>
-            <button type="button" class="btn-enroll" onclick="openEnskriModal('Cadre Logique &amp; Indicateurs de Performance', '3 000 HTG', 'm2')">Acheter le cours</button>
+            <button type="button" class="btn-enroll" id="enrollBtn-m2" onclick="openEnskriModal('Cadre Logique &amp; Indicateurs de Performance', '3 000 HTG', 'm2')">Acheter le cours</button>
           </div>
         </div>
 
@@ -836,7 +1056,7 @@
               </div>
 			  <div class="card-foot">
                  <div class="price">3 500<span> HTG</span></div>
-                 <button type="button" class="btn-enroll" onclick="openEnskriModal('Collecte &amp; Analyse de Données sur le Terrain', '3 500 HTG', 'm3')">Acheter le cours</button>
+                 <button type="button" class="btn-enroll" id="enrollBtn-m3" onclick="openEnskriModal('Collecte &amp; Analyse de Données sur le Terrain', '3 500 HTG', 'm3')">Acheter le cours</button>
              </div>
             </div>
         </div>
@@ -884,7 +1104,7 @@
           
             <div class="card-foot">
              <div class="price">4 000<span> HTG</span></div>
-             <button type="button" class="btn-enroll" onclick="openEnskriModal('Rapport des Résultats &amp; Communication avec les Bailleurs', '4 000 HTG', 'm4')">Acheter le cours</button>
+             <button type="button" class="btn-enroll" id="enrollBtn-m4" onclick="openEnskriModal('Rapport des Résultats &amp; Communication avec les Bailleurs', '4 000 HTG', 'm4')">Acheter le cours</button>
             </div>
         </div>
 
@@ -1204,6 +1424,100 @@
 
       <button type="submit" class="btn-primary" id="registerSubmitBtn" style="width:100%; margin-top:14px;">S'inscrire</button>
       <p class="form-note">Déjà un compte ? <a href="#" id="registerToLoginLink" style="color:var(--blue); font-weight:600; text-decoration:none;">Se connecter</a></p>
+    </form>
+  </div>
+</div>
+
+<!-- ---------- MODALE : MON PROFIL ---------- -->
+<div class="modal-overlay" id="profileModal" aria-hidden="true">
+  <div class="modal-box" role="dialog" aria-modal="true" aria-labelledby="profileModalTitle">
+    <button type="button" class="modal-close" onclick="closeProfileModal()" aria-label="Fermer">
+      <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><line x1="4" y1="4" x2="20" y2="20"/><line x1="20" y1="4" x2="4" y2="20"/></svg>
+    </button>
+    <div class="modal-eyebrow">Espace étudiant</div>
+    <h3 id="profileModalTitle">Mon profil</h3>
+
+    <form class="signup-form" id="profileForm" style="max-width:none;">
+      <div class="profile-form-grid">
+
+        <span class="profile-section-label">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="8" r="4"/><path d="M4 20c1.5-4 5-6 8-6s6.5 2 8 6"/></svg>
+          Identité
+        </span>
+
+        <div class="profile-avatar-row">
+          <div class="profile-avatar-preview" id="profileAvatarPreview">É</div>
+          <div>
+            <button type="button" class="profile-avatar-edit" onclick="document.getElementById('profileAvatarInput').click()">Changer la photo</button>
+            <input type="file" id="profileAvatarInput" accept="image/*" style="display:none;">
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label for="profilePrenom">Prénom</label>
+          <input type="text" id="profilePrenom" placeholder="Votre prénom" autocomplete="given-name">
+        </div>
+        <div class="form-group">
+          <label for="profileNom">Nom</label>
+          <input type="text" id="profileNom" placeholder="Votre nom" autocomplete="family-name">
+        </div>
+
+        <div class="form-group">
+          <label for="profileRole">Rôle</label>
+          <select id="profileRole" style="width:100%; padding:12px 14px; border:1.5px solid var(--line); border-radius:8px; font-family:inherit; font-size:0.95rem; color:var(--ink); background:#fff;">
+            <option value="etudiant">Étudiant(e)</option>
+            <option value="agent_ong">Agent d'ONG</option>
+            <option value="cadre_etat">Cadre de l'État</option>
+            <option value="gestionnaire_projet">Gestionnaire de projet</option>
+            <option value="autre">Autre</option>
+          </select>
+        </div>
+        <div></div>
+
+        <span class="profile-section-label">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="M3 7l9 6 9-6"/></svg>
+          Contact
+        </span>
+
+        <div class="form-group">
+          <label for="profileEmail">Adresse e-mail</label>
+          <input type="email" id="profileEmail" placeholder="email@exemple.com" disabled>
+        </div>
+        <div class="form-group">
+          <label for="profileTelephone">Numéro de téléphone</label>
+          <input type="tel" id="profileTelephone" placeholder="+509 XXXX XXXX" autocomplete="tel">
+        </div>
+
+        <div class="form-group">
+          <label for="profilePays">Pays</label>
+          <input type="text" id="profilePays" placeholder="Haïti" autocomplete="country-name">
+        </div>
+        <div class="form-group">
+          <label for="profileLangue">Langue</label>
+          <select id="profileLangue" style="width:100%; padding:12px 14px; border:1.5px solid var(--line); border-radius:8px; font-family:inherit; font-size:0.95rem; color:var(--ink); background:#fff;">
+            <option value="fr">Français</option>
+            <option value="ht">Kreyòl ayisyen</option>
+            <option value="en">English</option>
+            <option value="es">Español</option>
+          </select>
+        </div>
+
+        <span class="profile-section-label">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M12 20h9"/><path d="M16.5 3.5a2.1 2.1 0 0 1 3 3L7 19l-4 1 1-4Z"/></svg>
+          Bio
+        </span>
+        <div class="form-row full" style="grid-column:1/-1;">
+          <div class="form-group" style="width:100%;">
+            <label for="profileBio">Courte description ou objectifs d'apprentissage</label>
+            <textarea id="profileBio" class="profile-bio" placeholder="Ex. Chargé de suivi-évaluation dans une ONG, je veux structurer mes indicateurs de projet."></textarea>
+          </div>
+        </div>
+      </div>
+
+      <p class="form-note" id="profileError" style="display:none; color:#B3261E; margin-top:10px;"></p>
+      <p class="form-note" id="profileSuccess" style="display:none; color:#2F6F52; margin-top:10px;"></p>
+
+      <button type="submit" class="btn-primary" id="profileSubmitBtn" style="width:100%; margin-top:14px;">Enregistrer mon profil</button>
     </form>
   </div>
 </div>
@@ -1679,6 +1993,9 @@
     var item = getModuleItems(mod)[idx];
     if(!item){ return; }
     lessonModalState = { mod: mod, idx: idx, item: item };
+    recordLastLesson(mod, idx);
+    startLearningTimer();
+    updateDashboard();
 
     var overlay = document.getElementById('lessonModal');
     var eyebrow = document.getElementById('lessonModalEyebrow');
@@ -1740,6 +2057,8 @@
     var body = document.getElementById('lessonModalBody');
     body.removeEventListener('scroll', onLessonBodyScroll);
     lessonModalState = null;
+    stopLearningTimer();
+    updateDashboard();
   }
 
   function renderQuizBody(body, item){
@@ -2254,12 +2573,300 @@
 
   function updateLoginButton(){
     var logged = isLoggedIn();
+
+    // Le bouton "Connexion" laisse totalement la place à l'espace profil (avatar + nom)
+    // une fois l'élève connecté.
     if(loginNavBtn){
-      loginNavBtn.textContent = logged ? 'Déconnexion' : 'Connexion';
-      loginNavBtn.classList.toggle('is-logged-in', logged);
+      loginNavBtn.style.display = logged ? 'none' : '';
     }
     if(loginNavLinkMobile){
       loginNavLinkMobile.textContent = logged ? 'Déconnexion' : 'Connexion';
+    }
+
+    var chip = document.getElementById('userChip');
+    if(chip){ chip.classList.toggle('active', logged); }
+    if(!logged){ closeUserDropdown(); }
+
+    if(logged){
+      var fullName = getAccountFullName() || 'Élève';
+      var email = (currentSession && currentSession.user && currentSession.user.email) || '';
+      var initial = fullName.trim().charAt(0).toUpperCase() || 'É';
+      var avatarUrl = getStoredAvatar();
+
+      ['userChipName'].forEach(function(id){
+        var el = document.getElementById(id);
+        if(el){ el.textContent = fullName; }
+      });
+      var dropdownName = document.getElementById('userDropdownName');
+      if(dropdownName){ dropdownName.textContent = fullName; }
+      var dropdownEmail = document.getElementById('userDropdownEmail');
+      if(dropdownEmail){ dropdownEmail.textContent = email; }
+
+      [document.getElementById('userChipAvatar'), document.getElementById('profileAvatarPreview')].forEach(function(el){
+        if(!el){ return; }
+        if(avatarUrl){
+          el.innerHTML = '<img src="' + avatarUrl + '" alt="Photo de profil">';
+        } else {
+          el.textContent = initial;
+        }
+      });
+    }
+
+    // Liens réservés aux élèves connectés dans le menu mobile (profil / tableau de bord / déconnexion)
+    var navLinksEl = document.getElementById('navLinks');
+    if(navLinksEl){ navLinksEl.classList.toggle('user-logged-in', logged); }
+
+    // Le tableau de bord (dashboard) ne s'affiche qu'une fois connecté.
+    var dashSection = document.getElementById('dashboard');
+    if(dashSection){ dashSection.classList.toggle('active', logged); }
+
+    updateDashboard();
+  }
+
+  function toggleUserDropdown(){
+    var dd = document.getElementById('userDropdown');
+    var chip = document.getElementById('userChip');
+    if(!dd || !chip){ return; }
+    var isOpen = dd.classList.toggle('open');
+    chip.setAttribute('aria-expanded', isOpen ? 'true' : 'false');
+  }
+
+  function closeUserDropdown(){
+    var dd = document.getElementById('userDropdown');
+    var chip = document.getElementById('userChip');
+    if(dd){ dd.classList.remove('open'); }
+    if(chip){ chip.setAttribute('aria-expanded', 'false'); }
+  }
+
+  document.addEventListener('click', function(e){
+    var wrap = document.getElementById('userChipWrap');
+    if(wrap && !wrap.contains(e.target)){ closeUserDropdown(); }
+  });
+
+  function scrollToDashboard(){
+    closeUserDropdown();
+    var el = document.getElementById('dashboard');
+    if(el){ el.scrollIntoView({behavior:'smooth'}); }
+  }
+
+  // ---- Avatar (stocké localement, par utilisateur : pas de colonne dédiée côté Supabase) ----
+  function avatarStorageKey(){
+    var uid = (currentSession && currentSession.user && currentSession.user.id) || 'anon';
+    return 'ha_avatar_' + uid;
+  }
+  function getStoredAvatar(){ return lsGet(avatarStorageKey()); }
+  function setStoredAvatar(dataUrl){ lsSet(avatarStorageKey(), dataUrl); }
+
+  var profileAvatarInput = document.getElementById('profileAvatarInput');
+  if(profileAvatarInput){
+    profileAvatarInput.addEventListener('change', function(){
+      var file = profileAvatarInput.files && profileAvatarInput.files[0];
+      if(!file){ return; }
+      var reader = new FileReader();
+      reader.onload = function(){
+        setStoredAvatar(reader.result);
+        var preview = document.getElementById('profileAvatarPreview');
+        if(preview){ preview.innerHTML = '<img src="' + reader.result + '" alt="Photo de profil">'; }
+        var chipAvatar = document.getElementById('userChipAvatar');
+        if(chipAvatar){ chipAvatar.innerHTML = '<img src="' + reader.result + '" alt="Photo de profil">'; }
+      };
+      reader.readAsDataURL(file);
+    });
+  }
+
+  // ---- Modale "Mon profil" (identité, contact, bio) ----
+  var profileModal = document.getElementById('profileModal');
+  var profileForm = document.getElementById('profileForm');
+  var profileError = document.getElementById('profileError');
+  var profileSuccess = document.getElementById('profileSuccess');
+  var profileLastFocused = null;
+
+  function profileStorageKey(){
+    var uid = (currentSession && currentSession.user && currentSession.user.id) || 'anon';
+    return 'ha_profile_' + uid;
+  }
+
+  function openProfileModal(){
+    closeUserDropdown();
+    if(!isLoggedIn()){ openLoginModal(); return; }
+    var meta = (currentSession.user && currentSession.user.user_metadata) || {};
+    var extra = {};
+    try{ extra = JSON.parse(lsGet(profileStorageKey()) || '{}'); }catch(e){ extra = {}; }
+
+    document.getElementById('profilePrenom').value = meta.prenom || '';
+    document.getElementById('profileNom').value = meta.nom || '';
+    document.getElementById('profileRole').value = extra.role || 'etudiant';
+    document.getElementById('profileEmail').value = (currentSession.user && currentSession.user.email) || '';
+    document.getElementById('profileTelephone').value = meta.telephone || '';
+    document.getElementById('profilePays').value = extra.pays || '';
+    document.getElementById('profileLangue').value = extra.langue || 'fr';
+    document.getElementById('profileBio').value = extra.bio || '';
+
+    var avatarUrl = getStoredAvatar();
+    var preview = document.getElementById('profileAvatarPreview');
+    if(preview){
+      if(avatarUrl){ preview.innerHTML = '<img src="' + avatarUrl + '" alt="Photo de profil">'; }
+      else { preview.textContent = (getAccountFullName() || 'É').charAt(0).toUpperCase(); }
+    }
+
+    if(profileError){ profileError.style.display = 'none'; }
+    if(profileSuccess){ profileSuccess.style.display = 'none'; }
+
+    profileLastFocused = document.activeElement;
+    profileModal.classList.add('open');
+    profileModal.setAttribute('aria-hidden', 'false');
+    document.body.style.overflow = 'hidden';
+    var firstInput = profileModal.querySelector('input:not([disabled])');
+    if(firstInput){ firstInput.focus(); }
+  }
+
+  function closeProfileModal(){
+    profileModal.classList.remove('open');
+    profileModal.setAttribute('aria-hidden', 'true');
+    document.body.style.overflow = '';
+    if(profileLastFocused){ profileLastFocused.focus(); }
+  }
+
+  if(profileForm){
+    profileForm.addEventListener('submit', function(e){
+      e.preventDefault();
+      if(!isLoggedIn()){ return; }
+
+      var prenom = document.getElementById('profilePrenom').value.trim();
+      var nom = document.getElementById('profileNom').value.trim();
+      var telephone = document.getElementById('profileTelephone').value.trim();
+      var role = document.getElementById('profileRole').value;
+      var pays = document.getElementById('profilePays').value.trim();
+      var langue = document.getElementById('profileLangue').value;
+      var bio = document.getElementById('profileBio').value.trim();
+
+      if(profileError){ profileError.style.display = 'none'; }
+      if(profileSuccess){ profileSuccess.style.display = 'none'; }
+
+      // Champs non pris en charge par une colonne Supabase dédiée (rôle, pays, langue, bio) :
+      // conservés localement, par élève.
+      lsSet(profileStorageKey(), JSON.stringify({ role: role, pays: pays, langue: langue, bio: bio }));
+
+      supabaseClient.auth.updateUser({
+        data: { prenom: prenom, nom: nom, telephone: telephone }
+      }).then(function(result){
+        if(result.error){
+          if(profileError){
+            profileError.textContent = result.error.message;
+            profileError.style.display = 'block';
+          }
+          return;
+        }
+        currentSession.user = result.data.user;
+        updateLoginButton();
+        refreshAll();
+        if(profileSuccess){
+          profileSuccess.textContent = 'Profil mis à jour avec succès.';
+          profileSuccess.style.display = 'block';
+        }
+      }).catch(function(){
+        if(profileError){
+          profileError.textContent = "Impossible d'enregistrer le profil pour le moment.";
+          profileError.style.display = 'block';
+        }
+      });
+    });
+  }
+
+  profileModal.addEventListener('click', function(e){
+    if(e.target === profileModal){ closeProfileModal(); }
+  });
+  document.addEventListener('keydown', function(e){
+    if(e.key === 'Escape' && profileModal.classList.contains('open')){ closeProfileModal(); }
+  });
+
+  // ---- Temps d'apprentissage & reprise du dernier cours (tableau de bord) ----
+  function learningTimeKey(){
+    var uid = (currentSession && currentSession.user && currentSession.user.id) || 'anon';
+    return 'ha_learntime_' + uid;
+  }
+  function lastLessonKey(){
+    var uid = (currentSession && currentSession.user && currentSession.user.id) || 'anon';
+    return 'ha_lastlesson_' + uid;
+  }
+  function getTotalLearningSeconds(){ return parseInt(lsGet(learningTimeKey()) || '0', 10) || 0; }
+  function addLearningSeconds(sec){
+    var total = getTotalLearningSeconds() + sec;
+    lsSet(learningTimeKey(), String(total));
+  }
+  function recordLastLesson(mod, idx){
+    lsSet(lastLessonKey(), JSON.stringify({ mod: mod, idx: idx, ts: Date.now() }));
+  }
+  function getLastLesson(){
+    try{ return JSON.parse(lsGet(lastLessonKey()) || 'null'); }catch(e){ return null; }
+  }
+
+  var learningTimerInterval = null;
+  function startLearningTimer(){
+    stopLearningTimer();
+    learningTimerInterval = setInterval(function(){ addLearningSeconds(15); }, 15000);
+  }
+  function stopLearningTimer(){
+    if(learningTimerInterval){ clearInterval(learningTimerInterval); learningTimerInterval = null; }
+  }
+
+  function formatLearningDuration(totalSeconds){
+    var totalMin = Math.round(totalSeconds / 60);
+    if(totalMin < 60){ return totalMin + ' min'; }
+    var h = Math.floor(totalMin / 60), m = totalMin % 60;
+    return h + ' h' + (m ? ' ' + m + ' min' : '');
+  }
+
+  function updateDashboard(){
+    if(typeof MODULE_CERT_TITLES === 'undefined'){ return; }
+    var totalTimeEl = document.getElementById('dashTotalTime');
+    if(totalTimeEl){ totalTimeEl.textContent = formatLearningDuration(getTotalLearningSeconds()); }
+
+    var listEl = document.getElementById('dashCourseList');
+    var avgEl = document.getElementById('dashAvgPct');
+    if(listEl){
+      listEl.innerHTML = '';
+      var sumPct = 0;
+      MODULES.forEach(function(mod){
+        var items = getModuleItems(mod);
+        var total = items.length, done = 0;
+        for(var i = 0; i < total; i++){ if(isLessonDone(mod, i)) done++; }
+        var pct = total ? Math.round((done / total) * 100) : 0;
+        sumPct += pct;
+        var card = document.createElement('div');
+        card.className = 'dash-course-card';
+        card.innerHTML =
+          '<div class="dash-course-top">' +
+            '<span>' + (MODULE_CERT_TITLES[mod] || mod) + '</span>' +
+            '<span class="dash-course-pct' + (pct === 100 ? ' done' : '') + '">' + pct + '%</span>' +
+          '</div>' +
+          '<div class="progress-track"><div class="progress-fill" style="width:' + pct + '%;"></div></div>';
+        listEl.appendChild(card);
+      });
+      if(avgEl){ avgEl.textContent = (MODULES.length ? Math.round(sumPct / MODULES.length) : 0) + '%'; }
+    }
+
+    var resumeTitle = document.getElementById('dashResumeTitle');
+    var resumeBtn = document.getElementById('dashResumeBtn');
+    var resumeEmpty = document.getElementById('dashResumeEmpty');
+    var last = getLastLesson();
+    if(last && MODULE_CERT_TITLES[last.mod]){
+      if(resumeTitle){ resumeTitle.textContent = MODULE_CERT_TITLES[last.mod]; }
+      if(resumeBtn){
+        resumeBtn.style.display = '';
+        resumeBtn.onclick = function(){
+          var card = document.getElementById('card-' + last.mod);
+          if(card){ card.scrollIntoView({behavior:'smooth', block:'center'}); }
+          if(isModuleUnlocked(last.mod)){
+            setTimeout(function(){ openLessonModal(last.mod, last.idx); }, 350);
+          }
+        };
+      }
+      if(resumeEmpty){ resumeEmpty.style.display = 'none'; }
+    } else {
+      if(resumeTitle){ resumeTitle.textContent = '—'; }
+      if(resumeBtn){ resumeBtn.style.display = 'none'; }
+      if(resumeEmpty){ resumeEmpty.style.display = 'block'; }
     }
   }
 
@@ -2309,10 +2916,22 @@
       if(list){ list.style.display = ''; }
 
       var status = paymentStatus[mod]; // undefined | 'pending' | 'confirmed'
+      var enrollBtn = document.getElementById('enrollBtn-' + mod);
 
       if(status === 'confirmed'){
         if(locked){ locked.style.display = 'none'; }
+        if(enrollBtn){
+          enrollBtn.classList.add('btn-enroll-owned');
+          enrollBtn.disabled = true;
+          enrollBtn.onclick = null;
+          enrollBtn.innerHTML = '<span class="owned-check"><svg viewBox="0 0 12 12" fill="none"><path d="M2 6.2L4.7 9L10 3" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></span>Cours acheté';
+        }
       } else {
+        if(enrollBtn && enrollBtn.classList.contains('btn-enroll-owned')){
+          enrollBtn.classList.remove('btn-enroll-owned');
+          enrollBtn.disabled = false;
+          enrollBtn.textContent = 'Acheter le cours';
+        }
         if(locked){ locked.style.display = 'flex'; }
         if(status === 'pending'){
           if(msg){ msg.textContent = "Paiement reçu — en attente de vérification manuelle. Vous recevrez l'accès dans les 24h suivant la confirmation."; }
