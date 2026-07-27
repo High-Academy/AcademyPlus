@@ -2708,7 +2708,8 @@ function openVideoModal(videoId, title){
   var titleEl = document.getElementById('videoModalTitle');
   if(!overlay || !iframe){ return; }
 
-  iframe.src = 'https://www.youtube.com/embed/' + videoId + '?autoplay=1&rel=0';
+  iframe.src = 'https://www.youtube-nocookie.com/embed/' + videoId +
+  '?autoplay=1&rel=0&modestbranding=1&iv_load_policy=3&disablekb=1&fs=1';
   if(titleEl){ titleEl.textContent = title || ''; }
 
   overlay.classList.add('open');
