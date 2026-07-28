@@ -2155,14 +2155,15 @@
     <div class="modal-eyebrow">Vidéo</div>
     <h3 id="videoModalTitle">Titre de la vidéo</h3>
     <div class="video-modal-frame">
-      <iframe id="videoModalIframe"
-              src=""
-              title="Vidéo de la leçon"
-              frameborder="0"
-              allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-              allowfullscreen></iframe>
+      <video id="videoModalPlayer" controls controlsList="nodownload noremoteplayback" disablePictureInPicture playsinline>
+        Votre navigateur ne supporte pas la lecture vidéo.
+      </video>
+    </div>
+    <div class="lesson-modal-footer">
+      <button type="button" class="btn-primary" id="videoModalAction" style="width:100%;" disabled>Passez à la leçon suivante →</button>
     </div>
   </div>
+</div>
 </div>
 
 <!-- ---------- MODALE : AVERTISSEMENT D'INACTIVITÉ ---------- -->
@@ -2575,13 +2576,11 @@
         '<span class="lesson-status"><svg viewBox="0 0 12 12" fill="none"><path d="M2 6.2L4.7 9L10 3" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></span>' +
         '<span class="lesson-title">' + titlePrefix + item.title + '</span>' +
         (!unlocked ? '<svg class="lesson-lock" viewBox="0 0 24 24" fill="none"><rect x="5" y="11" width="14" height="9" rx="2" stroke="currentColor" stroke-width="1.6"/><path d="M8 11V8a4 4 0 0 1 8 0v3" stroke="currentColor" stroke-width="1.6"/></svg>' : '');
-      
-	  if(unlocked){
+
+      if(unlocked){
         btn.addEventListener('click', function(){
           if(isVideo){
-            openVideoModal(item.videoId, item.title);
-            setLessonDone(mod, idx, true); // marque la vidéo comme "vue" dès l'ouverture
-            updateModuleProgress(mod);
+            openVideoModal(item.url, item.title, mod, idx);
           } else {
             openLessonModal(mod, idx);
           }
@@ -2657,26 +2656,24 @@
       actionBtn.textContent = 'Valider mes réponses';
       actionBtn.disabled = false;
       actionBtn.onclick = function(){ submitQuiz(mod, idx, item, body, actionBtn); };
-    } else {
+    }  else {
       eyebrow.textContent = 'Leçon';
       var p = document.createElement('p');
-      // Le contenu est un simple texte pédagogique (pas de HTML utilisateur) : on peut
-      // le découper en paragraphes sur les doubles retours à la ligne éventuels.
       item.body.split(/\n{2,}/).forEach(function(para){
         var pEl = document.createElement('p');
         pEl.textContent = para;
         body.appendChild(pEl);
       });
       hint.style.display = 'block';
-      actionBtn.textContent = 'J\'ai terminé cette leçon';
+      actionBtn.textContent = 'Passez à la leçon suivante →';
       actionBtn.disabled = true;
       actionBtn.onclick = function(){
         setLessonDone(mod, idx, true);
         closeLessonModal();
         refreshAll();
+        goToNextLesson(mod, idx);
       };
       body.addEventListener('scroll', onLessonBodyScroll);
-      // Si le texte tient déjà entièrement à l'écran (rien à faire défiler), on débloque direct.
       setTimeout(function(){ onLessonBodyScroll(); }, 50);
     }
 
@@ -2702,19 +2699,52 @@
     stopLearningTimer();
     updateDashboard();
   }
-function openVideoModal(videoId, title){
-  var overlay = document.getElementById('videoModal');
-  var iframe = document.getElementById('videoModalIframe');
-  var titleEl = document.getElementById('videoModalTitle');
-  if(!overlay || !iframe){ return; }
+var videoModalState = null; // { mod, idx }
 
-  iframe.src = 'https://www.youtube-nocookie.com/embed/' + videoId +
-  '?autoplay=1&rel=0&modestbranding=1&iv_load_policy=3&disablekb=1&fs=1';
+function openVideoModal(url, title, mod, idx){
+  var overlay = document.getElementById('videoModal');
+  var player = document.getElementById('videoModalPlayer');
+  var titleEl = document.getElementById('videoModalTitle');
+  var actionBtn = document.getElementById('videoModalAction');
+  if(!overlay || !player){ return; }
+
+  videoModalState = { mod: mod, idx: idx };
+  player.src = url;
   if(titleEl){ titleEl.textContent = title || ''; }
+
+  actionBtn.disabled = true;
+  actionBtn.onclick = function(){
+    setLessonDone(mod, idx, true);
+    closeVideoModal();
+    refreshAll();
+	goToNextLesson(mod, idx);
+  };
+
+  player.addEventListener('ended', onVideoEnded);
 
   overlay.classList.add('open');
   overlay.setAttribute('aria-hidden', 'false');
   document.body.style.overflow = 'hidden';
+  player.play().catch(function(){});
+}
+
+function onVideoEnded(){
+  var actionBtn = document.getElementById('videoModalAction');
+  if(actionBtn){ actionBtn.disabled = false; }
+}
+
+function closeVideoModal(){
+  var overlay = document.getElementById('videoModal');
+  var player = document.getElementById('videoModalPlayer');
+  if(!overlay || !player){ return; }
+
+  player.pause();
+  player.removeEventListener('ended', onVideoEnded);
+  player.src = '';
+  overlay.classList.remove('open');
+  overlay.setAttribute('aria-hidden', 'true');
+  document.body.style.overflow = '';
+  videoModalState = null;
 }
 
 function closeVideoModal(){
@@ -2797,15 +2827,19 @@ document.addEventListener('keydown', function(e){
     body.insertBefore(resultEl, body.firstChild);
 
     if(pass){
-      setLessonDone(mod, idx, true);
-      actionBtn.textContent = 'Continuer';
-      actionBtn.disabled = false;
-      actionBtn.onclick = function(){ closeLessonModal(); refreshAll(); };
-    } else {
-      actionBtn.textContent = 'Réessayer';
-      actionBtn.disabled = false;
-      actionBtn.onclick = function(){ openLessonModal(mod, idx); };
-    }
+  setLessonDone(mod, idx, true);
+  actionBtn.textContent = 'Téléchargez votre certificat';
+  actionBtn.disabled = false;
+  actionBtn.onclick = function(){
+    closeLessonModal();
+    refreshAll();
+    goToCertificate(mod);
+  };
+} else {
+  actionBtn.textContent = 'Réessayer';
+  actionBtn.disabled = false;
+  actionBtn.onclick = function(){ openLessonModal(mod, idx); };
+}
   }
 
   MODULES.forEach(renderLessonList);
