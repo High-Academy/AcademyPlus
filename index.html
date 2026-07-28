@@ -2629,6 +2629,36 @@
 
   // ---- Modale leçon / quiz ----
   var lessonModalState = null; // { mod, idx, item }
+  
+ function goToNextLesson(mod, idx){
+  var items = getModuleItems(mod);
+  var nextIdx = idx + 1;
+  if(nextIdx >= items.length){ return; }
+
+  var nextItem = items[nextIdx];
+  var unlocked = isModuleUnlocked(mod) && isLessonDone(mod, nextIdx - 1);
+  if(!unlocked){ return; }
+
+  setTimeout(function(){
+    if(nextItem.type === 'video'){
+      openVideoModal(nextItem.url, nextItem.title, mod, nextIdx);
+    } else {
+      openLessonModal(mod, nextIdx);
+    }
+  }, 200);
+}
+
+function goToCertificate(mod){
+  setTimeout(function(){
+    var specificSection = document.getElementById('certPreviewWrap-' + mod)
+      || document.getElementById('certForm-' + mod)
+      || document.getElementById('certLockedMsg-' + mod);
+    var target = specificSection || document.getElementById('certificat');
+    if(target){
+      target.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    }
+  }, 250);
+}
 
   function openLessonModal(mod, idx){
     var item = getModuleItems(mod)[idx];
