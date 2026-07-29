@@ -219,17 +219,10 @@
 
   /* ---------- HERO ---------- */
   
- 
-  
-  
-  
-  
-  =========================
-  
-  
+   
   .hero{
     padding:0px 0 48px;
-	margin-top:5px;
+	margin-top:0px;
   }
   
   @media (max-width:760px){
@@ -265,9 +258,9 @@
     .hero-grid > div:not(.hero-illustration){order:1;}
   }
   .eyebrow{
-    font-family:'IBM Plex Mono', monospace; font-size:1.72rem; letter-spacing:.normal;
+    font-family:'IBM Plex Mono', monospace; font-size:rem; letter-spacing:.normal;
     text-transform:uppercase; color:#DAA243; margin-bottom:12px; display:flex; gap:10px; align-items:center;
-	margin-top:0px;
+	margin-top:-10px;
   }
   .eyebrow::before{content:""; width:26px; height:1px; background:var(--teal);}
   .hero h1{font-size:clamp(2rem, 3.4vw, 2.85rem); line-height:1.14; max-width:20ch;}
@@ -362,7 +355,7 @@
 .hero-title{
     font-size:clamp(1.6rem, 3.2vw, 2.35rem);
     line-height:1.2; font-weight:800; margin:0 0 16px;
-    max-width:22ch;
+    max-width:22ch; color:#E8A96B; text-align: justify;
 }
 .hero-subtitle{
     font-size:1.02rem; line-height:1.55; color:rgba(255,255,255,0.9);
@@ -483,9 +476,9 @@
 
   /* ---------- STRIP ---------- */
   .strip{
-    background:var(--navy); color:#fff; padding:14px 0;
+    background:#9C3EF2; color:#fff; padding:14px 0; margin-top: -40px; margin-right: 40px; margin-left: 42px; height: 20px;
   }
-  .strip .wrap{display:flex; justify-content:space-between; flex-wrap:wrap; gap:18px;}
+  .strip .wrap{display:flex; justify-content:space-between; flex-wrap:wrap; gap:8px;margin-top: -15px;}
   .strip-item{display:inline-flex; align-items:baseline; gap:8px; font-size:0.9rem; color:#CBD3E1; margin-right:40px;}
   .strip-item b{font-family:'Inter', sans-serif; color:#fff; font-size:1.15rem; font-weight:600;}
 
@@ -510,10 +503,30 @@
   .feature-card p{color:var(--ink-soft); font-size:0.9rem; margin:0; line-height:1.4;}
 
   /* ---------- POURQUOI CHOISIR (image + checklist) ---------- */
-  .why-grid{display:grid; grid-template-columns:0.85fr 1.15fr; gap:48px; align-items:center;}
+  
+.why-content{
+  align-self:stretch;
+}
+.why-media{
+  height:100%;
+}
+.why-grid{
+  display:grid; 
+  grid-template-columns:0.85fr 1.15fr; 
+  gap:48px; 
+  align-items:stretch;
+}
+  .why-media img{
+  width:100%; 
+  height:80%;  /* remplit toute la hauteur de .why-media */
+  object-fit:cover;  /* garde les proportions sans déformer, recadre si besoin */
+  border-radius:14px; 
+  box-shadow:var(--shadow); 
+  display:block;
+}
   @media(max-width:760px){ .why-grid{grid-template-columns:1fr;} }
-  .why-media img{width:100%; height:auto; border-radius:14px; object-fit:cover; box-shadow:var(--shadow); display:block;}
-  .why-content h2{font-size:clamp(1.6rem,2.6vw,2.1rem); margin-top:10px; line-height:1.25;}
+ 
+  .why-content h2{font-size:clamp(1.6rem,2.6vw,2.1rem); margin-top:-6px; line-height:1;}
   #pourquoi .eyebrow{color:var(--blue);}
   #pourquoi .eyebrow::before{background:var(--blue);}
   .why-checklist{
@@ -522,7 +535,7 @@
   }
   @media(max-width:520px){ .why-checklist{grid-template-columns:1fr;} }
   .why-checklist li{
-    position:relative; padding-left:30px; font-size:0.96rem; color:var(--navy); font-weight:600;
+    position:relative; padding-left:30px; font-size:0.9rem; color:var(--navy); font-weight:600;
   }
   .why-checklist li::before{
     content:""; position:absolute; left:0; top:1px; width:20px; height:20px; border-radius:50%;
@@ -622,7 +635,7 @@
 
   .card{
     background:var(--panel); border-radius:14px; padding:24px;
-    border:1px solid var(--line); box-shadow:var(--shadow); display:flex; flex-direction:column; gap:14px;
+    border:1px solid var(--line); box-shadow:var(--shadow); display:flex; flex-direction:column; gap:14px; height:100%;
     transition:transform .15s ease, box-shadow .15s ease;
   }
   .card:hover{transform:translateY(-3px); box-shadow:0 16px 30px -20px rgba(0,0,0,0.3);}
@@ -656,7 +669,7 @@
   .card-meta{display:flex; gap:16px; font-size:0.82rem; color:var(--ink-soft); font-family:'IBM Plex Mono', monospace;}
   .card-foot{
     margin-top:auto; display:flex; align-items:center; justify-content:space-between;
-    padding-top:18px; border-top:1px dashed var(--line);
+    padding-top:16px; border-top:1px dashed var(--line);
   }
   .price{font-family:'Inter', sans-serif; font-size:1.5rem; font-weight:800; color:var(--navy);}
   .price span{font-size:0.78rem; font-family:'Inter'; color:var(--ink-soft); font-weight:500;}
@@ -727,7 +740,9 @@
   .lesson-locked-btn{font-size:0.82rem; padding:9px 20px;}
 
   /* ---------- VIDÉO D'INTRODUCTION DU MODULE ---------- */
-  .lesson-panel{display:flex; flex-direction:column; align-items:stretch; gap:14px; margin-top:6px;}
+  .lesson-panel{display:flex; flex-direction:column; align-items:stretch; gap:14px; margin-top:6px;
+  flex:1 1 auto;   /* ← ajouté : prend toute la hauteur restante dans .card */
+  height:100%;}
   
   .lesson-panel .lesson-content{flex:1 1 auto; min-width:0;}
   .lesson-panel .lesson-content .lesson-list,
@@ -1460,7 +1475,22 @@
           <div class="progress-label"><span id="ptxt-m1">0/4 leçons terminées</span><span class="ppct" id="ppct-m1">0%</span></div>
           <a href="#cert-m1" id="certmini-m1" style="display:none; font-size:0.8rem; font-weight:700; color:var(--teal); text-decoration:none;">🎓 Certificat du module débloqué — cliquez pour le générer</a>
           
-            <summary>Le contenu du module</summary>
+            
+			
+			<div class="module-video">
+                <span class="module-video-label">Vidéo d'intro</span>
+                <div class="module-video-frame">
+                  <video id="introVideo-m1" controls controlsList="nodownload noremoteplayback" disablePictureInPicture playsinline preload="metadata" oncontextmenu="return false;">
+                    <source src="https://interactive-examples.mdn.mozilla.net/media/cc0-videos/flower.mp4" type="video/mp4">
+                    Votre navigateur ne supporte pas la lecture vidéo.
+                  </video>
+                </div>
+                <button type="button" class="module-video-fs-btn" onclick="openVideoFullscreen('introVideo-m1')">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M8 3H5a2 2 0 0 0-2 2v3"/><path d="M21 8V5a2 2 0 0 0-2-2h-3"/><path d="M3 16v3a2 2 0 0 0 2 2h3"/><path d="M16 21h3a2 2 0 0 0 2-2v-3"/></svg>
+                  Plein écran
+                </button>
+              </div>
+			  <summary>Contenu du module</summary>
             <div class="lesson-panel">
               <div class="lesson-content">
                 <ul class="lesson-list" id="lessonList-m1">
@@ -1475,19 +1505,7 @@
               <button type="button" class="btn-ghost lesson-locked-btn" id="lessonLockedBtn-m1" onclick="openEnskriModal('Introduction au Suivi &amp; Évaluation de Projet', '2 500 HTG', 'm1')">Acheter pour débloquer</button>
             </div>
               </div>
-              <div class="module-video">
-                <span class="module-video-label">Vidéo d'intro</span>
-                <div class="module-video-frame">
-                  <video id="introVideo-m1" controls controlsList="nodownload noremoteplayback" disablePictureInPicture playsinline preload="metadata" oncontextmenu="return false;">
-                    <source src="https://interactive-examples.mdn.mozilla.net/media/cc0-videos/flower.mp4" type="video/mp4">
-                    Votre navigateur ne supporte pas la lecture vidéo.
-                  </video>
-                </div>
-                <button type="button" class="module-video-fs-btn" onclick="openVideoFullscreen('introVideo-m1')">
-                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M8 3H5a2 2 0 0 0-2 2v3"/><path d="M21 8V5a2 2 0 0 0-2-2h-3"/><path d="M3 16v3a2 2 0 0 0 2 2h3"/><path d="M16 21h3a2 2 0 0 0 2-2v-3"/></svg>
-                  Plein écran
-                </button>
-              </div>
+              
             </div>
           
           <div class="card-foot">
@@ -1517,23 +1535,9 @@
           <div class="progress-label"><span id="ptxt-m2">0/5 leçons terminées</span><span class="ppct" id="ppct-m2">0%</span></div>
           <a href="#cert-m2" id="certmini-m2" style="display:none; font-size:0.8rem; font-weight:700; color:var(--teal); text-decoration:none;">🎓 Certificat du module débloqué — cliquez pour le générer</a>
           
-            <summary>Contenu du module</summary>
+           
             <div class="lesson-panel">
-              <div class="lesson-content">
-                <ul class="lesson-list" id="lessonList-m2">
-              <li> Construire un Cadre Logique (logframe)</li>
-              <li> Définir des indicateurs SMART</li>
-              <li> Relier indicateurs et objectifs</li>
-              <li> Étude de cas pratique</li>
-              <li> Quiz — Cadre Logique et Indicateurs</li>
-            </ul>
-            <div class="lesson-locked" id="lessonLocked-m2">
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="5" y="11" width="14" height="9" rx="1.5"/><path d="M8 11V8a4 4 0 0 1 8 0v3"/></svg>
-              <p id="lessonLockedMsg-m2">Le contenu détaillé de ce module est réservé aux personnes inscrites. Inscrivez-vous, puis connectez-vous avec le code d'accès reçu après vérification du paiement.</p>
-              <button type="button" class="btn-ghost lesson-locked-btn" id="lessonLockedBtn-m2" onclick="openEnskriModal('Cadre Logique &amp; Indicateurs de Performance', '3 000 HTG', 'm2')">Acheter pour débloquer</button>
-            </div>
-              </div>
-              <div class="module-video">
+			<div class="module-video">
                 <span class="module-video-label">Vidéo d'intro</span>
                 <div class="module-video-frame">
                   <video id="introVideo-m2" controls controlsList="nodownload noremoteplayback" disablePictureInPicture playsinline preload="metadata" oncontextmenu="return false;">
@@ -1546,6 +1550,22 @@
                   Plein écran
                 </button>
               </div>
+			  <summary>Contenu du module</summary>
+              <div class="lesson-content">
+			  <ul class="lesson-list" id="lessonList-m2">
+              <li> Construire un Cadre Logique (logframe)</li>
+              <li> Définir des indicateurs SMART</li>
+              <li> Relier indicateurs et objectifs</li>
+              <li> Étude de cas pratique</li>
+              <li> Quiz — Cadre Logique et Indicateurs</li>
+            </ul>
+            <div class="lesson-locked" id="lessonLocked-m2">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="5" y="11" width="14" height="9" rx="1.5"/><path d="M8 11V8a4 4 0 0 1 8 0v3"/></svg>
+              <p id="lessonLockedMsg-m2">Le contenu détaillé de ce module est réservé aux personnes inscrites. Inscrivez-vous, puis connectez-vous avec le code d'accès reçu après vérification du paiement.</p>
+              <button type="button" class="btn-ghost lesson-locked-btn" id="lessonLockedBtn-m2" onclick="openEnskriModal('Cadre Logique &amp; Indicateurs de Performance', '3 000 HTG', 'm2')">Acheter pour débloquer</button>
+            </div>
+              </div>
+              
             </div>
           
           <div class="card-foot">
@@ -1575,8 +1595,22 @@
           <div class="progress-label"><span id="ptxt-m3">0/6 leçons terminées</span><span class="ppct" id="ppct-m3">0%</span></div>
           <a href="#cert-m3" id="certmini-m3" style="display:none; font-size:0.8rem; font-weight:700; color:var(--teal); text-decoration:none;">🎓 Certificat du module débloqué — cliquez pour le générer</a>
           
-            <summary>Contenu du module</summary>
+           
             <div class="lesson-panel">
+			<div class="module-video">
+                <span class="module-video-label">Vidéo d'intro</span>
+                <div class="module-video-frame">
+                  <video id="introVideo-m3" controls controlsList="nodownload noremoteplayback" disablePictureInPicture playsinline preload="metadata" oncontextmenu="return false;">
+                    <source src="https://interactive-examples.mdn.mozilla.net/media/cc0-videos/flower.mp4" type="video/mp4">
+                    Votre navigateur ne supporte pas la lecture vidéo.
+                  </video>
+                </div>
+                <button type="button" class="module-video-fs-btn" onclick="openVideoFullscreen('introVideo-m3')">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M8 3H5a2 2 0 0 0-2 2v3"/><path d="M21 8V5a2 2 0 0 0-2-2h-3"/><path d="M3 16v3a2 2 0 0 0 2 2h3"/><path d="M16 21h3a2 2 0 0 0 2-2v-3"/></svg>
+                  Plein écran
+                </button>
+              </div>
+			   <summary>Contenu du module</summary>
               <div class="lesson-content">
                 <ul class="lesson-list" id="lessonList-m3">
               <li> Méthodes de collecte sur le terrain</li>
@@ -1592,20 +1626,7 @@
               <button type="button" class="btn-ghost lesson-locked-btn" id="lessonLockedBtn-m3" onclick="openEnskriModal('Collecte &amp; Analyse de Données sur le Terrain', '3 500 HTG', 'm3')">Acheter pour débloquer</button>
             </div>
               </div>
-              <div class="module-video">
-                <span class="module-video-label">Vidéo d'intro</span>
-                <div class="module-video-frame">
-                  <video id="introVideo-m3" controls controlsList="nodownload noremoteplayback" disablePictureInPicture playsinline preload="metadata" oncontextmenu="return false;">
-                    <source src="https://interactive-examples.mdn.mozilla.net/media/cc0-videos/flower.mp4" type="video/mp4">
-                    Votre navigateur ne supporte pas la lecture vidéo.
-                  </video>
-                </div>
-                <button type="button" class="module-video-fs-btn" onclick="openVideoFullscreen('introVideo-m3')">
-                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M8 3H5a2 2 0 0 0-2 2v3"/><path d="M21 8V5a2 2 0 0 0-2-2h-3"/><path d="M3 16v3a2 2 0 0 0 2 2h3"/><path d="M16 21h3a2 2 0 0 0 2-2v-3"/></svg>
-                  Plein écran
-                </button>
-              </div>
-			  <div class="card-foot">
+              <div class="card-foot">
                  <div class="price">3 500<span> HTG</span></div>
                  <button type="button" class="btn-enroll" id="enrollBtn-m3" onclick="openEnskriModal('Collecte &amp; Analyse de Données sur le Terrain', '3 500 HTG', 'm3')">Acheter le cours</button>
              </div>
@@ -1635,8 +1656,21 @@
           <a href="#cert-m4" id="certmini-m4" style="display:none; font-size:0.8rem; font-weight:700; color:var(--teal); text-decoration:none;">🎓 Certificat du module débloqué — cliquez pour le générer</a>
             
 		   
-            <summary>Le contenu du module</summary>
             <div class="lesson-panel" >
+			<div class="module-video">
+                <span class="module-video-label">Vidéo d'intro</span>
+                <div class="module-video-frame">
+                  <video id="introVideo-m4" controls controlsList="nodownload noremoteplayback" disablePictureInPicture playsinline preload="metadata" oncontextmenu="return false;">
+                    <source src="https://interactive-examples.mdn.mozilla.net/media/cc0-videos/flower.mp4" type="video/mp4">
+                    Votre navigateur ne supporte pas la lecture vidéo.
+                  </video>
+                 </div>
+                 <button type="button" class="module-video-fs-btn" onclick="openVideoFullscreen('introVideo-m4')">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M8 3H5a2 2 0 0 0-2 2v3"/><path d="M21 8V5a2 2 0 0 0-2-2h-3"/><path d="M3 16v3a2 2 0 0 0 2 2h3"/><path d="M16 21h3a2 2 0 0 0 2-2v-3"/></svg>
+                  Plein écran
+                 </button>
+            </div>
+			<summary>Contenu du module</summary>
               <div class="lesson-content">
                 <ul class="lesson-list" id="lessonList-m4">
                 <li> Structurer un rapport S&amp;E</li>
@@ -1650,21 +1684,7 @@
               <button type="button" class="btn-ghost lesson-locked-btn" id="lessonLockedBtn-m4" onclick="openEnskriModal('Rapport des Résultats &amp; Communication avec les Bailleurs', '4 000 HTG', 'm4')">Acheter pour débloquer</button>
             </div>
               </div>
-            <div class="module-video">
-                <span class="module-video-label">Vidéo d'intro</span>
-                <div class="module-video-frame">
-                  <video id="introVideo-m4" controls controlsList="nodownload noremoteplayback" disablePictureInPicture playsinline preload="metadata" oncontextmenu="return false;">
-                    <source src="https://interactive-examples.mdn.mozilla.net/media/cc0-videos/flower.mp4" type="video/mp4">
-                    Votre navigateur ne supporte pas la lecture vidéo.
-                  </video>
-                 </div>
-                 <button type="button" class="module-video-fs-btn" onclick="openVideoFullscreen('introVideo-m4')">
-                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M8 3H5a2 2 0 0 0-2 2v3"/><path d="M21 8V5a2 2 0 0 0-2-2h-3"/><path d="M3 16v3a2 2 0 0 0 2 2h3"/><path d="M16 21h3a2 2 0 0 0 2-2v-3"/></svg>
-                  Plein écran
-                 </button>
-            </div>
-          
-            <div class="card-foot">
+              <div class="card-foot">
              <div class="price">4 000<span> HTG</span></div>
              <button type="button" class="btn-enroll" id="enrollBtn-m4" onclick="openEnskriModal('Rapport des Résultats &amp; Communication avec les Bailleurs', '4 000 HTG', 'm4')">Acheter le cours</button>
             </div>
