@@ -265,7 +265,7 @@
     .hero-grid > div:not(.hero-illustration){order:1;}
   }
   .eyebrow{
-    font-family:'IBM Plex Mono', monospace; font-size:0.72rem; letter-spacing:.16em;
+    font-family:'IBM Plex Mono', monospace; font-size:1.72rem; letter-spacing:.normal;
     text-transform:uppercase; color:#DAA243; margin-bottom:12px; display:flex; gap:10px; align-items:center;
 	margin-top:0px;
   }
@@ -307,7 +307,7 @@
     align-items:stretch;
     max-width:1180px;
     margin:0 auto;
-    border-radius:20px;
+    border-radius:0px;
     overflow:hidden;
     box-shadow:0 20px 45px -18px rgba(20,30,80,0.35);
 }
@@ -331,6 +331,9 @@
 .hero-purple-card{
     flex:1 1 auto;
     background:linear-gradient(135deg,#8B2FE0 0%,#7A22D6 100%);
+	background-image: linear-gradient(rgba(139, 47, 224, 0.75), rgba(139, 47, 224, 0.75)), url('Etudiante.jpg');
+    background-size: cover;
+    background-position: center;
     padding:44px 48px;
     border-radius:0;
     color:#fff;
@@ -340,7 +343,7 @@
 @media (max-width:760px){
   .hero-split{
     flex-direction:column;
-    border-radius:16px;
+    border-radius:0px;
   }
   .hero-logo-panel{
     flex:0 0 auto;
@@ -396,7 +399,7 @@
 
 @media (max-width:640px){
   .hero-purple-card{
-    padding:28px 22px; border-radius:16px;
+    padding:28px 22px; border-radius:0px;
   }
   .hero-badge{font-size:0.72rem; padding:7px 13px; margin-bottom:16px;}
   .hero-title{font-size:1.5rem; max-width:none;}
@@ -483,7 +486,7 @@
     background:var(--navy); color:#fff; padding:14px 0;
   }
   .strip .wrap{display:flex; justify-content:space-between; flex-wrap:wrap; gap:18px;}
-  .strip-item{display:flex; align-items:baseline; gap:8px; font-size:0.9rem; color:#CBD3E1;}
+  .strip-item{display:inline-flex; align-items:baseline; gap:8px; font-size:0.9rem; color:#CBD3E1; margin-right:40px;}
   .strip-item b{font-family:'Inter', sans-serif; color:#fff; font-size:1.15rem; font-weight:600;}
 
   /* ---------- FEATURE GRID (4 cartes-icônes façon mockup) ---------- */
@@ -1122,9 +1125,18 @@
   width: 100%; height: 100%;
   border: 0;
 }
+.video-modal-frame #videoModalPlayer,
+.video-modal-frame .wistia_embed{
+  position: absolute;
+  top: 0; left: 0;
+  width: 100%; height: 100%;
+}
+
+
 </style>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="https://fast.wistia.com/assets/external/E-v1.js" async></script>
 </head>
 <body>
 
@@ -1161,12 +1173,7 @@
       <a href="#certificat">Certificats</a>
       <a href="#kontak">Contact</a>
      
-      <a href="#" class="mobile-auth-link" id="mobileProfileLink" onclick="openProfileModal(); return false;">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="8" r="4"/><path d="M4 20c1.5-4 5-6 8-6s6.5 2 8 6"/></svg>
-        Mon profil
-      </a>
-      
-    </nav>
+       </nav>
 	
     <div class="nav-right">
       <button type="button" class="btn-login" id="loginNavBtn" onclick="openLoginModal()">Connexion</button>
@@ -1230,10 +1237,10 @@
       <div class="account-tab-pane active" id="paneDashboard"></div>
       <div class="account-tab-pane" id="paneProfile"></div>
     </div>
-    <button type="button" class="account-drawer-logout" onclick="logoutUser()">
-      <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>
-      Déconnexion
-    </button>
+	<button type="button" class="account-drawer-logout" onclick="logoutUser(); closeAccountDrawer();">
+  <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>
+  Déconnexion
+</button>
   </aside>
 </div>
 
@@ -1345,10 +1352,12 @@
 
 <div class="strip">
   <div class="wrap">
+  <marquee>
     <div class="strip-item"><b>4</b> modules de formation</div>
     <div class="strip-item"><b>100%</b> en ligne, à votre rythme</div>
     <div class="strip-item"><b>&lt;24h</b> pour la confirmation d'accès</div>
     <div class="strip-item"><b>2</b> moyens de paiement</div>
+	</marquee>
   </div>
 </div>
 
@@ -1379,11 +1388,11 @@
 <section id="pourquoi">
   <div class="wrap why-grid">
     <div class="why-media">
-      <img src="formateur-novacc.jpg" alt="Formateur NOVACC en session de formation" class="why-img" loading="lazy">
+      <img src="Enseignant.jpg" alt="Formateur NOVACC en session de formation" class="why-img" loading="lazy">
     </div>
     <div class="why-content">
       <div class="eyebrow">Pourquoi choisir NOVACC ?</div>
-      <h2>Des formations pratiques pour des compétences qui font la différence.</h2>
+      <h3>Des formations pratiques pour des compétences qui font la différence.</h3>
       <ul class="why-checklist">
         <li>Formations pratiques et concrètes</li>
         <li>Gestion de projets</li>
@@ -1572,9 +1581,7 @@
                 <ul class="lesson-list" id="lessonList-m3">
               <li> Méthodes de collecte sur le terrain</li>
               <li> Outils numériques gratuits (KoboToolbox, ODK)</li>
-			  <li class="lesson-video" onclick="openVideoModal('MwajEqBtrmI')"> ▶️ Excel-Tableau croisé dynamique</li>
-			  <li> papapppppppppppppppp</li>
-              <li> Échantillonnage et fiabilité des données</li>
+			  <li> Échantillonnage et fiabilité des données</li>
               <li> Analyse quantitative de base</li>
               <li> Analyse qualitative de base</li>
               <li> Quiz — Collecte &amp; Analyse de Données</li>
@@ -2155,9 +2162,7 @@
     <div class="modal-eyebrow">Vidéo</div>
     <h3 id="videoModalTitle">Titre de la vidéo</h3>
     <div class="video-modal-frame">
-      <video id="videoModalPlayer" controls controlsList="nodownload noremoteplayback" disablePictureInPicture playsinline>
-        Votre navigateur ne supporte pas la lecture vidéo.
-      </video>
+      <div id="videoModalPlayer"></div>
     </div>
     <div class="lesson-modal-footer">
       <button type="button" class="btn-primary" id="videoModalAction" style="width:100%;" disabled>Passez à la leçon suivante →</button>
@@ -2359,7 +2364,7 @@
 	{
       "type": "video",
       "title": "Excel — Tableau croisé dynamique",
-      "videoId": "MwajEqBtrmI"
+      "videoId": "7hfae5gsnf"
     },
     {
       "type": "lesson",
@@ -2580,7 +2585,7 @@
       if(unlocked){
         btn.addEventListener('click', function(){
           if(isVideo){
-            openVideoModal(item.url, item.title, mod, idx);
+            openVideoModal(item.videoId, item.title, mod, idx);
           } else {
             openLessonModal(mod, idx);
           }
@@ -2731,31 +2736,38 @@ function goToCertificate(mod){
   }
 var videoModalState = null; // { mod, idx }
 
-function openVideoModal(url, title, mod, idx){
+var currentWistiaHandle = null;
+
+function openVideoModal(mediaId, title, mod, idx){
   var overlay = document.getElementById('videoModal');
-  var player = document.getElementById('videoModalPlayer');
+  var container = document.getElementById('videoModalPlayer');
   var titleEl = document.getElementById('videoModalTitle');
   var actionBtn = document.getElementById('videoModalAction');
-  if(!overlay || !player){ return; }
+  if(!overlay || !container){ return; }
 
   videoModalState = { mod: mod, idx: idx };
-  player.src = url;
   if(titleEl){ titleEl.textContent = title || ''; }
-
   actionBtn.disabled = true;
+
+  container.innerHTML = '<div class="wistia_embed wistia_async_' + mediaId + '" style="width:100%;height:100%;"></div>';
+
   actionBtn.onclick = function(){
     setLessonDone(mod, idx, true);
     closeVideoModal();
     refreshAll();
-	goToNextLesson(mod, idx);
+    goToNextLesson(mod, idx);
   };
-
-  player.addEventListener('ended', onVideoEnded);
 
   overlay.classList.add('open');
   overlay.setAttribute('aria-hidden', 'false');
   document.body.style.overflow = 'hidden';
-  player.play().catch(function(){});
+
+  window._wq = window._wq || [];
+  window._wq.push({ id: mediaId, onReady: function(video){
+    currentWistiaHandle = video;
+    video.bind('end', onVideoEnded);
+    video.play();
+  }});
 }
 
 function onVideoEnded(){
@@ -2765,27 +2777,20 @@ function onVideoEnded(){
 
 function closeVideoModal(){
   var overlay = document.getElementById('videoModal');
-  var player = document.getElementById('videoModalPlayer');
-  if(!overlay || !player){ return; }
+  var container = document.getElementById('videoModalPlayer');
+  if(!overlay || !container){ return; }
 
-  player.pause();
-  player.removeEventListener('ended', onVideoEnded);
-  player.src = '';
+  if(currentWistiaHandle){
+    currentWistiaHandle.unbind('end', onVideoEnded);
+    currentWistiaHandle.pause();
+    currentWistiaHandle = null;
+  }
+  container.innerHTML = '';
+
   overlay.classList.remove('open');
   overlay.setAttribute('aria-hidden', 'true');
   document.body.style.overflow = '';
   videoModalState = null;
-}
-
-function closeVideoModal(){
-  var overlay = document.getElementById('videoModal');
-  var iframe = document.getElementById('videoModalIframe');
-  if(!overlay || !iframe){ return; }
-
-  iframe.src = ''; // stoppe la lecture à la fermeture
-  overlay.classList.remove('open');
-  overlay.setAttribute('aria-hidden', 'true');
-  document.body.style.overflow = '';
 }
 
 document.getElementById('videoModal').addEventListener('click', function(e){
