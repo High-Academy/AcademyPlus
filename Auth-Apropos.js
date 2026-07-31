@@ -613,3 +613,18 @@ document.addEventListener('keydown', function(e){
     try{ savedTheme = localStorage.getItem('ha_theme') || 'light'; }catch(e){}
     applyTheme(savedTheme);
   })();
+//===========Fermeture du Menu deroulant sur Mobile=========//
+
+document.addEventListener('click', function(e) {
+  const nav = document.getElementById('navLinks');
+  const toggle = document.getElementById('menuToggle');
+  if (!nav.classList.contains('open')) return;
+
+  const clickedInsideNav = nav.contains(e.target);
+  const clickedToggle = toggle.contains(e.target);
+
+  if (!clickedInsideNav && !clickedToggle) {
+    nav.classList.remove('open');
+    toggle.setAttribute('aria-expanded', 'false');
+  }
+});
