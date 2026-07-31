@@ -90,7 +90,7 @@
   .brand-tag{font-family:'IBM Plex Mono', monospace; font-size:0.62rem; letter-spacing:.12em; text-transform:uppercase; color:#E59819; display:block; line-height:1;}
   nav.links{display:flex; align-items:center; gap:36px; font-size:0.96rem; font-weight:600;}
   nav.links a{
-    text-decoration:none; color:var(--ink-soft); transition:color .2s ease;
+    text-decoration:none; color:#fff; transition:color .2s ease;
     position:relative; padding:8px 2px; letter-spacing:.01em;
   }
   nav.links a::after{
@@ -98,21 +98,25 @@
     background:var(--blue); border-radius:2px;
     transform:scaleX(0); transform-origin:left; transition:transform .25s ease;
   }
+  nav.links a.active{color:#fff;}
   nav.links a:hover{color:var(--navy);}
   nav.links a:hover::after{transform:scaleX(1);}
-  nav.links a.active{color:var(--navy);}
   nav.links a.active::after{transform:scaleX(1);}
+  
+  
   .btn-nav{
-    background:var(--blue); color:#fff; padding:10px 20px; border-radius:4px;
+    background:var(--blue); color:#fff; padding:7px 18px; border-radius:4px;
     text-decoration:none; font-weight:600; font-size:0.88rem; white-space:nowrap;
     display:inline-flex; align-items:center;
   }
   .btn-nav:hover{background:var(--blue-deep);}
+  
   .btn-login{
-    background:transparent; color:#fff; border:1.5px solid var(--line); padding:9px 18px;
+    background:var(--blue); color:#fff; border:1.5px; padding:9px 18px;
     border-radius:4px; text-decoration:none; font-weight:600; font-size:0.88rem; white-space:nowrap;
     cursor:pointer; font-family:inherit;
   }
+  
   .btn-login:hover{border-color:var(--navy);}
   .nav-search{
     flex:1; max-width:520px; display:flex; align-items:center; gap:10px;
@@ -142,7 +146,7 @@
   @media(max-width:760px){
     .nav{position:relative;}
     nav.links{
-      display:none; position:absolute; top:100%; left:0; right:0; background:var(--panel);
+      display:none; position:absolute; top:100%; with:50%; right:0; background:#8B5CF6;
       border-bottom:1px solid var(--line); flex-direction:column; align-items:stretch; gap:0;
       box-shadow:var(--shadow);
     }
@@ -152,7 +156,7 @@
     nav.links a:active{background:var(--bg-alt);}
     .menu-toggle{display:inline-flex;}
     .btn-nav{padding:9px 16px; font-size:0.82rem;}
-    .nav-right .btn-login{display:none;}
+    
   }
 
   /* ---------- ABOUT PAGE (theme Udemy) ---------- */
@@ -172,7 +176,9 @@
   flex-direction: column;
   align-items: center;
   }
-  
+  @media(max-width:900px){
+   .about-hero{display:none;}
+   }
 
   .about-layout{
     display:grid;
@@ -189,10 +195,11 @@
     position:sticky;
     top:96px;
     align-self:start;
-    background:var(--navy-deep);
+    background:#0B1220;
     border-radius:8px;
     padding:26px 22px;
     color:#fff;
+	margin-top:-14px;
   }
   aside.stat-rail h2{
     font-size:0.98rem; color:#fff; margin-bottom:18px; padding-bottom:12px;
@@ -391,7 +398,7 @@
     </a>
    
     <nav class="links" id="navLinks">
-      <a href="index.html" class="active">Accueil</a>
+      <a href="index.html"> Accueil</a>
       <a href="#kontak">Contact</a>
     </nav>
 
@@ -454,7 +461,7 @@
         </div>
       </aside>
 
-      <div class="content-col">
+      <div class="content-col" style="text-align:justify">
 
         <div class="section-card" id="qui-sommes-nous">
           <h2>Qui sommes-nous ?</h2>
