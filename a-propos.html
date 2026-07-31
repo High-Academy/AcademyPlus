@@ -33,10 +33,12 @@
   }
 
   *{box-sizing:border-box;}
-  html{scroll-behavior:smooth;}
+  html{scroll-behavior:smooth;overflow-x:hidden;}
   body{
     margin:0;
     background:var(--bg);
+	overflow-x:hidden;
+    max-width:100%;
     color:var(--ink);
     font-family:'Inter', sans-serif;
     line-height:1.55;
@@ -103,6 +105,24 @@
   nav.links a:hover::after{transform:scaleX(1);}
   nav.links a.active::after{transform:scaleX(1);}
   
+  nav.links .mobile-only-link{
+  background:transparent;
+  border:none;
+  border-radius:0;
+  border-top:1px solid var(--line);
+  padding:14px 28px;
+  width:100%;
+  text-align:left;
+  font-weight:600;
+  font-size:0.96rem;
+  cursor:pointer;
+  color:#fff;
+}
+
+nav.links .mobile-only-link:hover{
+  color:var(--navy);
+}
+  
   
   .btn-nav{
     background:var(--blue); color:#fff; padding:7px 18px; border-radius:4px;
@@ -110,6 +130,7 @@
     display:inline-flex; align-items:center;
   }
   .btn-nav:hover{background:var(--blue-deep);}
+  .mobile-only-link{display:none;}
   
   .btn-login{
     background:var(--blue); color:#fff; border:1.5px; padding:9px 18px;
@@ -145,6 +166,9 @@
   .menu-toggle svg{width:20px;height:20px;}
   @media(max-width:760px){
     .nav{position:relative;}
+	.brand-tag{display:none;}
+	
+	
     nav.links{
       display:none; position:absolute; top:100%; width:50%; right:0; background:#8B5CF6;
       border-bottom:1px solid var(--line); flex-direction:column; align-items:stretch; gap:0;
@@ -156,7 +180,18 @@
     nav.links a:active{background:var(--bg-alt);}
     .menu-toggle{display:inline-flex;}
     .btn-nav{padding:9px 16px; font-size:0.82rem;}
+    /* on masque le bouton Connexion desktop : il migre dans le dropdown */
     
+
+    /* le lien Connexion dupliqué n'apparaît qu'en mobile, dans le dropdown */
+    .mobile-only-link{display:inline-block;}
+	#loginNavBtn{display:none;}
+
+  .mobile-only-link{display:inline-block;}
+  
+  nav.links .mobile-only-link:active{
+  background:var(--bg-alt);
+}
   }
 
   /* ---------- ABOUT PAGE (theme Udemy) ---------- */
@@ -277,9 +312,11 @@
 .foot-whatsapp svg{color:#25D366; flex-shrink:0;}
 .foot-whatsapp:hover{color:#fff;}
 .mono{
-    font-family:'IBM Plex Mono', monospace; color:#fff;}
+    font-family:'IBM Plex Mono', monospace; color:#fff;
+	word-break:break-word; overflow-wrap:break-word;
+	}
 .foot-payments{display:flex; flex-direction:column; gap:8px; font-size:0.88rem;}
-.foot-pay-row{display:flex; align-items:center; gap:10px; color:#B9C0D4; color:#fff;}
+.foot-pay-row{display:flex; align-items:center; gap:10px; color:#B9C0D4; color:#fff; flex-wrap:wrap; max-width:100%;}
 .foot-bottom{padding-top:24px; font-size:0.8rem; display:flex; justify-content:space-between; flex-wrap:wrap; gap:10px; color:#7C87A3;}
 .brand-name display{color:#fff;}
 
@@ -400,6 +437,7 @@
     <nav class="links" id="navLinks">
       <a href="index.html"> Accueil</a>
       <a href="#kontak">Contact</a>
+	  <button type="button" class="btn-login mobile-only-link" onclick="openLoginModal()">Connexion</button>
     </nav>
 
     <div class="nav-right">
