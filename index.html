@@ -63,11 +63,15 @@
   :focus-visible{outline:2px solid var(--blue); outline-offset:3px;}
 
   .wrap{
-    max-width:1120px;
+    max-width:1220px;
     margin:0 auto;
-    padding:0 28px;
+    padding:0 0px;
   }
-
+@media (max-width:760px){
+    .wrap{
+        padding:0 3px; /* quasi-zéro, mais évite que le texte touche le bord exact */
+    }
+}
   /* ---------- HEADER ---------- */
   
   .user-chip-name{display:none;}
@@ -81,11 +85,12 @@
     border-bottom:1px solid var(--line);
     position:sticky; top:0; z-index:40;
     background-color:#2563EB;
+	
     
   }
   .nav{
     display:flex; align-items:center; justify-content:space-between;
-    padding:18px 0; gap:16px;
+    padding:25px 0; gap:16px;
   }
   .nav-right{display:flex; align-items:center; gap:12px;}
   .brand{display:flex; align-items:center; gap:10px; text-decoration:none; line-height:1;}
@@ -96,7 +101,7 @@
   .brand-tag{font-family:'IBM Plex Mono', monospace; font-size:0.62rem; letter-spacing:.12em; text-transform:uppercase; color:var(--gold); display:block; line-height:1;}
   header .wrap, nav.links, .nav-right {display:flex; align-items:center; gap:20px; font-size:0.96rem; font-weight:600; flex-wrap: nowrap;}
   nav.links a{
-    text-decoration:none; color:var(--ink-soft); transition:color .2s ease;
+    text-decoration:none; color:#fff; transition:color .2s ease;
     position:relative; padding:6px 2px; letter-spacing:.01em;
   }
   nav.links a::after{
@@ -107,13 +112,13 @@
   nav.links a:hover{color:var(--navy);}
   nav.links a:hover::after{transform:scaleX(1);}
   .btn-nav{
-    background:var(--blue); color:#fff; padding:10px 20px; border-radius:4px;
+    background:var(--blue); color:#fff; padding:7px 18px; border-radius:4px;
     text-decoration:none; font-weight:600; font-size:0.88rem; white-space:nowrap;
     display:inline-flex; align-items:center;
   }
   .btn-nav:hover{background:var(--blue-deep);}
   .btn-login{
-    background:transparent; color:var(--navy); border:1.5px solid var(--line); padding:9px 18px;
+    background:var(--blue); color:#fff; border:1.5px; padding:9px 18px;
     border-radius:4px; text-decoration:none; font-weight:600; font-size:0.88rem; white-space:nowrap;
     cursor:pointer; font-family:inherit;
   }
@@ -150,7 +155,7 @@
     color:var(--ink); white-space:nowrap; cursor:default;
   }
   .nav-explore svg{width:13px;height:13px;}
-  @media(max-width:900px){ .nav-search{display:none;} .nav-explore{display:none;} }
+  @media(max-width:760px){ .nav-search{display:none;} .nav-explore{display:none;} }
   .menu-toggle{
     display:none; background:none; border:1px solid var(--line); border-radius:4px;
     width:40px; height:40px; align-items:center; justify-content:center; cursor:pointer;
@@ -170,8 +175,8 @@
   .nav-dropdown:focus-within .nav-dropdown-caret{ transform:rotate(180deg); }
   .nav-dropdown-menu{
     position:absolute; top:100%; left:0; margin-top:6px; min-width:200px;
-    background:var(--panel); border:1px solid var(--line); border-radius:8px;
-    box-shadow:var(--shadow); padding:8px; z-index:50;
+    background:#8B5CF6; border:1px solid var(--line); border-radius:8px;
+    padding:8px; z-index:50;
     opacity:0; visibility:hidden; transform:translateY(6px);
     transition:opacity .18s ease, transform .18s ease, visibility .18s ease;
   }
@@ -182,9 +187,9 @@
   .nav-dropdown-item{
     display:block; padding:9px 10px; border-radius:6px; white-space:nowrap;
     color:var(--ink-soft); text-decoration:none; font-weight:600; font-size:0.92rem;
-    transition:background .15s ease, color .15s ease;
+    color .15s ease;
   }
-  .nav-dropdown-item:hover{ background:var(--line); color:var(--navy); }
+  .nav-dropdown-item:hover{color:var(--navy); }
   @media(max-width:760px){
     .nav-dropdown-menu{ position:static; opacity:1; visibility:visible; transform:none;
       box-shadow:none; border:none; margin-top:2px; padding:0 0 0 14px; display:none; }
@@ -194,10 +199,16 @@
   @media(max-width:760px){
     .nav{position:relative;}
     nav.links{
-      display:none; position:absolute; top:100%; left:0; right:0; background:var(--panel);
+      display:none; position:absolute; top:100%; right:0; width:40%; background:#8B5CF6;
       flex-direction:column; align-items:flex-start; gap:0; border-bottom:1px solid var(--line);
       box-shadow:var(--shadow); max-height:calc(100vh - 100%); overflow-y:auto;
     }
+	
+	@media(max-width:760px){
+    nav.links a{color:#fff;}
+    nav.links a:hover{color:var(--navy);}
+}
+
     nav.links.open{display:flex;}
     nav.links a{padding:14px 28px; width:100%; border-top:1px solid var(--line);}
     nav.links a::after{display:none;}
@@ -482,7 +493,7 @@
 
   /* ---------- STRIP ---------- */
   .strip{
-    background:#9C3EF2; color:#fff; padding:14px 0; margin-top: -40px; margin-right: 40px; margin-left: 42px; height: 20px;
+    background:#0B1220; color:#fff; padding:14px 0; margin-top: -40px; margin-right: 0px; margin-left: 0px; height: 20px;
   }
   .strip .wrap{display:flex; justify-content:space-between; flex-wrap:wrap; gap:8px;margin-top: -15px;}
   .strip-item{display:inline-flex; align-items:baseline; gap:8px; font-size:0.9rem; color:#CBD3E1; margin-right:40px;}
@@ -492,7 +503,7 @@
   .feature-grid{
     display:grid; grid-template-columns:repeat(4,1fr); gap:18px;
   }
-  @media(max-width:900px){ .feature-grid{grid-template-columns:1fr 1fr;} }
+  @media(max-width:760px){ .feature-grid{grid-template-columns:1fr 1fr;} }
   @media(max-width:520px){ .feature-grid{grid-template-columns:1fr;} }
   .feature-card{
     background:var(--panel); border:1px solid var(--line); border-radius:10px;
@@ -561,14 +572,14 @@
   /* ---------- COURSES ---------- */
   .courses{background:var(--bg-alt); border-top:1px solid var(--line); border-bottom:1px solid var(--line);}
   .course-body{display:grid; grid-template-columns:280px 1fr; gap:28px; align-items:start;}
-  @media(max-width:900px){ .course-body{grid-template-columns:1fr;} }
+  @media(max-width:760px){ .course-body{grid-template-columns:1fr;} }
 
   /* ---------- CURRICULUM SIDEBAR (style Coursera/Udemy) ---------- */
   .curriculum{
     position:sticky; top:88px; background:var(--panel); border:1px solid var(--line);
     border-radius:var(--radius); box-shadow:var(--shadow); overflow:hidden;
   }
-  @media(max-width:900px){ .curriculum{position:static;} }
+  @media(max-width:760px){ .curriculum{position:static;} }
   .curriculum-head{padding:20px 20px 16px; border-bottom:1px solid var(--line);}
   .curriculum-head span.eyebrow{margin-bottom:8px;}
   .curriculum-head h3{font-size:1.05rem;}
@@ -753,9 +764,9 @@
   .lesson-panel .lesson-content{flex:1 1 auto; min-width:0;}
   .lesson-panel .lesson-content .lesson-list,
   .lesson-panel .lesson-content .lesson-locked{margin-top:0;}
-  .module-video{width:300px; max-width:100%; margin:0 auto; flex-shrink:0; display:flex; flex-direction:column; gap:6px;}
+  .module-video{width:420px; max-width:100%; margin:0 auto; flex-shrink:0; display:flex; flex-direction:column; gap:6px;}
   .module-video-label{font-family:'IBM Plex Mono', monospace; font-size:0.6rem; letter-spacing:.06em; text-transform:uppercase; color:var(--ink-soft); text-align:center;}
-  .module-video-frame{position:relative; width:100%; aspect-ratio:9/8; border-radius:4px; overflow:hidden; background:var(--navy-deep); box-shadow:var(--shadow);}
+  .module-video-frame{position:relative; width:100%; aspect-ratio:16/9; border-radius:4px; overflow:hidden; background:var(--navy-deep); box-shadow:var(--shadow);}
   .module-video-frame video{width:100%; height:100%; object-fit:cover; display:block; background:#000;}
   .module-video-fs-btn{
     display:flex; align-items:center; justify-content:center; gap:5px;
@@ -766,7 +777,7 @@
   .module-video-fs-btn:hover{background:var(--blue-tint); color:var(--blue-deep);}
   .module-video-fs-btn svg{width:12px; height:12px; flex-shrink:0;}
  @media(max-width:520px){
-  .module-video{width:180px;}
+  .module-video{width:280px;}
 }
   }
   .cnum-done{background:var(--teal) !important; color:#fff !important; border-color:var(--teal) !important;}
@@ -815,7 +826,8 @@
   .steps{display:grid; grid-template-columns:repeat(3,1fr); gap:20px; position:relative;}
   @media(max-width:760px){ .steps{grid-template-columns:1fr;} }
   .steps::before{
-    content:""; position:absolute; top:23px; left:calc(100%/6); right:calc(100%/6);
+    content:""; position:absolute; top:23px; left:calc(100%/6 - 20px/3);   /* ← corrigé : tient compte du gap */
+    right:calc(100%/6 - 20px/3);
     height:2px; background:var(--line); z-index:0;
   }
   @media(max-width:760px){ .steps::before{display:none;} }
@@ -824,10 +836,15 @@
     font-family:'Inter', sans-serif; font-size:1.15rem; color:#fff; font-weight:700; line-height:1;
     width:46px; height:46px; border-radius:50%; background:var(--blue);
     display:flex; align-items:center; justify-content:center;
+	margin:0 auto;
   }
   .step h3{margin-top:14px; font-size:1.1rem;}
   .step p{color:var(--ink-soft); font-size:0.94rem; margin-top:8px;}
-  .step-num-tag{font-family:'IBM Plex Mono',monospace; font-size:.7rem; color:var(--ink-soft); text-transform:uppercase; letter-spacing:.1em;}
+  .step-num-tag{font-family:'IBM Plex Mono',monospace; font-size:.7rem; color:var(--ink-soft); text-transform:uppercase; letter-spacing:.1em;
+   display:block;        /* force le passage à la ligne suivante */
+    text-align:center;    /* centre le texte au-dessus du cercle */
+    margin-bottom:10px;
+  }
 
   /* ---------- TRUST NOTE ---------- */
   .note{
@@ -1012,7 +1029,7 @@
      du cours à gauche). On protège plutôt chaque élément susceptible de déborder. */
   html{ width:100%; }
   body{ max-width:100%; }
-  .wrap{ max-width:1120px; }
+  .wrap{ max-width:1320px; }
   img, svg, video, iframe{ max-width:100%; height:auto; }
   table{ max-width:100%; display:block; overflow-x:auto; }
 
@@ -1153,11 +1170,23 @@
   width: 100%; height: 100%;
 }
 
+@media (max-width: 760px) {
+  .hero-logo-panel {
+    display: none;
+  }
+
+  .hero-purple-card {
+    width: 100%;
+    flex: 1 1 100%;
+  }
+}
+
 </style>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script src="https://fast.wistia.com/assets/external/E-v1.js" async></script>
 </head>
+
 <body>
 
 <header>
@@ -1176,7 +1205,7 @@
       <input type="text" id="siteSearchInput" class="nav-search-input" placeholder="Recherche" autocomplete="off">
     </form>
     <nav class="links" id="navLinks">
-     <a href="a-propos.html" class="nav-formations-link">A propos</a>
+     <a href="a-propos.html" class="nav-formations-link">Qui sommes-nous?</a>
       <div class="nav-dropdown" id="navFormationsLink">
        <a href="#kous" class="nav-formations-link">
           Formations
@@ -1691,7 +1720,7 @@
              <button type="button" class="btn-enroll" id="enrollBtn-m4" onclick="openEnskriModal('Rapport des Résultats &amp; Communication avec les Bailleurs', '4 000 HTG', 'm4')">Acheter le cours</button>
             </div>
         </div>
-
+       </div>
       </div>
     </div>
   </div>
