@@ -43,8 +43,7 @@
     max-width:100%;
     color:var(--ink);
     font-family:'Inter', sans-serif;
-    line-height:1.55;
-    -webkit-font-smoothing:antialiased;
+      -webkit-font-smoothing:antialiased;
   }
   h1,h2,h3,.display{
     font-family:'Inter', sans-serif;
@@ -66,6 +65,7 @@
     margin:0 auto;
     padding:0 28px;
     color:#fff;
+	line-height:1.1;
   }
 
   /* ---------- HEADER (identique au site, figé/sticky) ---------- */
@@ -337,6 +337,10 @@ nav.links .mobile-only-link:hover{
     content:""; width:4px; height:20px; border-radius:2px; display:inline-block;
   }
   .section-card p{margin:0 0 10px; color:var(--ink);}
+  .section-card ul,
+.section-card li{
+  color:var(--ink);
+}
   .section-card p:last-child{margin-bottom:0;}
   .section-card ul{margin:8px 0 10px 22px; padding:0;}
   .section-card ul li{margin-bottom:7px;}
@@ -357,8 +361,8 @@ nav.links .mobile-only-link:hover{
   }
 
   .section-card.highlight{
-    background:linear-gradient(135deg, var(--navy-deep), #262626);
-    color:#fff; border:none;
+    
+    border:none;
   }
   .section-card.highlight h2{color:#fff;}
   .section-card.highlight h2::before{background:var(--gold);}
@@ -492,6 +496,7 @@ nav.links .mobile-only-link:hover{
   .card6{background:#9CA3AF40;}
   .card7{background:#C4B5FD60;}
   .card8{background:#F4C46840;}
+  .card9{background:#1F2937;}
 
 </style>
 
@@ -634,7 +639,7 @@ nav.links .mobile-only-link:hover{
           <h2>Ce que nous faisons</h2>
           <p>NOVACC conçoit et dispense des formations professionnelles alliant théorie et pratique afin de répondre aux besoins réels du marché de l'emploi.</p>
           <p>Nos domaines d'intervention comprennent notamment :</p>
-          <ul style="color:black">
+          <ul>
             <li>Gestion de projet</li>
             <li>Gestion Axée sur les Résultats (GAR)</li>
             <li>Élaboration de cadres logiques</li>
@@ -662,7 +667,7 @@ nav.links .mobile-only-link:hover{
         <div class="section-card card7" id="pourquoi-nous-choisir">
           <h2>Pourquoi choisir NOVACC ?</h2>
           <p>Choisir NOVACC, c'est bénéficier :</p>
-          <ul style="color:black">
+          <ul>
             <li>d'une équipe de formateurs hautement qualifiés et expérimentés ;</li>
             <li>d'une approche orientée vers les besoins réels du marché du travail ;</li>
             <li>de formations pratiques basées sur des projets et des cas réels ;</li>
@@ -685,7 +690,7 @@ nav.links .mobile-only-link:hover{
           <p>Nos activités ont déjà touché plusieurs pays d'Amérique et d'Afrique, témoignant de notre volonté d'offrir des formations accessibles au-delà des frontières.</p>
         </div>
 
-        <div class="section-card highlight" id="engagement">
+        <div class="section-card card9 highlight" id="engagement">
           <h2>Notre engagement</h2>
           <p>Chez NOVACC, nous croyons que la formation est bien plus qu'une simple transmission de connaissances : elle constitue un levier de transformation individuelle, institutionnelle et sociale. En investissant dans le développement des compétences, nous contribuons à bâtir une main-d'œuvre plus qualifiée, des organisations plus performantes et une société plus résiliente.</p>
         </div>
@@ -1164,40 +1169,43 @@ nav.links .mobile-only-link:hover{
   var currentServiceKey = null;
   var serviceLastFocused = null;
 
-  function renderField(f){
-    var wrap = document.createElement('div');
-    wrap.className = 'form-group';
-    wrap.style.marginBottom = '16px';
-    var label = document.createElement('label');
-    label.setAttribute('for', 'svc_' + f.name);
-    label.textContent = f.label + (f.required ? ' *' : '');
-    wrap.appendChild(label);
+ function renderField(f){
+  var wrap = document.createElement('div');
+  wrap.className = 'form-group';
+  wrap.style.marginBottom = '16px';
+  var label = document.createElement('label');
+  label.setAttribute('for', 'svc_' + f.name);
+  label.textContent = f.label + (f.required ? ' *' : '');
+  wrap.appendChild(label);
 
-    var input;
-    if(f.type === 'textarea'){
-      input = document.createElement('textarea');
-      input.rows = 3;
-    } else if(f.type === 'select'){
-      input = document.createElement('select');
-      var blank = document.createElement('option');
-      blank.value = ''; blank.textContent = 'Choisir…';
-      input.appendChild(blank);
-      f.options.forEach(function(opt){
-        var o = document.createElement('option');
-        o.value = opt; o.textContent = opt;
-        input.appendChild(o);
-      });
-    } else {
-      input = document.createElement('input');
-      input.type = f.type || 'text';
-    }
-    input.id = 'svc_' + f.name;
-    input.name = f.name;
-    if(f.required){ input.required = true; }
-    wrap.appendChild(input);
-    return wrap;
+  var input;
+  if(f.type === 'textarea'){
+    input = document.createElement('textarea');
+    input.rows = 3;
+  } else if(f.type === 'select'){
+    input = document.createElement('select');
+    var blank = document.createElement('option');
+    blank.value = ''; blank.textContent = 'Choisir…';
+    input.appendChild(blank);
+    f.options.forEach(function(opt){
+      var o = document.createElement('option');
+      o.value = opt; o.textContent = opt;
+      input.appendChild(o);
+    });
+  } else if(f.type === 'file'){
+    input = document.createElement('input');
+    input.type = 'file';
+    input.accept = '.pdf,.doc,.docx,.xls,.xlsx,.jpg,.jpeg,.png';
+  } else {
+    input = document.createElement('input');
+    input.type = f.type || 'text';
   }
-
+  input.id = 'svc_' + f.name;
+  input.name = f.name;
+  if(f.required){ input.required = true; }
+  wrap.appendChild(input);
+  return wrap;
+}
   window.openServiceForm = function(service){
     var config = SERVICE_FORMS[service];
     if(!config){ return; }
@@ -1223,16 +1231,7 @@ nav.links .mobile-only-link:hover{
       });
     });
 
-    // Documents (upload informatif — non stocké, à activer plus tard si besoin d'un bucket Supabase Storage)
-    var docsTitle = document.createElement('div');
-    docsTitle.className = 'service-section-title';
-    
-    serviceFormFields.appendChild(docsTitle);
-    var docsNote = document.createElement('p');
-    docsNote.className = 'form-note';
-    docsNote.style.margin = '0 0 14px';
-    docsNote.style.textAlign = 'left';
-    
+   
 
     // Comment avez-vous entendu parler de NOVACC ?
     var heardWrap = document.createElement('div');
@@ -1294,39 +1293,58 @@ nav.links .mobile-only-link:hover{
   });
 
   serviceForm.addEventListener('submit', function(e){
-    e.preventDefault();
-    var config = SERVICE_FORMS[currentServiceKey];
-    if(!config){ return; }
+  e.preventDefault();
+  var config = SERVICE_FORMS[currentServiceKey];
+  if(!config){ return; }
 
-    serviceFormError.style.display = 'none';
-    serviceFormSuccess.style.display = 'none';
+  serviceFormError.style.display = 'none';
+  serviceFormSuccess.style.display = 'none';
 
-    var payload = { service: currentServiceKey };
-    var allFields = [].concat.apply([], config.sections.map(function(s){ return s.fields; }));
-    allFields.forEach(function(f){
-      var el = document.getElementById('svc_' + f.name);
-      payload[f.name] = el ? el.value.trim() : '';
-    });
-    payload.heard_about = document.getElementById('svc_heard_about').value;
-    payload.consent = document.getElementById('svc_consent').checked;
-    payload.created_at = new Date().toISOString();
+  var payload = { service: currentServiceKey };
+  var allFields = [].concat.apply([], config.sections.map(function(s){ return s.fields; }));
+  var fileFields = allFields.filter(function(f){ return f.type === 'file'; });
+  var textFields = allFields.filter(function(f){ return f.type !== 'file'; });
 
-    if(!payload.consent){
-      serviceFormError.textContent = "Merci de cocher la case d'autorisation avant d'envoyer votre demande.";
-      serviceFormError.style.display = 'block';
-      return;
-    }
+  textFields.forEach(function(f){
+    var el = document.getElementById('svc_' + f.name);
+    payload[f.name] = el ? el.value.trim() : '';
+  });
+  payload.heard_about = document.getElementById('svc_heard_about').value;
+  payload.consent = document.getElementById('svc_consent').checked;
+  payload.created_at = new Date().toISOString();
 
-    if(typeof supabaseClient === 'undefined'){
-      serviceFormError.textContent = "Une erreur est survenue lors de l'envoi. Merci de réessayer ou de nous contacter sur WhatsApp.";
-      serviceFormError.style.display = 'block';
-      return;
-    }
+  if(!payload.consent){
+    serviceFormError.textContent = "Merci de cocher la case d'autorisation avant d'envoyer votre demande.";
+    serviceFormError.style.display = 'block';
+    return;
+  }
 
-    serviceFormSubmitBtn.disabled = true;
-    serviceFormSubmitBtn.textContent = 'Envoi en cours…';
+  serviceFormSubmitBtn.disabled = true;
+  serviceFormSubmitBtn.textContent = 'Envoi en cours…';
 
-    supabaseClient.from('service_requests').insert([payload]).then(function(result){
+  var uploadPromises = fileFields.map(function(f){
+    var el = document.getElementById('svc_' + f.name);
+    var file = el && el.files && el.files[0];
+    if(!file){ return Promise.resolve(null); }
+
+    var path = currentServiceKey + '/' + Date.now() + '_' + f.name + '_' + file.name;
+    return supabaseClient.storage
+      .from('service-request-documents')
+      .upload(path, file)
+      .then(function(res){
+        if(res.error){ throw res.error; }
+        var pub = supabaseClient.storage
+          .from('service-request-documents')
+          .getPublicUrl(path);
+        payload[f.name + '_url'] = pub.data.publicUrl;
+      });
+  });
+
+  Promise.all(uploadPromises)
+    .then(function(){
+      return supabaseClient.from('service_requests').insert([payload]);
+    })
+    .then(function(result){
       serviceFormSubmitBtn.disabled = false;
       serviceFormSubmitBtn.textContent = config.submitLabel;
       if(result.error){
@@ -1339,9 +1357,17 @@ nav.links .mobile-only-link:hover{
       serviceFormSuccess.style.display = 'block';
       serviceForm.reset();
       setTimeout(function(){ closeServiceModal(); }, 1800);
+    })
+    .catch(function(err){
+      serviceFormSubmitBtn.disabled = false;
+      serviceFormSubmitBtn.textContent = config.submitLabel;
+      serviceFormError.textContent = "Erreur lors de l'envoi des documents. Merci de réessayer.";
+      serviceFormError.style.display = 'block';
+      console.error('Erreur upload Storage :', err);
     });
-  });
+});
 })();
+
 </script>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script src="Auth-Apropos.js"></script>
