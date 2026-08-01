@@ -33,11 +33,13 @@
   }
 
   *{box-sizing:border-box;}
-  html{scroll-behavior:smooth;overflow-x:hidden;}
+  html{scroll-behavior:smooth;}
+  
+  
   body{
     margin:0;
     background:var(--bg);
-	overflow-x:hidden;
+	overflow-x:;
     max-width:100%;
     color:var(--ink);
     font-family:'Inter', sans-serif;
@@ -194,6 +196,66 @@ nav.links .mobile-only-link:hover{
 }
   }
 
+  /* ---- "Demande de services" : menu déroulant (identique à index.html) ---- */
+  #serviceNavItem{ position:relative; display:inline-block; }
+  .nav-item-label{
+    display:inline-flex; align-items:center; gap:4px; cursor:pointer;
+    text-decoration:none; color:#fff; font-weight:600; font-size:0.96rem;
+    padding:6px 2px; letter-spacing:.01em; white-space:nowrap; transition:color .2s ease;
+  }
+  .nav-item-label:hover{ color:var(--navy); }
+  .nav-item-label svg{ width:14px; height:14px; transition:transform .18s ease; }
+  #serviceNavItem.open .nav-item-label svg,
+  #serviceNavItem:hover .nav-item-label svg{ transform:rotate(180deg); }
+  .dropdown-panel{
+    position:absolute; top:100%; left:0; margin-top:6px; min-width:340px;
+    background:#8B5CF6; border:1px solid var(--line); border-radius:8px;
+    padding:8px; z-index:50; box-shadow:0 12px 28px rgba(0,0,0,0.14);
+    opacity:0; visibility:hidden; transform:translateY(6px);
+    transition:opacity .18s ease, transform .18s ease, visibility .18s ease;
+  }
+  #serviceNavItem:hover .dropdown-panel,
+  #serviceNavItem:focus-within .dropdown-panel,
+  #serviceNavItem.open .dropdown-panel{
+    opacity:1; visibility:visible; transform:translateY(0);
+  }
+  .dropdown-item{
+    display:flex; align-items:flex-start; gap:12px; width:100%;
+    background:none; border:none; text-align:left; cursor:pointer;
+    padding:10px 10px; border-radius:6px; transition:background .15s ease;
+    font-family:inherit;
+  }
+  .dropdown-item:hover{ background:rgba(255,255,255,0.14); }
+  .di-icon{ font-size:1.3rem; line-height:1; flex-shrink:0; margin-top:1px; }
+  .di-text{ display:flex; flex-direction:column; gap:2px; }
+  .di-title{ font-weight:600; font-size:0.92rem; color:#fff; }
+  .di-desc{ font-weight:400; font-size:0.8rem; color:rgba(255,255,255,0.78); }
+  @media(max-width:760px){
+    .dropdown-panel{ position:static; opacity:1; visibility:visible; transform:none;
+      box-shadow:none; border:none; margin-top:2px; padding:8px; display:none; min-width:0; border-radius:8px; }
+    #serviceNavItem.open .dropdown-panel{ display:block; }
+    .nav-item-label{ color:#fff; }
+    .di-title{ color:#fff; }
+  }
+
+  /* ---- Champs de formulaire (textarea / select) + éléments utilisés par les formulaires de service ---- */
+  .form-group textarea, .form-group select{
+    padding:12px 14px; border:1.5px solid var(--line); border-radius:4px;
+    font-size:0.95rem; font-family:inherit; color:var(--ink); background:var(--bg);
+  }
+  .form-group textarea{resize:vertical; min-height:80px;}
+  .form-group textarea:focus, .form-group select:focus{border-color:var(--gold-deep); outline:none;}
+  .form-check-row{
+    display:flex; align-items:flex-start; gap:9px; font-size:0.82rem; color:var(--ink-soft);
+    margin:6px 0; cursor:pointer;
+  }
+  .form-check-row input{width:16px; height:16px; accent-color:var(--teal); margin-top:2px; flex-shrink:0; cursor:pointer;}
+  .service-section-title{
+    font-family:'IBM Plex Mono', monospace; font-size:0.7rem; letter-spacing:.1em; text-transform:uppercase;
+    color:var(--gold-deep); margin:18px 0 8px; padding-top:12px; border-top:1px solid var(--line);
+  }
+  .service-section-title:first-child{margin-top:0; padding-top:0; border-top:none;}
+
   /* ---------- ABOUT PAGE (theme Udemy) ---------- */
 
   main{padding:44px 0 80px;}
@@ -263,7 +325,7 @@ nav.links .mobile-only-link:hover{
   .content-col{display:flex; flex-direction:column; gap:22px;}
 
   .section-card{
-    background:var(--panel);
+    
     border:1px solid var(--line);
     border-radius:8px;
     padding:26px 30px;
@@ -272,7 +334,7 @@ nav.links .mobile-only-link:hover{
     font-size:1.28rem; margin-bottom:12px; display:flex; align-items:center; gap:10px;
   }
   .section-card h2::before{
-    content:""; width:4px; height:20px; background:var(--blue); border-radius:2px; display:inline-block;
+    content:""; width:4px; height:20px; border-radius:2px; display:inline-block;
   }
   .section-card p{margin:0 0 10px; color:var(--ink);}
   .section-card p:last-child{margin-bottom:0;}
@@ -418,6 +480,18 @@ nav.links .mobile-only-link:hover{
   .theme-toggle button.active{ background:var(--navy); color:var(--bg); }
   .theme-toggle svg{ width:16px; height:16px; }
   @media(max-width:600px){ .theme-toggle{ right:10px; padding:3px; } .theme-toggle button{ width:30px; height:30px; } }
+  
+  
+  <!----Couleur des paragragrahes---->
+  
+  .card1{background:#F4C46860;}
+  .card2{background:#F4C46820;}
+  .card3{background:#F4C46810;}
+  .card4{background:#C4B5FD60;}
+  .card5{background:#F4C46840;}
+  .card6{background:#9CA3AF40;}
+  .card7{background:#C4B5FD60;}
+  .card8{background:#F4C46840;}
 
 </style>
 
@@ -436,6 +510,40 @@ nav.links .mobile-only-link:hover{
    
     <nav class="links" id="navLinks">
       <a href="index.html"> Accueil</a>
+
+      <div class="nav-item" id="serviceNavItem">
+        <div class="nav-item-label" id="serviceNavToggle" onclick="event.preventDefault(); event.stopPropagation(); this.closest('#serviceNavItem').classList.toggle('open');">
+          Demander un service
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"></polyline></svg>
+        </div>
+        <div class="dropdown-panel" id="dropdownPanel">
+          <button class="dropdown-item" data-service="appel_offre">
+            <span class="di-icon">📄</span>
+            <span class="di-text"><span class="di-title">Soumettre un appel d'offres</span><span class="di-desc">Publier un TDR et recevoir des propositions</span></span>
+          </button>
+          <button class="dropdown-item" data-service="consultation">
+            <span class="di-icon">🤝</span>
+            <span class="di-text"><span class="di-title">Demander une consultation</span><span class="di-desc">Un accompagnement ponctuel sur un besoin précis</span></span>
+          </button>
+          <button class="dropdown-item" data-service="etude">
+            <span class="di-icon">🔎</span>
+            <span class="di-text"><span class="di-title">Demander une étude</span><span class="di-desc">Étude de faisabilité, de marché, d'impact, etc.</span></span>
+          </button>
+          <button class="dropdown-item" data-service="evaluation">
+            <span class="di-icon">📊</span>
+            <span class="di-text"><span class="di-title">Demander une évaluation</span><span class="di-desc">Suivi-évaluation, baseline, mesure d'impact</span></span>
+          </button>
+          <button class="dropdown-item" data-service="formation">
+            <span class="di-icon">🎓</span>
+            <span class="di-text"><span class="di-title">Demander une formation</span><span class="di-desc">Formation sur mesure pour votre équipe</span></span>
+          </button>
+          <button class="dropdown-item" data-service="autre">
+            <span class="di-icon">📝</span>
+            <span class="di-text"><span class="di-title">Autre demande</span><span class="di-desc">Une prestation qui ne rentre pas dans les cases ci-dessus</span></span>
+          </button>
+        </div>
+      </div>
+
       <a href="#kontak">Contact</a>
 	  <button type="button" class="btn-login mobile-only-link" onclick="openLoginModal()">Connexion</button>
     </nav>
@@ -501,9 +609,9 @@ nav.links .mobile-only-link:hover{
 
       <div class="content-col" style="text-align:justify">
 
-        <div class="section-card" id="qui-sommes-nous">
+        <div class="section-card card6" id="qui-sommes-nous">
           <h2>Qui sommes-nous ?</h2>
-          <div class="qsn-columns">
+          <div class="qsn-columns card1">
             <p>Dans un contexte où le marché du travail devient de plus en plus exigeant, de nombreux étudiants, jeunes diplômés et professionnels rencontrent des difficultés à accéder aux meilleures opportunités d'emploi ou à évoluer dans leur carrière. Malgré un solide parcours académique, beaucoup ne disposent pas des compétences techniques, des outils numériques et des méthodes de travail recherchés par les organisations nationales, internationales, les entreprises privées et les institutions publiques.</p>
             <p>Cette inadéquation entre les compétences acquises à l'université et les exigences du monde professionnel constitue un véritable frein à l'employabilité, à la performance et au développement de carrière de milliers de jeunes talents.</p>
             <p>C'est pour répondre à cette problématique qu'a été créé NOVA Academy and Consulting Center (NOVACC) en 2020.</p>
@@ -512,17 +620,17 @@ nav.links .mobile-only-link:hover{
           </div>
         </div>
 
-        <div class="section-card" id="mission">
+        <div class="section-card card2" id="mission">
           <h2>Notre mission</h2>
           <p>Notre mission est de renforcer les capacités des individus et des organisations en leur offrant des formations de haute qualité, un accompagnement technique personnalisé et des services de consultation répondant aux standards nationaux et internationaux. Nous souhaitons permettre à chaque apprenant de développer des compétences concrètes, immédiatement mobilisables dans son environnement professionnel.</p>
         </div>
 
-        <div class="section-card" id="vision">
+        <div class="section-card card3" id="vision">
           <h2>Notre vision</h2>
           <p>Nous aspirons à faire de NOVACC une référence internationale dans le domaine de la formation professionnelle, du développement des compétences, de la recherche appliquée et du conseil stratégique. Notre ambition est de contribuer à l'émergence d'une nouvelle génération de professionnels compétents, innovants et capables de relever les défis du développement durable, de la gouvernance, de la gestion de projet et de la transformation numérique.</p>
         </div>
-
-        <div class="section-card" id="ce-que-nous-faisons">
+      
+        <div class="section-card card4" id="ce-que-nous-faisons">
           <h2>Ce que nous faisons</h2>
           <p>NOVACC conçoit et dispense des formations professionnelles alliant théorie et pratique afin de répondre aux besoins réels du marché de l'emploi.</p>
           <p>Nos domaines d'intervention comprennent notamment :</p>
@@ -543,14 +651,15 @@ nav.links .mobile-only-link:hover{
           </ul>
           <p>Au-delà des formations, NOVACC accompagne également les organisations publiques, privées, universitaires et les organisations de la société civile dans la réalisation de recherches, diagnostics, évaluations, études de référence, enquêtes de terrain, analyses de données, développement de systèmes de suivi-évaluation et renforcement institutionnel.</p>
         </div>
+	 
 
-        <div class="section-card" id="approche-pedagogique">
+        <div class="section-card card6" id="approche-pedagogique">
           <h2>Notre approche pédagogique</h2>
           <p>Chez NOVACC, nous sommes convaincus que les compétences s'acquièrent avant tout par la pratique. C'est pourquoi nos formations privilégient les exercices pratiques, les études de cas inspirées de situations réelles, les simulations, les travaux individuels et collaboratifs ainsi que l'utilisation des logiciels et outils utilisés quotidiennement dans les organisations.</p>
           <p>Nos participants développent des compétences directement exploitables dans leur environnement professionnel grâce à une pédagogie interactive favorisant l'autonomie, la résolution de problèmes et l'apprentissage par l'expérience. Chaque formation est animée par des experts ayant une expérience concrète dans leurs domaines respectifs.</p>
         </div>
 
-        <div class="section-card" id="pourquoi-nous-choisir">
+        <div class="section-card card7" id="pourquoi-nous-choisir">
           <h2>Pourquoi choisir NOVACC ?</h2>
           <p>Choisir NOVACC, c'est bénéficier :</p>
           <ul style="color:black">
@@ -564,13 +673,13 @@ nav.links .mobile-only-link:hover{
           <p>Notre objectif ne se limite pas à transmettre des connaissances ; nous préparons des professionnels capables d'être immédiatement performants dans leurs fonctions.</p>
         </div>
 
-        <div class="section-card" id="partenaires">
+        <div class="section-card card8" id="partenaires">
           <h2>Nos partenaires</h2>
           <p>NOVACC développe des collaborations avec des universités, des institutions publiques, des organisations non gouvernementales, des agences de développement, des entreprises privées et des partenaires techniques et financiers afin d'offrir des formations répondant aux standards internationaux et de favoriser le partage de bonnes pratiques.</p>
           <p>Grâce à ces partenariats, nous contribuons également à la réalisation d'études, de recherches, d'évaluations et d'initiatives de développement au service des communautés.</p>
         </div>
 
-        <div class="section-card" id="impact">
+        <div class="section-card card2" id="impact">
           <h2>Notre impact</h2>
           <p>Depuis 2020, NOVACC a déjà accompagné plus de 400 apprenants provenant de différents secteurs professionnels. Nos formations ont permis à de nombreux participants d'améliorer leurs performances, de renforcer leur employabilité, d'accéder à de nouvelles opportunités professionnelles, d'obtenir des promotions ou de réussir des concours et recrutements au sein d'organisations nationales et internationales.</p>
           <p>Nos activités ont déjà touché plusieurs pays d'Amérique et d'Afrique, témoignant de notre volonté d'offrir des formations accessibles au-delà des frontières.</p>
@@ -637,6 +746,24 @@ nav.links .mobile-only-link:hover{
 
 <!----------------------Formulaire d'inscription et connexion------------------->
 
+
+<div class="modal-overlay" id="serviceModal" aria-hidden="true">
+  <div class="modal-box" role="dialog" aria-modal="true" aria-labelledby="serviceModalTitle">
+    <button type="button" class="modal-close" onclick="closeServiceModal()" aria-label="Fermer">
+      <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><line x1="4" y1="4" x2="20" y2="20"/><line x1="20" y1="4" x2="4" y2="20"/></svg>
+    </button>
+    <div class="modal-eyebrow">Demander un service</div>
+    <h3 id="serviceModalTitle">Titre du formulaire</h3>
+    <p class="form-note" id="serviceModalDesc" style="margin-top:4px;"></p>
+
+    <form class="signup-form" id="serviceForm">
+      <div id="serviceFormFields"></div>
+      <p class="form-note" id="serviceFormError" style="display:none; color:#B3261E; margin-top:10px;"></p>
+      <p class="form-note" id="serviceFormSuccess" style="display:none; color:#2F6F52; margin-top:10px;"></p>
+      <button type="submit" class="btn-primary" id="serviceFormSubmitBtn" style="width:100%; margin-top:14px;">Envoyer ma demande</button>
+    </form>
+  </div>
+</div>
 
 <div class="modal-overlay" id="loginModal" aria-hidden="true">
   <div class="modal-box" role="dialog" aria-modal="true" aria-labelledby="loginModalTitle">
@@ -781,6 +908,441 @@ nav.links .mobile-only-link:hover{
     <button type="button" class="btn-ghost" id="logoutNowBtn" style="width:100%; margin-top:10px;">Se déconnecter maintenant</button>
   </div>
 </div>
+<script>
+(function(){
+  var navLinks = document.getElementById('navLinks');
+  var menuToggle = document.getElementById('menuToggle');
+
+  // ---- Fermeture du menu mobile / du menu déroulant "Demander un service" au clic sur un lien ou en dehors ----
+  if(navLinks){
+    navLinks.addEventListener('click', function(e){
+      if(e.target.tagName === 'A'){
+        navLinks.classList.remove('open');
+        if(menuToggle){ menuToggle.setAttribute('aria-expanded', 'false'); }
+      }
+      var openServiceItem = document.querySelector('#serviceNavItem.open');
+      if(openServiceItem && !openServiceItem.contains(e.target)){
+        openServiceItem.classList.remove('open');
+      }
+    });
+  }
+
+  document.addEventListener('click', function(e){
+    var serviceNavItem = document.getElementById('serviceNavItem');
+    if(serviceNavItem && !serviceNavItem.contains(e.target)){
+      serviceNavItem.classList.remove('open');
+    }
+  });
+
+  document.querySelectorAll('#dropdownPanel .dropdown-item').forEach(function(btn){
+    btn.addEventListener('click', function(){
+      var service = this.getAttribute('data-service');
+      document.getElementById('serviceNavItem').classList.remove('open');
+      if(navLinks){ navLinks.classList.remove('open'); }
+      if(menuToggle){ menuToggle.setAttribute('aria-expanded', 'false'); }
+      openServiceForm(service);
+    });
+  });
+
+  // ---- Définition des 6 formulaires "Demander un service" ----
+  var HEARD_ABOUT_OPTIONS = ['Site web','Réseaux sociaux','Référence / recommandation','Partenaire','Appel d\'offres','Autre'];
+
+  var SERVICE_FORMS = {
+    appel_offre: {
+      title: "Soumettre un appel d'offres",
+      desc: "Publiez votre TDR et recevez des propositions.",
+      submitLabel: "Soumettre l'appel d'offres",
+      table: 'service_requests_appel_offre',
+      sections: [
+        { title: "Informations sur l'organisation", fields: [
+          { name:'org_name', label:"Nom de l'organisation / entreprise", type:'text', required:true },
+          { name:'org_type', label:"Type d'organisation", type:'select', required:true,
+            options:['ONG','Institution publique','Entreprise privée','Organisation internationale','Association / OSC','Autre'] },
+          { name:'contact_name', label:'Nom du contact', type:'text', required:true },
+          { name:'contact_role', label:'Fonction', type:'text' },
+          { name:'email', label:'Email', type:'email', required:true },
+          { name:'phone', label:'Téléphone / WhatsApp', type:'tel', required:true },
+          { name:'address', label:'Adresse / Localisation', type:'text' }
+        ]},
+        { title: "Informations sur l'appel d'offres", fields: [
+          { name:'title', label:"Titre de l'appel d'offres", type:'text', required:true },
+          { name:'reference', label:"Référence de l'appel d'offres", type:'text' },
+          { name:'sector', label:'Domaine / secteur', type:'text', required:true },
+          { name:'description', label:'Description / objet de la prestation', type:'textarea', required:true },
+          { name:'deadline', label:'Date limite de soumission', type:'date', required:true },
+          { name:'budget', label:'Budget indicatif', type:'text' },
+          { name:"lieu", label:"Lieu d'exécution", type:'text' },
+          { name:'duree', label:'Durée prévue de la mission', type:'text' }
+        ]},
+		{ title:"Documents", fields:[
+        {name:'doc_tdr', label:"Appel d'offres / TDR (PDF, Word)", type:'file', required:true},
+        {name:'doc_cahier', label:'Cahier des charges', type:'file'},
+        {name:'doc_soumission', label:'Formulaire de soumission', type:'file'},
+        {name:'doc_autres', label:'Autres documents pertinents', type:'file'}
+       ]}
+      ]
+    },
+	consultation: {
+    icon:'🤝', title:'Demander une consultation', desc:'Un accompagnement ponctuel sur un besoin précis',
+    submitLabel:'Envoyer ma demande',
+    sections:[
+      { title:"Informations sur l'organisation", fields:[
+        {name:'organization', label:'Organisation / entreprise', required:true},
+        {name:'contact_name', label:'Nom du responsable', required:true},
+        {name:'contact_role', label:'Fonction'},
+        {name:'email', label:'Email', type:'email', required:true},
+        {name:'phone', label:'Téléphone / WhatsApp', required:true},
+        {name:'activity_sector', label:"Secteur d'activité", required:true}
+      ]},
+      { title:'Votre besoin', fields:[
+        {name:'subject', label:'Objet de la consultation', required:true},
+        {name:'domain', label:'Domaine de consultation', type:'select', required:true, options:['Gestion de projets','Suivi-évaluation','Agriculture / agroéconomie','Développement organisationnel','Recherche','Data / analyse','Formation','Stratégie','Autre']},
+        {name:'need', label:'Décrivez votre besoin', type:'textarea', required:true},
+        {name:'expected_results', label:'Résultats attendus', type:'textarea', required:true},
+        {name:'beneficiaries', label:'Public / bénéficiaires concernés'},
+        {name:'location', label:'Lieu de la consultation'},
+        {name:'preferred_date', label:'Date souhaitée', type:'date'},
+        {name:'duration', label:'Durée estimée'},
+        {name:'budget', label:'Budget disponible (facultatif)'}
+      ]},
+	
+      { title:'Documents', fields:[
+        {name:'doc_tdr', label:'Termes de référence', type:'file'},
+        {name:'doc_concept', label:'Note conceptuelle', type:'file'},
+        {name:'doc_ref', label:'Documents de référence', type:'file'},
+        {name:'doc_autres', label:'Autres documents', type:'file'}
+      ]}
+    ]
+  },
+  etude: {
+    icon:'🔎', title:'Demander une étude', desc:"Étude de faisabilité, de marché, d'impact, etc.",
+    submitLabel:"Soumettre la demande d'étude",
+    sections:[
+      { title:'Informations générales', fields:[
+        {name:'organization', label:'Organisation', required:true},
+        {name:'contact_name', label:'Personne responsable', required:true},
+        {name:'contact_role', label:'Fonction'},
+        {name:'email', label:'Email', type:'email', required:true},
+        {name:'phone', label:'Téléphone', required:true},
+        {name:'sector', label:'Secteur / domaine', required:true}
+      ]},
+      { title:"Description de l'étude", fields:[
+        {name:'study_title', label:"Titre de l'étude", required:true},
+        {name:'study_type', label:"Type d'étude", type:'select', required:true, options:['Étude de faisabilité','Étude de marché','Étude socio-économique','Recherche','Diagnostic','Enquête',"Étude d'impact",'Évaluation','Autre']},
+        {name:'context', label:'Problématique / contexte', type:'textarea', required:true},
+        {name:'general_objective', label:'Objectif général', type:'textarea', required:true},
+        {name:'specific_objectives', label:'Objectifs spécifiques', type:'textarea'},
+        {name:'research_questions', label:'Questions de recherche', type:'textarea'},
+        {name:'target_group', label:'Population / groupe cible'},
+        {name:'geo_zone', label:'Zone géographique'},
+        {name:'methodology', label:'Méthodologie souhaitée', type:'textarea'},
+        {name:'deliverables', label:'Résultats / livrables attendus', type:'textarea'},
+        {name:'start_date', label:'Date souhaitée de démarrage', type:'date'},
+        {name:'delivery_date', label:'Date souhaitée de livraison', type:'date'},
+        {name:'budget', label:'Budget indicatif'}
+      ]},
+      { title:'Documents', fields:[
+        {name:'doc_tdr', label:'TDR', type:'file'},
+        {name:'doc_concept', label:'Note conceptuelle', type:'file'},
+        {name:'doc_prev_report', label:'Rapport antérieur', type:'file'},
+        {name:'doc_dataset', label:'Base de données existante', type:'file'},
+        {name:'doc_ref', label:'Documents de référence', type:'file'},
+        {name:'doc_autres', label:'Autres', type:'file'}
+      ]}
+    ]
+  },
+  evaluation: {
+    icon:'📊', title:'Demander une évaluation', desc:'Suivi-évaluation, baseline, mesure d\'impact',
+    submitLabel:'Soumettre la demande',
+    sections:[
+      { title:'Informations', fields:[
+        {name:'organization', label:'Organisation', required:true},
+        {name:'contact_name', label:'Nom du contact', required:true},
+        {name:'contact_role', label:'Fonction'},
+        {name:'email', label:'Email', type:'email', required:true},
+        {name:'phone', label:'Téléphone'},
+        {name:'project', label:'Projet / programme concerné', required:true}
+      ]},
+      { title:'Besoin en suivi-évaluation', fields:[
+        {name:'service_needed', label:'Type de service', type:'select', required:true, options:['Conception du système S&E',"Élaboration d'indicateurs",'Collecte de données','Analyse de données','Évaluation à mi-parcours','Évaluation finale','Étude de référence / Baseline','Enquête de satisfaction','Enquête de perception',"Mesure d'impact",'Data visualization / Dashboard','Autre']},
+        {name:'need_description', label:'Description du besoin', type:'textarea', required:true},
+        {name:'objectives', label:'Objectifs', type:'textarea'},
+        {name:'target_population', label:'Population cible'},
+        {name:'intervention_zone', label:"Zone d'intervention"},
+        {name:'beneficiaries_count', label:'Nombre approximatif de bénéficiaires'},
+        {name:'methodology', label:'Méthodologie souhaitée', type:'textarea'},
+        {name:'deliverables', label:'Livrables attendus', type:'textarea'},
+        {name:'deadline', label:'Échéance', type:'date'},
+        {name:'budget', label:'Budget indicatif'}
+      ]},
+      { title:'Documents', fields:[
+        {name:'doc_tdr', label:'TDR', type:'file'},
+        {name:'doc_logframe', label:'Cadre logique', type:'file'},
+        {name:'doc_toc', label:'Théorie du changement', type:'file'},
+        {name:'doc_indicators', label:"Matrice d'indicateurs", type:'file'},
+        {name:'doc_questionnaires', label:'Questionnaires existants', type:'file'},
+        {name:'doc_datasets', label:'Bases de données', type:'file'},
+        {name:'doc_prev_reports', label:'Rapports précédents', type:'file'},
+        {name:'doc_autres', label:'Autres documents', type:'file'}
+      ]}
+    ]
+  },
+  formation: {
+    icon:'🎓', title:'Demander une formation', desc:'Formation sur mesure pour votre équipe',
+    submitLabel:'Demander une formation',
+    sections:[
+      { title:'Organisation', fields:[
+        {name:'organization', label:'Organisation', required:true},
+        {name:'contact_name', label:'Nom du responsable', required:true},
+        {name:'contact_role', label:'Fonction'},
+        {name:'email', label:'Email', type:'email', required:true},
+        {name:'phone', label:'Téléphone'},
+        {name:'location', label:'Localisation'}
+      ]},
+      { title:'Besoins en formation', fields:[
+        {name:'topic', label:'Thématique de formation', required:true},
+        {name:'objective', label:'Objectif de la formation', type:'textarea', required:true},
+        {name:'target_audience', label:'Public cible', required:true},
+        {name:'participants_count', label:'Nombre de participants', type:'number', required:true},
+        {name:'level', label:'Niveau des participants', type:'select', options:['Débutant','Intermédiaire','Avancé','Mixte']},
+        {name:'format', label:'Format souhaité', type:'select', required:true, options:['Présentiel','En ligne','Hybride']},
+        {name:'location_pref', label:'Lieu'},
+        {name:'duration', label:'Durée souhaitée'},
+        {name:'period', label:'Période souhaitée'},
+        {name:'sessions_count', label:'Nombre de sessions'},
+        {name:'expected_skills', label:'Compétences attendues à la fin de la formation', type:'textarea'},
+        {name:'budget', label:'Budget indicatif'}
+      ]},
+      { title:'Documents', fields:[
+        {name:'doc_tdr', label:'TDR', type:'file'},
+        {name:'doc_plan', label:'Plan de formation existant', type:'file'},
+        {name:'doc_program', label:'Programme souhaité', type:'file'},
+        {name:'doc_pedago', label:'Documents pédagogiques', type:'file'},
+        {name:'doc_autres', label:'Autres documents', type:'file'}
+      ]}
+    ]
+  },
+  autre: {
+    icon:'📝', title:'Autre demande', desc:"Une prestation qui ne rentre pas dans les cases ci-dessus",
+    submitLabel:'Envoyer la demande',
+    sections:[
+      { title:'Organisation', fields:[
+        {name:'organization', label:'Organisation / entreprise', required:true},
+        {name:'contact_name', label:'Nom du contact', required:true},
+        {name:'contact_role', label:'Fonction'},
+        {name:'email', label:'Email', type:'email', required:true},
+        {name:'phone', label:'Téléphone', required:true}
+      ]},
+      { title:'Votre demande', fields:[
+        {name:'subject', label:'Objet de la demande', required:true},
+        {name:'domain', label:'Domaine', required:true},
+        {name:'description', label:'Description détaillée du besoin', type:'textarea', required:true},
+        {name:'expected_results', label:'Résultats attendus', type:'textarea'},
+        {name:'preferred_date', label:'Date souhaitée', type:'date'},
+        {name:'budget', label:'Budget indicatif'}
+      ]},
+      { title:'Documents', fields:[
+        {name:'doc_tdr', label:'TDR', type:'file'},
+        {name:'doc_cahier', label:'Cahier des charges', type:'file'},
+        {name:'doc_ref', label:'Documents de référence', type:'file'},
+        {name:'doc_autres', label:'Autres pièces justificatives', type:'file'}
+      ]}
+    ]
+  }
+};
+	
+	
+	
+	
+
+  var serviceModal = document.getElementById('serviceModal');
+  var serviceForm = document.getElementById('serviceForm');
+  var serviceFormFields = document.getElementById('serviceFormFields');
+  var serviceFormError = document.getElementById('serviceFormError');
+  var serviceFormSuccess = document.getElementById('serviceFormSuccess');
+  var serviceFormSubmitBtn = document.getElementById('serviceFormSubmitBtn');
+  var currentServiceKey = null;
+  var serviceLastFocused = null;
+
+  function renderField(f){
+    var wrap = document.createElement('div');
+    wrap.className = 'form-group';
+    wrap.style.marginBottom = '16px';
+    var label = document.createElement('label');
+    label.setAttribute('for', 'svc_' + f.name);
+    label.textContent = f.label + (f.required ? ' *' : '');
+    wrap.appendChild(label);
+
+    var input;
+    if(f.type === 'textarea'){
+      input = document.createElement('textarea');
+      input.rows = 3;
+    } else if(f.type === 'select'){
+      input = document.createElement('select');
+      var blank = document.createElement('option');
+      blank.value = ''; blank.textContent = 'Choisir…';
+      input.appendChild(blank);
+      f.options.forEach(function(opt){
+        var o = document.createElement('option');
+        o.value = opt; o.textContent = opt;
+        input.appendChild(o);
+      });
+    } else {
+      input = document.createElement('input');
+      input.type = f.type || 'text';
+    }
+    input.id = 'svc_' + f.name;
+    input.name = f.name;
+    if(f.required){ input.required = true; }
+    wrap.appendChild(input);
+    return wrap;
+  }
+
+  window.openServiceForm = function(service){
+    var config = SERVICE_FORMS[service];
+    if(!config){ return; }
+    currentServiceKey = service;
+
+    document.getElementById('serviceModalTitle').textContent = config.title;
+    document.getElementById('serviceModalDesc').textContent = config.desc;
+    serviceFormSubmitBtn.textContent = config.submitLabel;
+    serviceFormError.style.display = 'none';
+    serviceFormSuccess.style.display = 'none';
+    serviceForm.style.display = '';
+    serviceFormSubmitBtn.disabled = false;
+
+    serviceFormFields.innerHTML = '';
+
+    config.sections.forEach(function(section){
+      var h = document.createElement('div');
+      h.className = 'service-section-title';
+      h.textContent = section.title;
+      serviceFormFields.appendChild(h);
+      section.fields.forEach(function(f){
+        serviceFormFields.appendChild(renderField(f));
+      });
+    });
+
+    // Documents (upload informatif — non stocké, à activer plus tard si besoin d'un bucket Supabase Storage)
+    var docsTitle = document.createElement('div');
+    docsTitle.className = 'service-section-title';
+    
+    serviceFormFields.appendChild(docsTitle);
+    var docsNote = document.createElement('p');
+    docsNote.className = 'form-note';
+    docsNote.style.margin = '0 0 14px';
+    docsNote.style.textAlign = 'left';
+    
+
+    // Comment avez-vous entendu parler de NOVACC ?
+    var heardWrap = document.createElement('div');
+    heardWrap.className = 'form-group';
+    heardWrap.style.marginBottom = '16px';
+    var heardLabel = document.createElement('label');
+    heardLabel.setAttribute('for', 'svc_heard_about');
+    heardLabel.textContent = 'Comment avez-vous entendu parler de NOVACC ?';
+    heardWrap.appendChild(heardLabel);
+    var heardSelect = document.createElement('select');
+    heardSelect.id = 'svc_heard_about';
+    heardSelect.name = 'heard_about';
+    var blankOpt = document.createElement('option');
+    blankOpt.value = ''; blankOpt.textContent = 'Choisir…';
+    heardSelect.appendChild(blankOpt);
+    HEARD_ABOUT_OPTIONS.forEach(function(opt){
+      var o = document.createElement('option');
+      o.value = opt; o.textContent = opt;
+      heardSelect.appendChild(o);
+    });
+    heardWrap.appendChild(heardSelect);
+    serviceFormFields.appendChild(heardWrap);
+
+    // Consentement
+    var consentRow = document.createElement('label');
+    consentRow.className = 'form-check-row';
+    var consentInput = document.createElement('input');
+    consentInput.type = 'checkbox';
+    consentInput.id = 'svc_consent';
+    consentInput.name = 'consent';
+    consentInput.required = true;
+    consentRow.appendChild(consentInput);
+    var consentSpan = document.createElement('span');
+    consentSpan.textContent = "J'autorise NOVACC à utiliser les informations fournies afin d'évaluer et traiter ma demande.";
+    consentRow.appendChild(consentSpan);
+    serviceFormFields.appendChild(consentRow);
+
+    document.getElementById('serviceNavItem').classList.remove('open');
+    serviceLastFocused = document.activeElement;
+    serviceModal.classList.add('open');
+    serviceModal.setAttribute('aria-hidden', 'false');
+    document.body.style.overflow = 'hidden';
+    var firstInput = serviceModal.querySelector('input, select, textarea');
+    if(firstInput){ firstInput.focus(); }
+  };
+
+  window.closeServiceModal = function(){
+    serviceModal.classList.remove('open');
+    serviceModal.setAttribute('aria-hidden', 'true');
+    document.body.style.overflow = '';
+    if(serviceLastFocused){ serviceLastFocused.focus(); }
+  };
+
+  serviceModal.addEventListener('click', function(e){
+    if(e.target === serviceModal){ closeServiceModal(); }
+  });
+  document.addEventListener('keydown', function(e){
+    if(e.key === 'Escape' && serviceModal.classList.contains('open')){ closeServiceModal(); }
+  });
+
+  serviceForm.addEventListener('submit', function(e){
+    e.preventDefault();
+    var config = SERVICE_FORMS[currentServiceKey];
+    if(!config){ return; }
+
+    serviceFormError.style.display = 'none';
+    serviceFormSuccess.style.display = 'none';
+
+    var payload = { service: currentServiceKey };
+    var allFields = [].concat.apply([], config.sections.map(function(s){ return s.fields; }));
+    allFields.forEach(function(f){
+      var el = document.getElementById('svc_' + f.name);
+      payload[f.name] = el ? el.value.trim() : '';
+    });
+    payload.heard_about = document.getElementById('svc_heard_about').value;
+    payload.consent = document.getElementById('svc_consent').checked;
+    payload.created_at = new Date().toISOString();
+
+    if(!payload.consent){
+      serviceFormError.textContent = "Merci de cocher la case d'autorisation avant d'envoyer votre demande.";
+      serviceFormError.style.display = 'block';
+      return;
+    }
+
+    if(typeof supabaseClient === 'undefined'){
+      serviceFormError.textContent = "Une erreur est survenue lors de l'envoi. Merci de réessayer ou de nous contacter sur WhatsApp.";
+      serviceFormError.style.display = 'block';
+      return;
+    }
+
+    serviceFormSubmitBtn.disabled = true;
+    serviceFormSubmitBtn.textContent = 'Envoi en cours…';
+
+    supabaseClient.from('service_requests').insert([payload]).then(function(result){
+      serviceFormSubmitBtn.disabled = false;
+      serviceFormSubmitBtn.textContent = config.submitLabel;
+      if(result.error){
+        serviceFormError.textContent = "Une erreur est survenue lors de l'envoi. Merci de réessayer ou de nous contacter sur WhatsApp.";
+        serviceFormError.style.display = 'block';
+        console.error('Erreur Supabase (service_requests) :', result.error);
+        return;
+      }
+      serviceFormSuccess.textContent = "Votre demande a bien été envoyée. Nous vous répondrons rapidement.";
+      serviceFormSuccess.style.display = 'block';
+      serviceForm.reset();
+      setTimeout(function(){ closeServiceModal(); }, 1800);
+    });
+  });
+})();
+</script>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script src="Auth-Apropos.js"></script>
 </body>
