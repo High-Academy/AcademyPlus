@@ -230,12 +230,17 @@ nav.links .mobile-only-link:hover{
   .di-text{ display:flex; flex-direction:column; gap:2px; }
   .di-title{ font-weight:600; font-size:0.92rem; color:#fff; }
   .di-desc{ font-weight:400; font-size:0.8rem; color:rgba(255,255,255,0.78); }
+  
+  
   @media(max-width:760px){
-    .dropdown-panel{ position:static; opacity:1; visibility:visible; transform:none;
-      box-shadow:none; border:none; margin-top:2px; padding:8px; display:none; min-width:0; border-radius:8px; }
+    #serviceNavItem{ position:static !important; }
+    .dropdown-panel{ position:static !important; opacity:1; visibility:visible; transform:none;
+      box-shadow:none; border:0.5px solid rgba(255,255,255,0.25); margin:6px 0 4px !important;
+      padding:8px; display:none; width:100% !important; max-width:none !important; min-width:0; border-radius:8px; }
     #serviceNavItem.open .dropdown-panel{ display:block; }
     .nav-item-label{ color:#fff; }
-    .di-title{ color:#fff; }
+    .di-title{ color:#fff !important; }
+    .di-desc{ color:rgba(255,255,255,0.78) !important; }
   }
 
   /* ---- Champs de formulaire (textarea / select) + éléments utilisés par les formulaires de service ---- */
@@ -365,7 +370,7 @@ nav.links .mobile-only-link:hover{
     border:none;
   }
   .section-card.highlight h2{color:#fff;}
-  .section-card.highlight h2::before{background:var(--gold);}
+  .section-card ::before{background:var(--gold);}
   .section-card.highlight p{color:#E3E5E8;}
 
   footer{background:var(--navy-deep); color:#B9C0D4; padding:30px 0;}
@@ -497,6 +502,45 @@ nav.links .mobile-only-link:hover{
   .card7{background:#C4B5FD60;}
   .card8{background:#F4C46840;}
   .card9{background:#1F2937;}
+  
+  
+  
+  
+    .menu-toggle svg{width:20px;height:20px;}
+  /* Lien "Formations" : toujours visible dans l'en-tête, qu'il soit dans le menu (desktop)
+     ou sorti du menu à côté du logo (mobile, voir script de réorganisation du header) */
+  .nav-dropdown{ position:relative; display:inline-block; }
+  .nav-formations-link{
+    display:inline-flex; align-items:center; gap:4px;
+    text-decoration:none; color:#fff; font-weight:600; font-size:0.96rem;
+    padding:8px 2px; letter-spacing:.01em; white-space:nowrap; transition:color .2s ease;
+  }
+  .nav-formations-link:hover{ color:var(--navy); }
+  .nav-dropdown-caret{ width:14px; height:14px; transition:transform .18s ease; cursor:pointer; }
+  .nav-dropdown:hover .nav-dropdown-caret,
+  .nav-dropdown:focus-within .nav-dropdown-caret{ transform:rotate(180deg); }
+  .nav-dropdown-menu{
+    position:absolute; top:100%; left:0; margin-top:6px; min-width:200px;
+    background:#8B5CF6; border:1px solid var(--line); border-radius:8px;
+    padding:8px; z-index:50;
+    opacity:0; visibility:hidden; transform:translateY(6px);
+    transition:opacity .18s ease, transform .18s ease, visibility .18s ease;
+  }
+  .nav-dropdown:hover .nav-dropdown-menu,
+  .nav-dropdown:focus-within .nav-dropdown-menu{
+    opacity:1; visibility:visible; transform:translateY(0);
+  }
+  .nav-dropdown-item{
+    display:block; padding:9px 10px; border-radius:6px; white-space:nowrap;
+    color:var(--ink-soft); text-decoration:none; font-weight:600; font-size:0.92rem;
+    color .15s ease;
+  }
+  .nav-dropdown-item:hover{color:var(--navy); }
+  @media(max-width:760px){
+    .nav-dropdown-menu{ position:static; opacity:1; visibility:visible; transform:none;
+      box-shadow:none; border:none; margin-top:2px; padding:0 0 0 14px; display:none; }
+    .nav-dropdown.open .nav-dropdown-menu{ display:block; }
+  }
 
 </style>
 
@@ -515,6 +559,16 @@ nav.links .mobile-only-link:hover{
    
     <nav class="links" id="navLinks">
       <a href="index.html"> Accueil</a>
+	  
+	  <div class="nav-dropdown" id="navFormationsLink">
+       <a href="#kous" class="nav-formations-link" onclick="event.preventDefault(); event.stopPropagation(); this.closest('.nav-dropdown').classList.toggle('open');">
+          Formations
+          <svg class="nav-dropdown-caret" onclick="event.preventDefault(); event.stopPropagation(); this.closest('.nav-dropdown').classList.toggle('open');" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><polyline points="6 9 12 15 18 9"/></svg>
+        </a>
+        <div class="nav-dropdown-menu">
+          <a href="index.html#formations" class="nav-dropdown-item">Suivi-évaluation</a>
+        </div>
+      </div>
 
       <div class="nav-item" id="serviceNavItem">
         <div class="nav-item-label" id="serviceNavToggle" onclick="event.preventDefault(); event.stopPropagation(); this.closest('#serviceNavItem').classList.toggle('open');">
@@ -548,7 +602,7 @@ nav.links .mobile-only-link:hover{
           </button>
         </div>
       </div>
-
+<a href="certificat.html">Certificat</a>
       <a href="#kontak">Contact</a>
 	  <button type="button" class="btn-login mobile-only-link" onclick="openLoginModal()">Connexion</button>
     </nav>
@@ -1254,6 +1308,25 @@ nav.links .mobile-only-link:hover{
     });
     heardWrap.appendChild(heardSelect);
     serviceFormFields.appendChild(heardWrap);
+	
+	//DROPDOWN-BUTTON(FORMATIONS)
+	navLinks.addEventListener('click', function(e){
+    if(e.target.tagName === 'A'){
+      navLinks.classList.remove('open');
+      menuToggle.setAttribute('aria-expanded', 'false');
+    }
+    var openDropdown = document.querySelector('.nav-dropdown.open');
+    if(openDropdown && !openDropdown.contains(e.target)){
+      openDropdown.classList.remove('open');
+    }
+    var openServiceItem = document.querySelector('#serviceNavItem.open');
+    if(openServiceItem && !openServiceItem.contains(e.target)){
+      openServiceItem.classList.remove('open');
+    }
+  });
+	
+	
+	
 
     // Consentement
     var consentRow = document.createElement('label');
@@ -1285,12 +1358,7 @@ nav.links .mobile-only-link:hover{
     if(serviceLastFocused){ serviceLastFocused.focus(); }
   };
 
-  serviceModal.addEventListener('click', function(e){
-    if(e.target === serviceModal){ closeServiceModal(); }
-  });
-  document.addEventListener('keydown', function(e){
-    if(e.key === 'Escape' && serviceModal.classList.contains('open')){ closeServiceModal(); }
-  });
+  
 
   serviceForm.addEventListener('submit', function(e){
   e.preventDefault();
@@ -1327,7 +1395,10 @@ nav.links .mobile-only-link:hover{
     var file = el && el.files && el.files[0];
     if(!file){ return Promise.resolve(null); }
 
-    var path = currentServiceKey + '/' + Date.now() + '_' + f.name + '_' + file.name;
+    var safeName = file.name
+  .normalize('NFD').replace(/[\u0300-\u036f]/g, '')
+  .replace(/[^a-zA-Z0-9.\-]/g, '_');
+var path = currentServiceKey + '/' + Date.now() + '_' + f.name + '_' + safeName;
     return supabaseClient.storage
       .from('service-request-documents')
       .upload(path, file)
