@@ -2968,7 +2968,44 @@ document.addEventListener('keydown', function(e){
     var imgData = canvas.toDataURL('image/png', 1.0);
     var doc = new window.jspdf.jsPDF({ orientation:'landscape', unit:'px', format:[canvas.width, canvas.height] });
     doc.addImage(imgData, 'PNG', 0, 0, canvas.width, canvas.height);
-    doc.save('certificat-novacc-' + fileTag + '-' + (fileSafe || 'etudiant') + '.pdf');
+    var fileName = 'certificat-novacc-' + fileTag + '-' + (fileSafe || 'etudiant') + '.pdf';
+    doc.save(fileName);
+
+    // Envoi automatique du certificat par email en pièce jointe. La fonction serveur
+    // (Edge Function "send-certificate") vérifie elle-même si ce certificat a déjà été
+    // envoyé à cet élève ; on ne bloque jamais le téléchargement local du PDF ci-dessus,
+    // même si l'envoi de l'email échoue.
+    sendCertificateByEmail(key, doc, fileName);
+  }
+
+  // Envoie le certificat par email via l'Edge Function Supabase "send-certificate"
+  // (qui appelle Resend). La fonction lit elle-même l'utilisateur connecté depuis le
+  // token d'authentification, vérifie/enregistre l'unicité dans "certificates_issued",
+  // et ne renvoie jamais un certificat déjà émis.
+  function sendCertificateByEmail(key, doc, fileName){
+    if(!isLoggedIn()){ return; }
+
+    var pdfBase64 = doc.output('datauristring').split(',')[1];
+    var moduleLabel = (key === 'final')
+      ? 'Parcours complet — Suivi & Évaluation de Projet'
+      : (MODULE_CERT_TITLES[key] || key);
+
+    supabaseClient.functions.invoke('send-certificate', {
+      body: {
+        pdfBase64: pdfBase64,
+        fileName: fileName,
+        moduleLabel: moduleLabel,
+        certKey: key
+      }
+    }).then(function(res){
+      if(res.error){
+        // 409 "already_issued" est un cas normal (déjà envoyé précédemment) : pas une vraie erreur.
+        console.log('Envoi certificat (info) :', res.error.message || res.error);
+        return;
+      }
+    }).catch(function(err){
+      console.error('Erreur appel Edge Function send-certificate :', err);
+    });
   }
 
   // Génère (une seule fois par nom de compte) le certificat pour le module/parcours "key",
