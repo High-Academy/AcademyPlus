@@ -2990,7 +2990,7 @@ document.addEventListener('keydown', function(e){
       ? 'Parcours complet — Suivi & Évaluation de Projet'
       : (MODULE_CERT_TITLES[key] || key);
 
-    supabaseClient.functions.invoke('send-certificate', {
+    supabaseClient.functions.invoke('swift-function', {
       body: {
         pdfBase64: pdfBase64,
         fileName: fileName,
