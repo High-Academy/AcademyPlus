@@ -2959,33 +2959,43 @@ document.addEventListener('keydown', function(e){
     return '';
   }
 
-  // Cache le bouton "Télécharger certificat" et affiche une confirmation à la place.
+  // Cache TOUT le certificat visible (canvas + bouton) — pas juste le bouton — pour
+  // qu'un étudiant ne puisse plus faire de capture d'écran une fois le certificat délivré.
+  // Le canvas est aussi vidé (clearRect) en plus d'être caché, en cas d'inspection DOM.
   function markCertificateDownloaded(key){
-    var btn = document.getElementById('certDownloadLink-' + key);
-    if(!btn || btn.dataset.done === '1') return;
-    btn.dataset.done = '1';
-    btn.style.display = 'none';
+    var wrap = document.getElementById('certPreviewWrap-' + key);
+    if(!wrap || wrap.dataset.done === '1') return;
+    wrap.dataset.done = '1';
+
+    var canvas = document.getElementById('certCanvas-' + key);
+    if(canvas){
+      var ctx = canvas.getContext('2d');
+      if(ctx){ ctx.clearRect(0, 0, canvas.width, canvas.height); }
+    }
+
+    wrap.innerHTML = '';
+    wrap.style.display = 'block';
 
     var note = document.createElement('p');
     note.className = 'cert-note-small';
     note.style.color = '#2F6F52';
     note.style.fontWeight = '600';
     note.textContent = '✓ Certificat déjà téléchargé et envoyé par email.';
-    btn.parentNode.insertBefore(note, btn.nextSibling);
+    wrap.appendChild(note);
   }
 
   // Vérifie en base (table certificate_downloads) si ce certificat a déjà été délivré.
-  // Appelée au chargement de la page pour que le bouton reste caché après un rechargement.
-  function checkCertificateAlreadyDownloaded(key){
-    if(!isLoggedIn()) return;
-    supabaseClient
+  // Retourne une Promise<boolean> pour pouvoir ATTENDRE la réponse avant d'afficher
+  // quoi que ce soit à l'écran (voir ensureCertificateRendered ci-dessous).
+  function isCertificateAlreadyDownloaded(key){
+    if(!isLoggedIn()) return Promise.resolve(false);
+    return supabaseClient
       .from('certificate_downloads')
       .select('cert_key')
       .eq('cert_key', key)
       .maybeSingle()
-      .then(function(res){
-        if(res.data){ markCertificateDownloaded(key); }
-      });
+      .then(function(res){ return !!res.data; })
+      .catch(function(){ return false; });
   }
 
   // Le bouton "Télécharger certificat" déclenche à la fois le téléchargement local (PDF)
@@ -3055,17 +3065,33 @@ document.addEventListener('keydown', function(e){
 
   // Génère (une seule fois par nom de compte) le certificat pour le module/parcours "key",
   // en utilisant exclusivement le prénom/nom fournis à l'inscription — aucune saisie manuelle.
+  // Le certificat ne devient VISIBLE qu'une fois confirmé côté serveur qu'il n'a pas déjà
+  // été délivré — sinon un étudiant pourrait capturer l'image pendant la vérification.
   function ensureCertificateRendered(key){
     var name = getAccountFullName();
     if(!name){ return; }
 
     var previewWrap = document.getElementById('certPreviewWrap-' + key);
     var certForm = document.getElementById('certForm-' + key);
+    if(certForm){ certForm.style.display = 'none'; }
+
+    function revealIfAllowed(){
+      isCertificateAlreadyDownloaded(key).then(function(done){
+        if(done){
+          markCertificateDownloaded(key);
+        } else if(previewWrap){
+          previewWrap.style.display = 'block';
+        }
+      });
+    }
 
     if(CERT_NAMES[key] === name){
       // Déjà généré avec le nom du compte actuellement connecté.
-      if(previewWrap){ previewWrap.style.display = 'block'; }
-      if(certForm){ certForm.style.display = 'none'; }
+      if(previewWrap && previewWrap.dataset.done === '1'){
+        previewWrap.style.display = 'block'; // ne montre que le message de confirmation
+      } else {
+        revealIfAllowed();
+      }
       return;
     }
     CERT_NAMES[key] = name;
@@ -3076,9 +3102,7 @@ document.addEventListener('keydown', function(e){
     });
     Promise.all(loaders).then(function(){
       drawCertificate(name, key);
-      if(previewWrap){ previewWrap.style.display = 'block'; }
-      if(certForm){ certForm.style.display = 'none'; }
-      checkCertificateAlreadyDownloaded(key);
+      revealIfAllowed();
     });
   }
 
