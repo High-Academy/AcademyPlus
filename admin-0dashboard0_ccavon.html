@@ -8,7 +8,7 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,600;9..144,700&family=Inter:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.4/dist/chart.umd.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.4/chart.umd.min.js"></script>
 <style>
   :root{
     --bg:#F7F9FA; --panel:#FFFFFF; --ink:#1C1D1F; --ink-soft:#6A6F73;
@@ -75,6 +75,23 @@
   .error-box{background:#FDEAEA; border:1px solid #F3B9B9; color:var(--red); padding:14px 16px; border-radius:8px; margin-bottom:20px; font-size:0.9rem;}
   .spinner{width:26px; height:26px; border:3px solid var(--line); border-top-color:var(--blue); border-radius:50%; animation:spin 0.8s linear infinite; margin:0 auto 14px;}
   @keyframes spin{to{transform:rotate(360deg);}}
+
+  .reset-form{display:flex; gap:12px; flex-wrap:wrap; align-items:flex-end;}
+  .reset-form .field{display:flex; flex-direction:column; gap:6px;}
+  .reset-form label{font-size:0.78rem; font-weight:600; color:var(--ink-soft); text-transform:uppercase; letter-spacing:.03em;}
+  .reset-form input, .reset-form select{
+    padding:10px 12px; border:1.5px solid var(--line); border-radius:6px; font-size:0.9rem;
+    font-family:inherit; color:var(--ink); background:#fff; min-width:220px;
+  }
+  .reset-form select{min-width:200px;}
+  .reset-form input:focus, .reset-form select:focus{outline:none; border-color:var(--blue);}
+  #resetCertBtn{background:var(--red); color:#fff; border:none; padding:11px 20px; border-radius:6px; font-weight:600; cursor:pointer; font-size:0.9rem; white-space:nowrap;}
+  #resetCertBtn:hover{background:#B93636;}
+  #resetCertBtn:disabled{background:var(--line); color:var(--ink-soft); cursor:not-allowed;}
+  #resetCertStatus{margin-top:14px; font-size:0.88rem; padding:10px 14px; border-radius:6px; display:none;}
+  #resetCertStatus.show{display:block;}
+  #resetCertStatus.success{background:#E4F5E9; color:var(--teal);}
+  #resetCertStatus.error{background:#FDEAEA; color:var(--red);}
 </style>
 </head>
 <body>
@@ -159,6 +176,28 @@
       <thead><tr><th>Date</th><th>Module</th><th>Paiement</th><th>Statut</th></tr></thead>
       <tbody id="recentTableBody"><tr><td colspan="4">Chargement…</td></tr></tbody>
     </table>
+  <section class="card">
+    <h3>Réinitialiser un certificat</h3>
+    <div class="card-sub">Débloque à nouveau le téléchargement/envoi d'un certificat pour un étudiant précis.</div>
+    <div class="reset-form">
+      <div class="field">
+        <label for="resetCertEmail">Email de l'étudiant</label>
+        <input type="email" id="resetCertEmail" placeholder="etudiant@exemple.com">
+      </div>
+      <div class="field">
+        <label for="resetCertModule">Module</label>
+        <select id="resetCertModule">
+          <option value="">Tous les certificats</option>
+          <option value="m1">Module 01</option>
+          <option value="m2">Module 02</option>
+          <option value="m3">Module 03</option>
+          <option value="m4">Module 04</option>
+          <option value="final">Certificat global</option>
+        </select>
+      </div>
+      <button id="resetCertBtn" type="button">Réinitialiser</button>
+    </div>
+    <div id="resetCertStatus"></div>
   </section>
 </main>
 
@@ -364,6 +403,57 @@
   }
 
   document.getElementById('refreshBtn').addEventListener('click', loadDashboardData);
+
+  // Réinitialise le verrou "certificat déjà délivré" pour un étudiant (un module précis,
+  // ou tous les modules si aucun n'est sélectionné). Passe par une fonction Postgres
+  // "security definer" qui vérifie elle-même que l'appelant est bien admin avant d'agir —
+  // la RLS de la table certificate_downloads empêcherait sinon un admin de toucher aux
+  // lignes des autres utilisateurs.
+  function showResetStatus(msg, isError){
+    var box = document.getElementById('resetCertStatus');
+    box.textContent = msg;
+    box.className = 'show ' + (isError ? 'error' : 'success');
+  }
+
+  document.getElementById('resetCertBtn').addEventListener('click', async function(){
+    var btn = this;
+    var emailInput = document.getElementById('resetCertEmail');
+    var moduleSelect = document.getElementById('resetCertModule');
+    var email = emailInput.value.trim();
+    var certKey = moduleSelect.value || null;
+
+    if(!email){
+      showResetStatus('Merci de saisir l\'email de l\'étudiant.', true);
+      return;
+    }
+
+    btn.disabled = true;
+    var originalLabel = btn.textContent;
+    btn.textContent = 'Réinitialisation…';
+
+    try {
+      var res = await supabaseClient.rpc('admin_reset_certificate', {
+        p_email: email,
+        p_cert_key: certKey
+      });
+      if(res.error) throw res.error;
+
+      var count = res.data || 0;
+      if(count === 0){
+        showResetStatus('Aucun certificat délivré trouvé pour cet email' + (certKey ? ' / ce module' : '') + '.', true);
+      } else {
+        var moduleLabel = certKey ? moduleSelect.options[moduleSelect.selectedIndex].textContent : 'tous les certificats';
+        showResetStatus('✓ Réinitialisé — ' + email + ' pourra retélécharger ' + moduleLabel + '.', false);
+        emailInput.value = '';
+      }
+    } catch(err){
+      console.error(err);
+      showResetStatus('Erreur : ' + (err.message || err), true);
+    } finally {
+      btn.disabled = false;
+      btn.textContent = originalLabel;
+    }
+  });
 
   (async function init(){
     var ok = await checkAdminAccess();
