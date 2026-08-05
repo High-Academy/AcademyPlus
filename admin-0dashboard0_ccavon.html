@@ -8,7 +8,14 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,600;9..144,700&family=Inter:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.4/chart.umd.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.4/dist/chart.umd.min.js"></script>
+<script>
+  window.addEventListener('error', function(e){
+    if(e.target && e.target.tagName === 'SCRIPT' && e.target.src && e.target.src.indexOf('chart.js') !== -1){
+      console.error('Chart.js n\'a pas pu être chargé depuis le CDN.');
+    }
+  }, true);
+</script>
 <style>
   :root{
     --bg:#F7F9FA; --panel:#FFFFFF; --ink:#1C1D1F; --ink-soft:#6A6F73;
@@ -382,6 +389,10 @@
 
   async function loadDashboardData(){
     errorBox.innerHTML = '';
+    if(typeof Chart === 'undefined'){
+      showError('La librairie de graphiques (Chart.js) n\'a pas pu se charger. Vérifiez votre connexion et actualisez la page.');
+      return;
+    }
     try {
       var statsRes = await supabaseClient.rpc('admin_visitor_stats');
       if(statsRes.error) throw statsRes.error;
