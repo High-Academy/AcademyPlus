@@ -99,6 +99,14 @@
   #resetCertStatus.show{display:block;}
   #resetCertStatus.success{background:#E4F5E9; color:var(--teal);}
   #resetCertStatus.error{background:#FDEAEA; color:var(--red);}
+
+  #confirmEnrollBtn{background:var(--teal); color:#fff; border:none; padding:11px 20px; border-radius:6px; font-weight:600; cursor:pointer; font-size:0.9rem; white-space:nowrap;}
+  #confirmEnrollBtn:hover{background:#155c26;}
+  #confirmEnrollBtn:disabled{background:var(--line); color:var(--ink-soft); cursor:not-allowed;}
+  #confirmEnrollStatus{margin-top:14px; font-size:0.88rem; padding:10px 14px; border-radius:6px; display:none;}
+  #confirmEnrollStatus.show{display:block;}
+  #confirmEnrollStatus.success{background:#E4F5E9; color:var(--teal);}
+  #confirmEnrollStatus.error{background:#FDEAEA; color:var(--red);}
 </style>
 </head>
 <body>
@@ -205,6 +213,28 @@
       <button id="resetCertBtn" type="button">Réinitialiser</button>
     </div>
     <div id="resetCertStatus"></div>
+  </section>
+
+  <section class="card">
+    <h3>Confirmer un paiement</h3>
+    <div class="card-sub">Passe une inscription de "en attente" à "confirmée" après vérification du paiement (MonCash/UNIBANK).</div>
+    <div class="reset-form">
+      <div class="field">
+        <label for="confirmEnrollEmail">Email de l'étudiant</label>
+        <input type="email" id="confirmEnrollEmail" placeholder="etudiant@exemple.com">
+      </div>
+      <div class="field">
+        <label for="confirmEnrollModule">Module</label>
+        <select id="confirmEnrollModule">
+          <option value="m1">Module 01</option>
+          <option value="m2">Module 02</option>
+          <option value="m3">Module 03</option>
+          <option value="m4">Module 04</option>
+        </select>
+      </div>
+      <button id="confirmEnrollBtn" type="button">Confirmer</button>
+    </div>
+    <div id="confirmEnrollStatus"></div>
   </section>
 </main>
 
@@ -460,6 +490,53 @@
     } catch(err){
       console.error(err);
       showResetStatus('Erreur : ' + (err.message || err), true);
+    } finally {
+      btn.disabled = false;
+      btn.textContent = originalLabel;
+    }
+  });
+
+  document.getElementById('confirmEnrollBtn').addEventListener('click', async function(){
+    var btn = this;
+    var emailInput = document.getElementById('confirmEnrollEmail');
+    var moduleSelect = document.getElementById('confirmEnrollModule');
+    var email = emailInput.value.trim();
+    var moduleId = moduleSelect.value;
+    var statusBox = document.getElementById('confirmEnrollStatus');
+
+    function showConfirmStatus(msg, isError){
+      statusBox.textContent = msg;
+      statusBox.className = 'show ' + (isError ? 'error' : 'success');
+    }
+
+    if(!email){
+      showConfirmStatus('Merci de saisir l\'email de l\'étudiant.', true);
+      return;
+    }
+
+    btn.disabled = true;
+    var originalLabel = btn.textContent;
+    btn.textContent = 'Confirmation…';
+
+    try {
+      var res = await supabaseClient.rpc('admin_confirm_enrollment', {
+        p_email: email,
+        p_module_id: moduleId
+      });
+      if(res.error) throw res.error;
+
+      var count = res.data || 0;
+      if(count === 0){
+        showConfirmStatus('Aucune inscription en attente trouvée pour cet email / ce module.', true);
+      } else {
+        var moduleLabel = moduleSelect.options[moduleSelect.selectedIndex].textContent;
+        showConfirmStatus('✓ Paiement confirmé — ' + email + ' a maintenant accès à ' + moduleLabel + '.', false);
+        emailInput.value = '';
+        loadDashboardData();
+      }
+    } catch(err){
+      console.error(err);
+      showConfirmStatus('Erreur : ' + (err.message || err), true);
     } finally {
       btn.disabled = false;
       btn.textContent = originalLabel;
