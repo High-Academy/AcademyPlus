@@ -2959,23 +2959,68 @@ document.addEventListener('keydown', function(e){
     return '';
   }
 
-  function downloadCertPDF(key){
-    var canvas = document.getElementById('certCanvas-' + key);
-    if(!canvas || !window.jspdf){ return; }
-    var name = CERT_NAMES[key] || 'etudiant';
-    var fileSafe = name.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '').replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)/g, '');
-    var fileTag = (key === 'final') ? 'global' : ('module-' + key.replace('m',''));
-    var imgData = canvas.toDataURL('image/png', 1.0);
-    var doc = new window.jspdf.jsPDF({ orientation:'landscape', unit:'px', format:[canvas.width, canvas.height] });
-    doc.addImage(imgData, 'PNG', 0, 0, canvas.width, canvas.height);
-    var fileName = 'certificat-novacc-' + fileTag + '-' + (fileSafe || 'etudiant') + '.pdf';
-    doc.save(fileName);
+  // Cache le bouton "Télécharger certificat" et affiche une confirmation à la place.
+  function markCertificateDownloaded(key){
+    var btn = document.getElementById('certDownloadLink-' + key);
+    if(!btn || btn.dataset.done === '1') return;
+    btn.dataset.done = '1';
+    btn.style.display = 'none';
 
-    // Envoi automatique du certificat par email en pièce jointe. La fonction serveur
-    // (Edge Function "send-certificate") vérifie elle-même si ce certificat a déjà été
-    // envoyé à cet élève ; on ne bloque jamais le téléchargement local du PDF ci-dessus,
-    // même si l'envoi de l'email échoue.
-    sendCertificateByEmail(key, doc, fileName);
+    var note = document.createElement('p');
+    note.className = 'cert-note-small';
+    note.style.color = '#2F6F52';
+    note.style.fontWeight = '600';
+    note.textContent = '✓ Certificat déjà téléchargé et envoyé par email.';
+    btn.parentNode.insertBefore(note, btn.nextSibling);
+  }
+
+  // Vérifie en base (table certificate_downloads) si ce certificat a déjà été délivré.
+  // Appelée au chargement de la page pour que le bouton reste caché après un rechargement.
+  function checkCertificateAlreadyDownloaded(key){
+    if(!isLoggedIn()) return;
+    supabaseClient
+      .from('certificate_downloads')
+      .select('cert_key')
+      .eq('cert_key', key)
+      .maybeSingle()
+      .then(function(res){
+        if(res.data){ markCertificateDownloaded(key); }
+      });
+  }
+
+  // Le bouton "Télécharger certificat" déclenche à la fois le téléchargement local (PDF)
+  // ET l'envoi par email — les deux actions doivent se produire une seule fois au total.
+  // On vérifie donc côté serveur (RPC request_certificate_download) AVANT de générer quoi
+  // que ce soit : le PDF n'est créé/téléchargé/envoyé que si le serveur confirme que
+  // c'est la toute première fois pour cet étudiant sur ce certificat.
+  function downloadCertPDF(key){
+    if(!isLoggedIn()){ return; }
+
+    supabaseClient.rpc('request_certificate_download', { p_cert_key: key })
+      .then(function(res){
+        if(res.error || res.data !== true){
+          alert("Ce certificat a déjà été délivré. Contactez-nous sur WhatsApp si vous avez besoin d'une copie.");
+          markCertificateDownloaded(key);
+          return;
+        }
+
+        var canvas = document.getElementById('certCanvas-' + key);
+        if(!canvas || !window.jspdf){ return; }
+        var name = CERT_NAMES[key] || 'etudiant';
+        var fileSafe = name.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '').replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)/g, '');
+        var fileTag = (key === 'final') ? 'global' : ('module-' + key.replace('m',''));
+        var imgData = canvas.toDataURL('image/png', 1.0);
+        var doc = new window.jspdf.jsPDF({ orientation:'landscape', unit:'px', format:[canvas.width, canvas.height] });
+        doc.addImage(imgData, 'PNG', 0, 0, canvas.width, canvas.height);
+        var fileName = 'certificat-novacc-' + fileTag + '-' + (fileSafe || 'etudiant') + '.pdf';
+        doc.save(fileName);
+
+        // Envoi automatique du certificat par email en pièce jointe. La fonction serveur
+        // (Edge Function "send-certificate") reste un filet de sécurité supplémentaire,
+        // mais le verrou principal "une seule fois" est désormais géré ci-dessus.
+        sendCertificateByEmail(key, doc, fileName);
+        markCertificateDownloaded(key);
+      });
   }
 
   // Envoie le certificat par email via l'Edge Function Supabase "send-certificate"
@@ -3033,6 +3078,7 @@ document.addEventListener('keydown', function(e){
       drawCertificate(name, key);
       if(previewWrap){ previewWrap.style.display = 'block'; }
       if(certForm){ certForm.style.display = 'none'; }
+      checkCertificateAlreadyDownloaded(key);
     });
   }
 
