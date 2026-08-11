@@ -7453,27 +7453,29 @@ document.addEventListener('keydown', function(e){
       setTimeout(proceedWithSubmit, 4000);
 
       var moduleIdsToRegister = (modId === 'bundle-4-modules') ? ['m1','m2','m3','m4'] : [modId];
-      var insertRequests = moduleIdsToRegister.map(function(moduleId){
+      var insertPromises = moduleIdsToRegister.map(function(moduleId){
         var moduleLabel = (modId === 'bundle-4-modules') ? ('Les 4 modules — ' + moduleId.toUpperCase()) : (modilField ? modilField.value : '');
-        return supabaseClient.from('enrollments').insert({
-          user_id: currentSession.user.id,
-          module_id: moduleId,
-          module_name: moduleLabel,
-          payment_method: payMethodField ? payMethodField.value : '',
-          status: 'pending'
+        // Wrappé dans une vraie Promise car le SDK Supabase v2 retourne un
+        // PostgrestFilterBuilder qui n'est pas une Promise standard (.catch isolé plante).
+        return new Promise(function(resolve){
+          supabaseClient.from('enrollments').insert({
+            user_id: currentSession.user.id,
+            module_id: moduleId,
+            module_name: moduleLabel,
+            payment_method: payMethodField ? payMethodField.value : '',
+            status: 'pending'
+          }).then(function(result){
+            if(!result.error && !paymentStatus[moduleId]){
+              paymentStatus[moduleId] = 'pending';
+            }
+            resolve();
+          }, function(){ resolve(); }); // erreur réseau : on résout quand même
         });
       });
-      Promise.all(insertRequests.map(function(request){
-        return request.catch(function(){ return { error: true }; });
-      })).then(function(results){
-        moduleIdsToRegister.forEach(function(moduleId, i){
-          if(!results[i].error && !paymentStatus[moduleId]){
-            paymentStatus[moduleId] = 'pending';
-          }
-        });
+      Promise.all(insertPromises).then(function(){
         applyAccessGate();
-      }).catch(function(){ /* pas de connexion Supabase : on laisse passer */ })
-        .then(proceedWithSubmit);
+        proceedWithSubmit();
+      }).catch(function(){ proceedWithSubmit(); });
     });
   }
 
