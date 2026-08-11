@@ -6504,7 +6504,18 @@ document.addEventListener('keydown', function(e){
   // Les identifiants sont stockés de façon sécurisée par Supabase, pas dans ce fichier.
   var SUPABASE_URL = 'https://lgohbjmbhprvjibkforn.supabase.co';
   var SUPABASE_ANON_KEY = 'sb_publishable_EmDRarwrfmft7DGnsWsgXA_LgeJV-sI';
-  var supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+  // keepalive:true garantit que les requêtes Supabase (ex: l'insert dans "enrollments"
+  // juste avant la redirection MonCash/UNIBANK) ne sont PAS annulées quand le navigateur
+  // navigue vers une nouvelle page pendant qu'elles sont encore en cours.
+  var supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY, {
+    global: {
+      fetch: function(url, options){
+        options = options || {};
+        options.keepalive = true;
+        return fetch(url, options);
+      }
+    }
+  });
 
   var loginModal = document.getElementById('loginModal');
   var loginForm = document.getElementById('loginForm');
