@@ -2629,6 +2629,69 @@ header .wrap{
   </div>
 </div>
 
+<script>
+  // ---- Formulaire de paiement : soumission garantie, indépendante du script principal ----
+  // Placé ici, isolé, pour que le clic PAYER fonctionne toujours (redirection MonCash/
+  // UNIBANK), même si le script Supabase plus bas plante (SDK non chargé, etc.).
+  (function(){
+    var enskriForm = document.getElementById('enskriForm');
+    if(!enskriForm) return;
+    var modIdField = document.getElementById('modIdField');
+    var payMethodField = document.getElementById('payMethodField');
+    var modilField = document.getElementById('modilField');
+
+    enskriForm.addEventListener('submit', function(e){
+      var loggedIn = false;
+      try{ loggedIn = (typeof isLoggedIn === 'function') && isLoggedIn(); }catch(err){}
+      if(!loggedIn){ return; } // pas connecté : soumission native normale
+
+      var modId = modIdField ? modIdField.value : '';
+      if(!modId){ return; } // formulaire générique : soumission native normale
+
+      e.preventDefault();
+      var proceeded = false;
+      function proceedWithSubmit(){
+        if(proceeded){ return; }
+        proceeded = true;
+        enskriForm.submit();
+      }
+      // Filet de sécurité programmé EN PREMIER, avant tout accès à Supabase :
+      // garantit la redirection même si l'enregistrement échoue ou plante.
+      setTimeout(proceedWithSubmit, 1500);
+
+      try{
+        if(typeof supabaseClient === 'undefined' || !supabaseClient ||
+           typeof currentSession === 'undefined' || !currentSession){
+          proceedWithSubmit();
+          return;
+        }
+        var moduleIdsToRegister = (modId === 'bundle-4-modules') ? ['m1','m2','m3','m4'] : [modId];
+        var insertRequests = moduleIdsToRegister.map(function(moduleId){
+          var moduleLabel = (modId === 'bundle-4-modules') ? ('Les 4 modules — ' + moduleId.toUpperCase()) : (modilField ? modilField.value : '');
+          return supabaseClient.from('enrollments').insert({
+            user_id: currentSession.user.id,
+            module_id: moduleId,
+            module_name: moduleLabel,
+            payment_method: payMethodField ? payMethodField.value : '',
+            status: 'pending'
+          });
+        });
+        Promise.all(insertRequests.map(function(request){
+          return request.catch(function(){ return { error: true }; });
+        })).then(function(){
+          moduleIdsToRegister.forEach(function(moduleId){
+            try{ if(typeof paymentStatus !== 'undefined'){ paymentStatus[moduleId] = 'pending'; } }catch(err){}
+          });
+          try{ if(typeof applyAccessGate === 'function'){ applyAccessGate(); } }catch(err){}
+          proceedWithSubmit();
+        }).catch(function(){ proceedWithSubmit(); });
+      }catch(err){
+        proceedWithSubmit();
+      }
+    });
+  })();
+</script>
+
 <!-- ---------- MODALE : DEMANDE DE SERVICE ---------- -->
 <div class="modal-overlay" id="serviceModal" aria-hidden="true">
   <div class="modal-box" role="dialog" aria-modal="true" aria-labelledby="serviceModalTitle">
@@ -6926,8 +6989,11 @@ document.addEventListener('keydown', function(e){
       loginSubmitBtn.disabled = true;
 
       var authCall = loginMode === 'signup'
-        ? supabaseClient.auth.signUp({ email: email, password: password, options: { emailRedirectTo: 'https://novacademyc.github.io/AcademyPlus/' } })
-		
+        ? supabaseClient.auth.signUp({
+            email: email,
+            password: password,
+            options: { emailRedirectTo: 'https://novacademyc.github.io/AcademyPlus/' }
+          })
         : supabaseClient.auth.signInWithPassword({ email: email, password: password });
 
       authCall.then(function(result){
@@ -7396,56 +7462,8 @@ document.addEventListener('keydown', function(e){
   });
 
   // ---- Enregistrement de la demande d'achat dans Supabase ("enrollments") ----
-  // Dès que l'élève clique sur PAYER (MonCash ou UNIBANK), on enregistre une ligne
-  // de statut "pending" pour ce module. Elle ne passera à "confirmed" — et ne
-  // débloquera donc le contenu — qu'après vérification manuelle du paiement,
-  // faite directement dans la table Supabase par un administrateur.
-  var enskriForm = document.getElementById('enskriForm');
-  if(enskriForm){
-    enskriForm.addEventListener('submit', function(e){
-      if(!isLoggedIn()){ return; }
-      var modId = modIdField ? modIdField.value : '';
-      if(!modId){ return; } // formulaire ouvert sans module précis (ex: inscription générale)
-
-      e.preventDefault();
-      var proceeded = false;
-      function proceedWithSubmit(){
-        if(proceeded){ return; }
-        proceeded = true;
-        enskriForm.submit();
-      }
-
-      var moduleIdsToRegister = (modId === 'bundle-4-modules') ? ['m1','m2','m3','m4'] : [modId];
-      var insertRequests = moduleIdsToRegister.map(function(moduleId){
-        var moduleLabel = (modId === 'bundle-4-modules') ? ('Les 4 modules — ' + moduleId.toUpperCase()) : (modilField ? modilField.value : '');
-        return supabaseClient.from('enrollments').insert({
-          user_id: currentSession.user.id,
-          module_id: moduleId,
-          module_name: moduleLabel,
-          payment_method: payMethodField ? payMethodField.value : '',
-          status: 'pending'
-        });
-      });
-
-      Promise.all(insertRequests.map(function(request){
-        return request.catch(function(){ return { error: true }; });
-      })).then(function(){
-        moduleIdsToRegister.forEach(function(moduleId){
-          paymentStatus[moduleId] = 'pending';
-        });
-        applyAccessGate();
-        proceedWithSubmit();
-      }).catch(function(){
-        moduleIdsToRegister.forEach(function(moduleId){
-          paymentStatus[moduleId] = 'pending';
-        });
-        applyAccessGate();
-        proceedWithSubmit();
-      });
-
-      setTimeout(proceedWithSubmit, 2000); // filet de sécurité
-    });
-  }
+  // Géré désormais dans le script isolé juste après le formulaire (voir plus haut),
+  // pour garantir la redirection MonCash/UNIBANK même si ce script plante.
 
   // ---- Recherche des modules ----
   var searchForm = document.getElementById('siteSearchForm');
