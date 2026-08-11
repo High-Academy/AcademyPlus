@@ -6926,7 +6926,7 @@ document.addEventListener('keydown', function(e){
       loginSubmitBtn.disabled = true;
 
       var authCall = loginMode === 'signup'
-        ? supabaseClient.auth.signUp({ email: email, password: password, options: { emailRedirectTo: 'https://high-academy.github.io/AcademyPlus/' } })
+        ? supabaseClient.auth.signUp({ email: email, password: password, options: { emailRedirectTo: 'https://novacademyc.github.io/AcademyPlus/' } })
 		
         : supabaseClient.auth.signInWithPassword({ email: email, password: password });
 
@@ -7293,7 +7293,7 @@ document.addEventListener('keydown', function(e){
         email: email,
         password: password,
         options: {
-		  emailRedirectTo: 'https://high-academy.github.io/AcademyPlus/',
+		  emailRedirectTo: 'https://novacademyc.github.io/AcademyPlus/',
           data: {
             prenom: prenom,
             nom: nom,
