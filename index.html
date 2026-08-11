@@ -2657,7 +2657,11 @@ header .wrap{
       }
       // Filet de sécurité programmé EN PREMIER, avant tout accès à Supabase :
       // garantit la redirection même si l'enregistrement échoue ou plante.
-      setTimeout(proceedWithSubmit, 1500);
+      // 4s de marge (au lieu de 1,5s) : le pack "4 modules" envoie 4 insertions
+      // Supabase en parallèle, qui peuvent prendre plus de temps sur une connexion
+      // lente — sans cette marge, la redirection coupait les requêtes en cours
+      // avant qu'elles n'atteignent Supabase.
+      setTimeout(proceedWithSubmit, 4000);
 
       try{
         if(typeof supabaseClient === 'undefined' || !supabaseClient ||
