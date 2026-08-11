@@ -14,6 +14,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600;9..144,700&family=Inter:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel='stylesheet' href='https://cdn-uicons.flaticon.com/4.0.0/uicons-thin-rounded/css/uicons-thin-rounded.css'>
 <style>
   :root{
     --bg: #FFFFFF;
@@ -2144,7 +2145,7 @@ header .wrap{
           <li><a href="#kous"><span class="cnum" id="cnum-m1" data-num="01">01</span><span class="clabel">Introduction au Suivi &amp; Évaluation<small>9 leçons · Quiz inclus</small></span></a></li>
           <li><a href="#kous"><span class="cnum" id="cnum-m2" data-num="02">02</span><span class="clabel">Cadre Logique &amp; Indicateurs<small>9 leçons · Quiz inclus</small></span></a></li>
           <li><a href="#kous"><span class="cnum" id="cnum-m3" data-num="03">03</span><span class="clabel">Collecte &amp; Analyse de Données<small>10 leçons · Quiz inclus</small></span></a></li>
-          <li><a href="#kous"><span class="cnum" id="cnum-m4" data-num="04">04</span><span class="clabel">Rapport des Résultats<small>4 leçons · Quiz inclus</small></span></a></li>
+          <li><a href="#kous"><span class="cnum" id="cnum-m4" data-num="04">04</span><span class="clabel">Rapport des Résultats<small>17 leçons · Quiz inclus</small></span></a></li>
         </ul>
         <div class="curriculum-divider"></div>
         <a href="#certificat" class="curriculum-cert" id="certLink">
@@ -2354,7 +2355,7 @@ header .wrap{
 		  
 		  <div class="card-meta"><span>4 leçons</span><span>~3h</span><span>Niveau : Avancé</span></div>
           <div class="progress-track"><div class="progress-fill" id="pf-m4"></div></div>
-          <div class="progress-label"><span id="ptxt-m4">0/4 leçons terminées</span><span class="ppct" id="ppct-m4">0%</span></div>
+          <div class="progress-label"><span id="ptxt-m4">0/17 leçons terminées</span><span class="ppct" id="ppct-m4">0%</span></div>
           <a href="#cert-m4" id="certmini-m4" style="display:none; font-size:0.8rem; font-weight:700; color:var(--teal); text-decoration:none;">🎓 Certificat du module débloqué — cliquez pour le générer</a>
             
 		   
@@ -2403,7 +2404,10 @@ header .wrap{
       <h3 style="color:red">Pack complet : les 4 modules</h3>
       <p>Profitez du parcours complet en une seule commande pour 15 000 HTG. Vous avez accès aux 4 modules du cours, avec le même formulaire d'inscription, puis le paiement via MonCash ou UNIBANK Online.</p>
     </div>
-    <button type="button" class="btn-enroll" onclick="openBundleModal()">Acheter les 4 modules — 15 000 HTG</button>
+    <div style="display:flex; flex-direction:column; align-items:flex-start; gap:8px;">
+      <button type="button" class="btn-enroll" onclick="openBundleModal()">Acheter les 4 modules — 15 000 HTG</button>
+      <p id="bundleProcessingMessage" style="display:none; margin:0; color:#16a34a; font-weight:600; font-size:0.95rem;">Traitement du paiement en cours, veuillez patienter.</p>
+    </div>
   </div>
 </div>
 
@@ -2512,7 +2516,7 @@ header .wrap{
         <div class="cert-generator-head"><span class="cnum">04</span><h3>Rapport des Résultats</h3></div>
         <p class="cert-locked-msg" id="certLockedMsg-m4">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="5" y="11" width="14" height="9" rx="1.5"/><path d="M8 11V8a4 4 0 0 1 8 0v3"/></svg>
-          <span>Terminez les 4 leçons du module 04 pour débloquer ce certificat. (<span id="certLockedProgress-m4">0/4</span>)</span>
+          <span>Terminez les 17 leçons du module 04 pour débloquer ce certificat. (<span id="certLockedProgress-m4">0/17</span>)</span>
         </p>
         <div class="cert-form" id="certForm-m4" style="display:none;">
           <p class="cert-note-small" style="margin:0 0 14px;">Connectez-vous avec le compte utilisé lors de votre inscription : votre certificat sera généré automatiquement avec votre prénom et nom.</p>
@@ -2530,7 +2534,7 @@ header .wrap{
         <div class="cert-generator-head"><span class="cnum" style="background:var(--gold); border-color:var(--gold); color:var(--navy-deep);">🎓</span><h3>Certificat global — parcours complet S&amp;E</h3></div>
         <p class="cert-locked-msg" id="certLockedMsg-final">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="5" y="11" width="14" height="9" rx="1.5"/><path d="M8 11V8a4 4 0 0 1 8 0v3"/></svg>
-          <span>Terminez les 4 modules (24 leçons au total — chaque module dans l'ordre de ses propres leçons) pour débloquer le certificat global. (<span id="certLockedProgress-final">0/24</span>)</span>
+          <span>Terminez les 4 modules (55 leçons au total — chaque module dans l'ordre de ses propres leçons) pour débloquer le certificat global. (<span id="certLockedProgress-final">0/55</span>)</span>
         </p>
         <div class="cert-form" id="certForm-final" style="display:none;">
           <p class="cert-note-small" style="margin:0 0 14px;">Connectez-vous avec le compte utilisé lors de votre inscription : votre certificat global sera généré automatiquement avec votre prénom et nom.</p>
@@ -3011,7 +3015,7 @@ header .wrap{
           <svg viewBox="0 0 24 24" width="20" height="20" fill="currentColor" aria-hidden="true"><path d="M12.04 2C6.58 2 2.13 6.45 2.13 11.91c0 1.75.46 3.46 1.32 4.96L2.05 22l5.25-1.38a9.9 9.9 0 0 0 4.74 1.21h.01c5.46 0 9.9-4.45 9.9-9.92 0-2.65-1.03-5.14-2.9-7.01A9.82 9.82 0 0 0 12.04 2m0 1.67c2.24 0 4.35.87 5.94 2.46a8.24 8.24 0 0 1 2.42 5.85c0 4.56-3.71 8.27-8.37 8.27a8.3 8.3 0 0 1-4.22-1.15l-.3-.18-3.12.82.83-3.04-.2-.31a8.18 8.18 0 0 1-1.27-4.42c0-4.56 3.71-8.3 8.29-8.3M8.5 6.9c-.17 0-.44.06-.67.32-.23.25-.87.85-.87 2.08 0 1.22.89 2.4 1.01 2.57.13.17 1.74 2.8 4.31 3.81 2.13.85 2.57.68 3.03.64.47-.04 1.5-.61 1.71-1.2.21-.6.21-1.1.15-1.21-.06-.11-.23-.17-.47-.3-.25-.12-1.5-.74-1.73-.83-.23-.08-.4-.12-.57.13-.17.25-.65.82-.8.99-.15.17-.29.19-.54.06-.25-.12-1.05-.39-2-1.23-.74-.66-1.24-1.47-1.39-1.72-.14-.25-.02-.38.11-.51.11-.11.25-.29.37-.43.12-.15.16-.25.24-.42.08-.17.04-.31-.02-.43-.06-.12-.55-1.36-.78-1.85-.2-.44-.41-.44-.57-.45z"/></svg>
           <span>WhatsApp</span>
         </a>
-        <span class="mono" style="color:#8892AC;">📧: novacc@gmail.com</span>
+        <span class="mono" style="color:#8892AC;">📧: novacc300@gmail.com</span>
       </div>
       <div class="foot-payments">
         <span style="color:#fff; font-weight:600; font-size:0.85rem; text-transform:uppercase; letter-spacing:.06em; margin-bottom:4px;">Moyens de paiement</span>
@@ -3051,7 +3055,7 @@ header .wrap{
         </a>
 		</div>
 		<div>
-		<a href="https://wa.me/50947655002" target="_blank" rel="noopener" class="foot-whatsapp"  title="Follow NOVACC on  X">
+		<a href="https://x.com/novacademycc" target="_blank" rel="noopener" class="foot-whatsapp"  title="Follow NOVACC on  X">
           <svg style="color:#fff" viewBox="0 0 24 24" width="20" height="20" fill="currentColor" aria-hidden="true">
   <path d="M18.9 2H22l-6.8 7.77L23 22h-6.2l-4.86-6.35L6.3 22H3.2l7.3-8.35L1 2h6.35l4.39 5.8L18.9 2zm-1.09 18h1.72L6.17 3.9H4.34z"/>
 </svg>
@@ -3135,7 +3139,7 @@ header .wrap{
     },
     {
       "type": "quiz",
-      "title": "Quiz — Chapitre 1 : Qu'est-ce que le S&E ?",
+      "title": "Quiz 1",
       "questions": [
         {
           "type": "single",
@@ -3186,7 +3190,7 @@ header .wrap{
     },
     {
       "type": "quiz",
-      "title": "Quiz — Chapitre 2 : Suivi vs Évaluation",
+      "title": "Quiz 2",
       "questions": [
         {
           "type": "single",
@@ -3241,7 +3245,7 @@ header .wrap{
     },
     {
       "type": "quiz",
-      "title": "Quiz — Chapitre 3 : Le cycle de vie d'un projet",
+      "title": "Quiz 3",
       "questions": [
         {
           "type": "single",
@@ -3293,7 +3297,7 @@ header .wrap{
 	  },
     {
       "type": "quiz",
-      "title": "Quiz — Chapitre 4 : Étude de cas Fond-Sable",
+      "title": "Quiz 4 ",
       "questions": [
         {
           "type": "single",
@@ -4952,167 +4956,684 @@ header .wrap{
     }
   ],
   "m4": [
-    {
-      "type": "lesson",
-      "title": "Structurer un rapport S&E",
-      "body": "Un rapport de S&E efficace suit généralement une structure claire : un résumé exécutif (une page maximum, avec les messages clés), une présentation du contexte et des objectifs du projet, la méthodologie utilisée pour collecter les données, les résultats présentés indicateur par indicateur (avec comparaison aux cibles fixées), une analyse des écarts et de leurs causes, les leçons apprises, et enfin des recommandations concrètes pour la suite. Il est essentiel d'adapter la longueur et le niveau de détail au public visé : un bailleur voudra souvent un rapport complet avec annexes techniques, alors qu'un résumé destiné aux bénéficiaires ou aux autorités locales devra être court et illustré. Un bon rapport ne se contente pas de lister des chiffres : il raconte une histoire cohérente sur ce qui a été fait, ce qui a été appris, et ce qui va changer."
-    },
-    {
-      "type": "lesson",
-      "title": "Présenter les données clés",
-      "body": "La façon de présenter les données change complètement la capacité du lecteur à les comprendre. Les graphiques simples (barres, courbes d'évolution, camemberts pour des proportions) sont souvent plus parlants qu'un tableau de chiffres bruts. Chaque graphique doit avoir un titre clair, des unités précises et, si possible, une comparaison (avant/après, cible/réalisé). Il faut éviter de surcharger une même page avec trop d'informations : mieux vaut plusieurs visuels simples qu'un seul graphique compliqué. Les tableaux de bord (dashboards), même simples sous Excel, permettent de suivre plusieurs indicateurs en un coup d'œil grâce à des codes couleur (par exemple vert si la cible est atteinte, orange si en cours, rouge si en retard). L'objectif est toujours le même : permettre à quelqu'un qui n'a pas suivi le projet au quotidien de comprendre rapidement où il en est."
-    },
-    {
-      "type": "lesson",
-      "title": "Communiquer l'impact aux bailleurs",
-      "body": "Les bailleurs de fonds veulent avant tout savoir si leur investissement a produit les résultats promis, et si l'argent a été utilisé de façon responsable. La communication doit donc être honnête et équilibrée : présenter aussi bien les réussites que les difficultés rencontrées et la façon dont elles ont été gérées. Cacher ou minimiser un échec nuit à la confiance sur le long terme, alors qu'une organisation qui explique clairement ce qui n'a pas fonctionné et ce qu'elle en a appris renforce sa crédibilité. Il est utile d'illustrer les résultats chiffrés par des exemples concrets ou des témoignages de bénéficiaires, qui donnent une dimension humaine aux statistiques. Enfin, il faut toujours relier les résultats présentés aux objectifs initialement fixés dans le cadre logique, pour montrer la cohérence entre ce qui était prévu et ce qui a été réalisé."
-    },
-    {
-      "type": "quiz",
-      "title": "Quiz — Rapport des Résultats",
-      "questions": [
-        {
-          "q": "Que doit contenir en priorité le résumé exécutif d'un rapport de S&E ?",
-          "options": [
-            "L'intégralité des données brutes collectées",
-            "Les messages clés du rapport, de façon concise",
-            "Uniquement le budget dépensé"
-          ],
-          "correct": 1
-        },
-        {
-          "q": "Pourquoi utiliser des graphiques plutôt que des tableaux de chiffres bruts dans un rapport ?",
-          "options": [
-            "Parce que les graphiques sont toujours plus précis que les chiffres",
-            "Parce qu'ils facilitent la compréhension rapide de l'information par le lecteur",
-            "Parce que les bailleurs l'exigent légalement dans tous les cas"
-          ],
-          "correct": 1
-        },
-        {
-          "q": "Quelle attitude renforce la confiance d'un bailleur envers une organisation ?",
-          "options": [
-            "Ne présenter que les réussites et cacher les difficultés",
-            "Communiquer de façon honnête sur les réussites ET les difficultés rencontrées",
-            "Éviter de comparer les résultats aux objectifs initiaux"
-          ],
-          "correct": 1
-        },
-        {
-          "type": "single",
-          "q": "Quelle est la durée totale du projet de latrinisation de Fond Sable ?",
-          "options": ["12 mois", "18 mois", "24 mois", "36 mois"],
-          "correct": 2
-        },
-        {
-          "type": "single",
-          "q": "Selon le glossaire du module, qu'est-ce qui distingue un extrant (output) d'un résultat (outcome) ?",
-          "options": [
-            "L'extrant est un produit livré directement par le projet, le résultat est un changement de comportement ou de situation",
-            "L'extrant se mesure en dollars, le résultat se mesure en pourcentage",
-            "L'extrant concerne le bailleur, le résultat concerne l'équipe projet",
-            "Ce sont deux termes synonymes utilisés indifféremment"
-          ],
-          "correct": 0
-        },
-        {
-          "type": "single",
-          "q": "Quel canal de communication est recommandé pour une réunion de comité de pilotage ou une visite de terrain du bailleur ?",
-          "options": [
-            "Le rapport narratif complet",
-            "Une note de synthèse d'une page",
-            "Un bulletin d'information mensuel",
-            "Les annexes financières détaillées"
-          ],
-          "correct": 1
-        },
-        {
-          "type": "single",
-          "q": "D'après le module, quel est le principal risque d'un rapport qui présente uniquement des données chiffrées, sans aucun récit humain ?",
-          "options": [
-            "Il coûte plus cher à produire",
-            "Il perd sa capacité à démontrer le sens réel du changement produit",
-            "Il ne respecte pas les normes de mise en page",
-            "Il devient trop long à lire"
-          ],
-          "correct": 1
-        },
-        {
-          "type": "fill",
-          "q": "Le ____ doit être rédigé en dernier, une fois que l'ensemble du rapport est finalisé, afin qu'il reflète fidèlement le contenu complet.",
-          "pairs": [{ "left": "Complétez la phrase", "right": "résumé exécutif" }],
-          "decoys": ["extrant", "pérennité"]
-        },
-        {
-          "type": "fill",
-          "q": "La ____ des données permet de révéler des inégalités entre catégories de ménages, comme le sexe ou le handicap.",
-          "pairs": [{ "left": "Complétez la phrase", "right": "désagrégation" }],
-          "decoys": ["pérennité", "budget total"]
-        },
-        {
-          "type": "fill",
-          "q": "Chaque section du rapport doit pouvoir être reliée à un objectif, un résultat ou un indicateur du ____ initial.",
-          "pairs": [{ "left": "Complétez la phrase", "right": "cadre logique" }],
-          "decoys": ["budget total", "extrant"]
-        },
-        {
-          "type": "fill",
-          "q": "La ____ est l'obligation de rendre compte de l'utilisation des ressources et des résultats obtenus aux parties prenantes.",
-          "pairs": [{ "left": "Complétez la phrase", "right": "redevabilité" }],
-          "decoys": ["extrant", "pérennité"]
-        },
-        {
-          "type": "fill",
-          "q": "La méthode du ____ structuré suit une structure en trois temps : avant, pendant, après.",
-          "pairs": [{ "left": "Complétez la phrase", "right": "témoignage" }],
-          "decoys": ["pérennité", "budget total"]
-        },
-        {
-          "type": "fill",
-          "q": "La ____ est la valeur qu'un indicateur doit atteindre à une échéance donnée.",
-          "pairs": [{ "left": "Complétez la phrase", "right": "valeur cible" }],
-          "decoys": ["budget total", "extrant"]
-        },
-        {
-          "type": "match",
-          "q": "Remettez dans l'ordre les trois temps de la méthode du témoignage structuré.",
-          "pairs": [
-            { "left": "Étape 1", "right": "La situation avant le projet" },
-            { "left": "Étape 2", "right": "L'intervention vécue" },
-            { "left": "Étape 3", "right": "La situation après le projet, avec les bénéfices concrets ressentis" }
-          ],
-          "decoys": []
-        },
-        {
-          "type": "match",
-          "q": "Remettez dans l'ordre la progression logique recommandée pour un rapport S&E, du début à la fin.",
-          "pairs": [
-            { "left": "Étape 1", "right": "Le contexte" },
-            { "left": "Étape 2", "right": "Les activités menées" },
-            { "left": "Étape 3", "right": "Les résultats et les données" },
-            { "left": "Étape 4", "right": "Les défis rencontrés et les leçons apprises" },
-            { "left": "Étape 5", "right": "Les recommandations" }
-          ],
-          "decoys": []
-        },
-        {
-          "type": "match",
-          "q": "Associez chaque définition du glossaire au bon terme.",
-          "pairs": [
-            { "left": "Extrant", "right": "Produit ou service directement livré par le projet, par exemple une latrine construite ou une formation dispensée" },
-            { "left": "Résultat", "right": "Changement de comportement, de connaissance ou de situation résultant de l'utilisation des extrants" },
-            { "left": "Impact", "right": "Changement à long terme et de portée plus large, souvent mesuré au niveau de la communauté ou de la population" },
-            { "left": "Indicateur", "right": "Variable mesurable permettant de suivre l'atteinte d'un résultat ou d'un objectif" },
-            { "left": "Cadre logique", "right": "Outil de planification présentant la chaîne de résultats du projet, des activités à l'impact" },
-            { "left": "Désagrégation", "right": "Répartition d'une donnée selon des catégories telles que le sexe, l'âge ou la localisation" },
-            { "left": "Redevabilité", "right": "Obligation de rendre compte de l'utilisation des ressources et des résultats obtenus aux parties prenantes" },
-            { "left": "Pérennité", "right": "Capacité des résultats d'un projet à se maintenir après la fin du financement externe" }
-          ],
-          "decoys": ["Valeur de référence", "Valeur cible"]
-        }
-      ]
-    }
-  ]
+  {
+    "type": "lesson",
+    "title": "Le module et le projet Fond Sable",
+    "chapterTag": "Introduction",
+    "body": "Avant d'entrer dans le détail des trois compétences du module, prenons connaissance du contexte général et du projet exemple qui accompagnera chaque section : le projet de latrinisation de la communauté de Fond Sable.",
+    "points": [
+      {
+        "label": "Résumé du module",
+        "html": "<p>Ce module s'adresse aux équipes de Suivi, Évaluation, Redevabilité et Apprentissage (S&amp;E) ainsi qu'aux chefs de projet chargés de produire des rapports de résultats destinés aux bailleurs de fonds. Il propose une démarche complète, depuis la structuration d'un rapport S&amp;E jusqu'à la communication finale de l'impact, en passant par la présentation rigoureuse des données clés.</p><p>À l'issue de ce module, le participant sera capable de :</p><ul><li>Structurer un rapport S&amp;E selon les standards attendus par les bailleurs (USAID, Union Européenne, Banque Mondiale, agences des Nations Unies, fondations privées).</li><li>Sélectionner, présenter et interpréter les données clés d'un projet de manière claire, honnête et convaincante.</li><li>Construire un récit d'impact qui relie les extrants du projet aux changements réels vécus par les communautés bénéficiaires.</li><li>Anticiper les questions et attentes des bailleurs et y répondre de façon proactive dans le rapport.</li></ul>"
+      },
+      {
+        "label": "Pourquoi ce module ?",
+        "html": "<p>Le rapport de résultats constitue le principal point de contact formel entre une organisation de mise en œuvre et son bailleur de fonds. Pourtant, de nombreux rapports S&amp;E échouent à remplir cette fonction, non pas parce que le projet n'a pas atteint ses résultats, mais parce que la communication de ces résultats manque de clarté, de structure ou de force narrative. Un excellent projet mal rapporté peut être perçu comme un projet médiocre, tandis qu'un rapport bien construit peut mettre en valeur des résultats modestes de manière convaincante et honnête.</p><p>Ce module aborde trois compétences complémentaires et indissociables :</p><ul><li><strong>La structure</strong> : organiser l'information selon une logique que le lecteur bailleur reconnaît et attend.</li><li><strong>Les données</strong> : choisir et présenter les indicateurs qui démontrent réellement la performance du projet.</li><li><strong>La communication</strong> : transformer des chiffres en un récit d'impact humain et crédible.</li></ul>"
+      },
+      {
+        "label": "Le projet exemple : Fond Sable",
+        "html": "<p>Fond Sable est une communauté rurale d'environ 3 200 habitants, répartis en 540 ménages, marquée par un accès très limité à l'assainissement de base avant l'intervention. Le projet, financé par un bailleur international sur une durée de dix-huit mois, visait la construction de 420 latrines familiales améliorées, la mise en place de 12 comités WASH villageois et la formation de 60 relais communautaires en promotion de l'hygiène.</p><div class=\"content-table-wrap\"><table class=\"content-table\"><thead><tr><th>Élément</th><th>Détail</th></tr></thead><tbody><tr><td>Zone d'intervention</td><td>Fond Sable, Section communale Haut-Coq Chante, commune Jacmel</td></tr><tr><td>Population cible</td><td>3 200 habitants, 540 ménages</td></tr><tr><td>Durée du projet</td><td>18 mois, janvier 2025 à juin 2026</td></tr><tr><td>Budget total</td><td>485 000 USD</td></tr><tr><td>Bailleur</td><td>Fondation partenaire pour l'eau et l'assainissement</td></tr><tr><td>Objectif principal</td><td>Éliminer la défécation à l'air libre dans la zone cible</td></tr></tbody></table></div><p>Cet exemple sera repris dans chaque section pour illustrer concrètement les principes présentés.</p>"
+      }
+    ]
+  },
+  {
+    "type": "lesson",
+    "title": "Structurer un Rapport S&E Convaincant",
+    "chapterTag": "Chapitre 1",
+    "body": "La structure d'un rapport S&E n'est pas une simple question de mise en forme : elle reflète la logique même du projet, depuis les ressources mobilisées jusqu'aux changements observés dans la vie des bénéficiaires.",
+    "points": [
+      {
+        "label": "1.1 Les principes d'une bonne structure",
+        "html": "<p>La structure d'un rapport S&amp;E n'est pas une simple question de mise en forme. Elle reflète la logique même du projet, depuis les ressources mobilisées jusqu'aux changements observés dans la vie des bénéficiaires. Une structure claire guide le lecteur, anticipe ses questions et renforce la crédibilité de l'organisation.</p><ul><li><strong>Cohérence avec le cadre logique</strong> : chaque section du rapport doit pouvoir être reliée à un objectif, un résultat ou un indicateur du cadre logique initial.</li><li><strong>Progression logique</strong> : partir du contexte, puis présenter les activités, les résultats, les données, les défis et les leçons apprises, pour terminer par les recommandations.</li><li><strong>Lisibilité</strong> : utiliser des titres explicites, des paragraphes courts, des visuels et des encadrés pour faciliter une lecture rapide par un bailleur souvent très sollicité.</li><li><strong>Équilibre entre narratif et données</strong> : alterner texte explicatif et éléments chiffrés afin de ne jamais noyer le lecteur sous les chiffres ni le laisser sans preuves concrètes.</li><li><strong>Honnêteté</strong> : présenter aussi bien les réussites que les difficultés rencontrées, avec les mesures correctives adoptées.</li></ul>"
+      },
+      {
+        "label": "1.2 Le plan type d'un rapport S&amp;E",
+        "html": "<p>La plupart des bailleurs attendent une structure proche du modèle suivant, qu'il s'agisse d'un rapport trimestriel, semestriel ou final :</p><div class=\"content-table-wrap\"><table class=\"content-table\"><thead><tr><th>Section</th><th>Contenu attendu</th></tr></thead><tbody><tr><td>Résumé exécutif</td><td>Une page maximum résumant les résultats clés et le statut global du projet</td></tr><tr><td>Contexte et justification</td><td>Rappel du problème initial et de la pertinence de l'intervention</td></tr><tr><td>Progrès par rapport aux objectifs</td><td>État d'avancement pour chaque résultat attendu du cadre logique</td></tr><tr><td>Données de suivi et indicateurs</td><td>Tableaux et graphiques présentant les valeurs cibles et atteintes</td></tr><tr><td>Analyse et interprétation</td><td>Explication des écarts, des tendances et des facteurs explicatifs</td></tr><tr><td>Histoires de changement</td><td>Témoignages et études de cas illustrant l'impact humain</td></tr><tr><td>Défis et mesures correctives</td><td>Difficultés rencontrées et actions prises pour les résoudre</td></tr><tr><td>Leçons apprises et recommandations</td><td>Enseignements pour la suite du projet ou de futures interventions</td></tr><tr><td>Annexes</td><td>Données brutes, outils de collecte, budget détaillé</td></tr></tbody></table></div>"
+      },
+      {
+        "label": "1.3 Application au projet de Fond Sable",
+        "html": "<p>Pour le rapport semestriel du projet de latrinisation, l'équipe S&amp;E de Fond Sable a organisé son document en respectant le plan type tout en l'adaptant à la réalité du terrain : résumé exécutif d'une page, contexte de l'assainissement dans le Sud, progrès sur la construction des 420 latrines et la formation des comités WASH, tableau des indicateurs de couverture, témoignage de la famille Joseph sur le changement de pratiques d'hygiène, défis liés à la saison des pluies et retards de livraison de matériaux, recommandations pour la phase de pérennisation.</p>"
+      },
+      {
+        "label": "1.4 Adapter la structure au type de bailleur",
+        "html": "<p>Chaque bailleur possède ses propres exigences de format, mais la logique de fond reste similaire. Il est essentiel de consulter le modèle de rapport fourni dans l'accord de subvention et de s'y conformer strictement, tout en conservant les bonnes pratiques de clarté et de rigueur.</p><ul><li><strong>Bailleurs institutionnels</strong> (agences gouvernementales, Union Européenne) : formats souvent standardisés, avec des annexes financières détaillées et des exigences de conformité strictes.</li><li><strong>Fondations privées</strong> : formats plus flexibles, souvent plus orientés vers le récit d'impact et les témoignages humains.</li><li><strong>Agences des Nations Unies</strong> : exigence forte d'alignement avec les indicateurs globaux et les cadres de résultats standardisés du secteur.</li></ul><blockquote><em>Point de réflexion : si le bailleur ne lisait que la première page, quels sont les trois messages qu'il doit absolument retenir ? Cette question guide la hiérarchisation de l'information dans l'ensemble du document.</em></blockquote>"
+      }
+    ]
+  },
+  {
+    "type": "lesson",
+    "title": "Structurer un Rapport S&E Convaincant (suite)",
+    "chapterTag": "Chapitre 1",
+    "body": "Deuxième partie du chapitre : le résumé exécutif, les erreurs de structure les plus fréquentes, et la checklist à suivre avant de soumettre un rapport.",
+    "points": [
+      {
+        "label": "1.5 Le résumé exécutif, une compétence à part entière",
+        "html": "<p>Le résumé exécutif mérite une attention particulière car il détermine souvent la lecture, ou non, du reste du document. De nombreux responsables de programme chez les bailleurs ne liront que cette page.</p><ul><li>Rédiger le résumé exécutif <strong>en dernier</strong>, une fois que l'ensemble du rapport est finalisé, afin qu'il reflète fidèlement le contenu complet.</li><li>Répondre dès les premières phrases à la question centrale : le projet est-il globalement sur la bonne voie ?</li><li>Inclure trois à cinq chiffres clés maximum, soigneusement choisis.</li><li>Terminer par une phrase de perspective, indiquant la priorité de la période suivante.</li></ul><p><em>Exemple, Fond Sable : « Au terme du premier semestre, le projet a atteint 95 % de sa cible de construction de latrines familiales, avec 398 ouvrages achevés sur 420 prévus, et a mis en place l'intégralité des douze comités WASH villageois. Le taux de défécation à l'air libre est passé de 78 % à 12 % dans la zone d'intervention. » </em></p>"
+      },
+      {
+        "label": "1.6 Les erreurs de structure les plus fréquentes",
+        "html": "<p>Certaines erreurs reviennent régulièrement dans les rapports S&amp;E et nuisent à leur efficacité, même lorsque le projet a produit d'excellents résultats sur le terrain.</p><div class=\"content-table-wrap\"><table class=\"content-table\"><thead><tr><th>Erreur fréquente</th><th>Conséquence pour le lecteur bailleur</th></tr></thead><tbody><tr><td>Commencer par une longue description des activités internes</td><td>Le lecteur perd du temps avant d'accéder aux résultats</td></tr><tr><td>Omettre la comparaison entre cible et valeur atteinte</td><td>Impossible d'évaluer objectivement la performance</td></tr><tr><td>Multiplier les acronymes sans les définir</td><td>Le rapport devient difficile à suivre pour un lecteur externe</td></tr><tr><td>Présenter uniquement les réussites</td><td>Le rapport perd en crédibilité et paraît peu transparent</td></tr><tr><td>Séparer totalement narratif et données chiffrées</td><td>Le lecteur doit faire lui-même le lien entre les deux</td></tr></tbody></table></div>"
+      },
+      {
+        "label": "1.7 Checklist de structuration",
+        "html": "<p>Avant de soumettre un rapport, il est recommandé de vérifier systématiquement :</p><ul><li>Le résumé exécutif tient-il sur une seule page et couvre-t-il les messages essentiels ?</li><li>Chaque section du cadre logique est-elle traitée dans le rapport, y compris celles où les résultats sont partiels ?</li><li>Les titres et sous-titres permettent-ils une lecture rapide en diagonale ?</li><li>Les annexes contiennent-elles les données brutes nécessaires pour vérifier les affirmations du corps du rapport ?</li><li>Le document a-t-il été relu par une personne extérieure à l'équipe projet avant soumission ?</li></ul>"
+      }
+    ]
+  },
+  {
+    "type": "quiz",
+    "title": "Quiz — Chapitre 1 : Structurer un rapport S&E",
+    "questions": [
+      {
+        "type": "single",
+        "q": "Que doit contenir en priorité le résumé exécutif d'un rapport de S&E ?",
+        "options": [
+          "L'intégralité des données brutes collectées",
+          "Les messages clés du rapport, de façon concise",
+          "Uniquement le budget dépensé"
+        ],
+        "correct": 1
+      },
+      {
+        "type": "single",
+        "q": "Quelle est la première section attendue dans la plupart des rapports S&E destinés aux bailleurs ?",
+        "options": [
+          "Les annexes budgétaires",
+          "Le résumé exécutif",
+          "La liste des relais communautaires formés"
+        ],
+        "correct": 1
+      },
+      {
+        "type": "single",
+        "q": "Quand faut-il rédiger le résumé exécutif ?",
+        "options": [
+          "En premier, avant le reste du rapport",
+          "En dernier, une fois le rapport finalisé",
+          "Uniquement si le bailleur le demande"
+        ],
+        "correct": 1
+      }
+    ]
+  },
+  {
+    "type": "lesson",
+    "title": "Présenter les Données Clés",
+    "chapterTag": "Chapitre 2",
+    "body": "Les données constituent la colonne vertébrale de tout rapport S&E : elles apportent la preuve objective des résultats obtenus. Encore faut-il les choisir, les présenter et les contextualiser correctement.",
+    "points": [
+      {
+        "label": "2.1 Choisir les bonnes données",
+        "html": "<p>Toutes les données collectées ne méritent pas d'apparaître dans le corps du rapport. Il convient de sélectionner celles qui répondent directement aux questions du bailleur et qui démontrent le lien entre les activités menées et les résultats obtenus.</p><ul><li><strong>Indicateurs d'extrants (outputs)</strong> : ce que le projet a produit directement, par exemple le nombre de latrines construites.</li><li><strong>Indicateurs de résultats (outcomes)</strong> : les changements de comportement ou de situation, par exemple le taux de ménages utilisant régulièrement une latrine.</li><li><strong>Indicateurs d'impact</strong> : les changements à long terme, par exemple la réduction des maladies diarrhéiques dans la communauté.</li></ul><p>Un rapport équilibré présente les trois niveaux, en accordant une attention particulière aux résultats et à l'impact, qui intéressent davantage les bailleurs que les seuls extrants.</p>"
+      },
+      {
+        "label": "2.2 Le tableau de bord des indicateurs",
+        "html": "<p>Le tableau de bord est l'outil central de présentation des données. Il doit comparer systématiquement la valeur cible, la valeur atteinte et le taux de réalisation, afin de permettre une lecture immédiate de la performance.</p><div class=\"content-table-wrap\"><table class=\"content-table\"><thead><tr><th>Indicateur</th><th>Cible</th><th>Réalisé</th><th>Taux</th></tr></thead><tbody><tr><td>Latrines familiales construites</td><td>420</td><td>398</td><td>95 %</td></tr><tr><td>Comités WASH mis en place</td><td>12</td><td>12</td><td>100 %</td></tr><tr><td>Relais communautaires formés</td><td>60</td><td>57</td><td>95 %</td></tr><tr><td>Ménages utilisant une latrine</td><td>486 (90 %)</td><td>430 (80 %)</td><td>89 %</td></tr><tr><td>Villages certifiés zéro défécation</td><td>6</td><td>4</td><td>67 %</td></tr></tbody></table></div><p>Ce tableau montre à la fois les réussites solides et les zones nécessitant une attention particulière. Cette transparence renforce la crédibilité du rapport plutôt que de l'affaiblir.</p>"
+      },
+      {
+        "label": "2.3 Visualiser les données",
+        "html": "<p>Un graphique bien choisi communique en quelques secondes une information qui demanderait plusieurs phrases à expliquer.</p><ul><li>Le <strong>graphique en barres</strong> pour comparer plusieurs indicateurs ou plusieurs périodes.</li><li>Le <strong>graphique en courbe</strong> pour montrer une évolution dans le temps.</li><li>La <strong>carte</strong> pour situer géographiquement les interventions et leur couverture.</li><li>Le <strong>diagramme circulaire</strong>, à utiliser avec parcimonie, pour montrer une répartition simple.</li></ul><p><em>Exemple, progression de la construction des latrines à Fond Sable :</em></p><div class=\"content-table-wrap\"><table class=\"content-table\"><thead><tr><th>Trimestre</th><th>Latrines construites</th><th>Cumul</th></tr></thead><tbody><tr><td>T1 (janv. à mars 2025)</td><td>45</td><td>45</td></tr><tr><td>T2 (avr. à juin 2025)</td><td>98</td><td>143</td></tr><tr><td>T3 (juil. à sept. 2025)</td><td>112</td><td>255</td></tr><tr><td>T4 (oct. à déc. 2025)</td><td>89</td><td>344</td></tr><tr><td>T5 (janv. à mars 2026)</td><td>54</td><td>398</td></tr></tbody></table></div>"
+      },
+      {
+        "label": "2.4 Contextualiser plutôt qu'énumérer",
+        "html": "<p>Un chiffre isolé a peu de valeur persuasive. Il devient significatif lorsqu'il est comparé, soit à une cible, soit à une situation de référence, soit à une moyenne nationale ou sectorielle. La donnée doit toujours être accompagnée d'une phrase d'interprétation.</p><p><em>Plutôt que d'écrire simplement « 398 latrines ont été construites », le rapport gagne à préciser que ces 398 latrines ont permis de réduire le taux de défécation à l'air libre de 78 % à 12 % dans la zone cible, un résultat proche de la cible nationale fixée à 10 %.</em></p>"
+      }
+    ]
+  },
+  {
+    "type": "lesson",
+    "title": "Présenter les Données Clés (suite)",
+    "chapterTag": "Chapitre 2",
+    "body": "Deuxième partie du chapitre : assurer la qualité des données, les désagréger pour révéler les inégalités, présenter les données financières, et éviter les erreurs courantes.",
+    "points": [
+      {
+        "label": "2.5 Assurer la qualité et la fiabilité des données",
+        "html": "<p>La crédibilité d'un rapport repose autant sur la qualité des données que sur leur présentation. Il est recommandé de préciser systématiquement la source, la méthode de collecte et la période de référence de chaque donnée présentée.</p><ul><li>Indiquer la méthode de collecte : enquête ménage, observation directe, registres des comités WASH, rapports des relais communautaires.</li><li>Préciser la taille de l'échantillon lorsque les données proviennent d'une enquête, par exemple un échantillon de 150 ménages sur les 540 de la zone.</li><li>Mentionner les limites connues, par exemple l'accès difficile à deux hameaux pendant la saison des pluies.</li></ul>"
+      },
+      {
+        "label": "2.6 Désagréger les données pour révéler les inégalités",
+        "html": "<p>Une moyenne globale peut masquer des disparités importantes entre zones, entre genres ou entre catégories sociales. Les bailleurs attachent une importance croissante à la désagrégation des données.</p><div class=\"content-table-wrap\"><table class=\"content-table\"><thead><tr><th>Catégorie de ménage</th><th>Nombre de ménages</th><th>Taux d'utilisation de latrine</th></tr></thead><tbody><tr><td>Ménages dirigés par un homme</td><td>410</td><td>82 %</td></tr><tr><td>Ménages dirigés par une femme</td><td>130</td><td>74 %</td></tr><tr><td>Ménages en situation de handicap</td><td>38</td><td>68 %</td></tr><tr><td>Moyenne générale de la zone</td><td>540</td><td>80 %</td></tr></tbody></table></div><p>Cette désagrégation révèle que les ménages dirigés par une femme et les ménages en situation de handicap affichent un taux d'utilisation inférieur à la moyenne, ce qui a conduit l'équipe de Fond Sable à adapter le modèle de latrine pour ces catégories.</p>"
+      },
+      {
+        "label": "2.7 Présenter les données financières",
+        "html": "<p>Les bailleurs accordent une grande importance à la cohérence entre l'avancement physique du projet et l'exécution budgétaire.</p><div class=\"content-table-wrap\"><table class=\"content-table\"><thead><tr><th>Ligne budgétaire</th><th>Budget alloué (USD)</th><th>Dépensé à ce jour (USD)</th><th>Taux</th></tr></thead><tbody><tr><td>Matériaux de construction</td><td>210 000</td><td>196 500</td><td>94 %</td></tr><tr><td>Formation et sensibilisation</td><td>85 000</td><td>79 300</td><td>93 %</td></tr><tr><td>Personnel et supervision</td><td>120 000</td><td>118 000</td><td>98 %</td></tr><tr><td>Suivi, évaluation et apprentissage</td><td>40 000</td><td>31 200</td><td>78 %</td></tr><tr><td>Fonctionnement et logistique</td><td>30 000</td><td>27 100</td><td>90 %</td></tr><tr><td><strong>Total</strong></td><td><strong>485 000</strong></td><td><strong>452 100</strong></td><td><strong>93 %</strong></td></tr></tbody></table></div><p>Un taux d'exécution physique cohérent avec le taux d'exécution budgétaire rassure le bailleur sur la bonne gestion financière du projet. Tout écart important doit toujours être expliqué dans le texte.</p>"
+      },
+      {
+        "label": "2.8 Erreurs courantes dans la présentation des données",
+        "html": "<ul><li>Présenter un tableau sans aucune phrase d'interprétation avant ou après.</li><li>Utiliser des graphiques en trois dimensions ou trop chargés.</li><li>Changer d'unité ou de période de référence d'un tableau à l'autre sans le signaler clairement.</li><li>Arrondir les chiffres de façon incohérente, par exemple 95 % à un endroit et 94,7 % ailleurs pour la même donnée.</li></ul>"
+      }
+    ]
+  },
+  {
+    "type": "quiz",
+    "title": "Quiz — Chapitre 2 : Présenter les données clés",
+    "questions": [
+      {
+        "type": "single",
+        "q": "Dans le cadre logique, à quel niveau correspond le nombre de latrines construites à Fond Sable ?",
+        "options": [
+          "Un indicateur d'impact",
+          "Un indicateur de résultat",
+          "Un indicateur d'extrant (output)"
+        ],
+        "correct": 2
+      },
+      {
+        "type": "single",
+        "q": "Pourquoi utiliser des graphiques plutôt que des tableaux de chiffres bruts dans un rapport ?",
+        "options": [
+          "Parce que les graphiques sont toujours plus précis que les chiffres",
+          "Parce qu'ils facilitent la compréhension rapide de l'information par le lecteur",
+          "Parce que les bailleurs l'exigent légalement dans tous les cas"
+        ],
+        "correct": 1
+      },
+      {
+        "type": "single",
+        "q": "Que révèle la désagrégation des données par catégorie de ménage à Fond Sable ?",
+        "options": [
+          "Aucune différence significative entre catégories",
+          "Un taux d'utilisation de latrine inférieur chez les ménages dirigés par une femme ou en situation de handicap",
+          "Que seuls les hommes utilisent les latrines"
+        ],
+        "correct": 1
+      }
+    ]
+  },
+  {
+    "type": "lesson",
+    "title": "Communiquer l'Impact aux Bailleurs",
+    "chapterTag": "Chapitre 3",
+    "body": "Au-delà des chiffres, les bailleurs cherchent à comprendre ce que le projet a réellement changé dans la vie des personnes concernées. La communication de l'impact transforme des données de suivi en un récit cohérent, humain et crédible.",
+    "points": [
+      {
+        "label": "3.1 Du chiffre au récit",
+        "html": "<p>La donnée répond à la question <em>quoi</em>. Le récit répond à la question <em>pourquoi cela compte</em>. Un bon rapport S&amp;E articule les deux en permanence, en utilisant les données comme preuve du récit et le récit comme interprétation des données.</p><ul><li>Commencer par le changement observé dans la vie des bénéficiaires, puis appuyer ce changement par les données quantitatives correspondantes.</li><li>Utiliser des citations directes et des témoignages, en respectant toujours le consentement et la dignité des personnes citées.</li><li>Relier explicitement chaque résultat à l'objectif stratégique du bailleur.</li></ul>"
+      },
+      {
+        "label": "3.2 La méthode du témoignage structuré",
+        "html": "<p>Un témoignage efficace suit généralement une structure en trois temps : la situation avant le projet, l'intervention vécue, puis la situation après le projet, avec les bénéfices concrets ressentis.</p><p><em>Exemple, la famille Joseph, Fond Sable : avant le projet, la famille pratiquait la défécation à l'air libre à proximité de la rivière utilisée pour l'eau potable. Grâce à l'appui du projet, elle a reçu une formation en hygiène et a construit une latrine améliorée. Aujourd'hui, madame Joseph rapporte que ses enfants n'ont plus souffert de diarrhée depuis six mois, et elle est devenue elle-même relais communautaire pour sensibiliser cinq autres familles du hameau.</em></p>"
+      },
+      {
+        "label": "3.3 Répondre aux questions implicites du bailleur",
+        "html": "<p>Un rapport convaincant anticipe les questions que se pose le bailleur, sans attendre qu'il les formule explicitement.</p><div class=\"content-table-wrap\"><table class=\"content-table\"><thead><tr><th>Question implicite du bailleur</th><th>Élément de réponse dans le rapport</th></tr></thead><tbody><tr><td>Le projet est-il sur la bonne voie ?</td><td>Tableau de bord des indicateurs avec taux de réalisation</td></tr><tr><td>Les fonds ont-ils été bien utilisés ?</td><td>Suivi budgétaire comparé aux dépenses réelles</td></tr><tr><td>Le changement est-il durable ?</td><td>Analyse de la pérennité, comités WASH, relais formés</td></tr><tr><td>Que se passe-t-il en cas de difficulté ?</td><td>Section défis et mesures correctives, avec transparence</td></tr><tr><td>Quel est l'impact humain réel ?</td><td>Témoignages, études de cas, citations de bénéficiaires</td></tr></tbody></table></div>"
+      },
+      {
+        "label": "3.4 Le langage de la communication d'impact",
+        "html": "<p>Le choix des mots influence fortement la perception du bailleur. Il convient de privilégier un langage précis, factuel et évocateur.</p><ul><li>Préférer les verbes d'action concrets : construire, former, réduire, atteindre — plutôt que des formulations vagues comme « travailler sur » ou « s'occuper de ».</li><li>Toujours quantifier lorsque cela est possible, tout en gardant une phrase de contexte humain à proximité du chiffre.</li><li>Éviter les superlatifs non étayés, comme « extraordinaire » ou « exceptionnel ».</li><li>Rester honnête sur les limites, ce qui renforce paradoxalement la crédibilité de l'ensemble du rapport.</li></ul>"
+      }
+    ]
+  },
+  {
+    "type": "lesson",
+    "title": "Communiquer l'Impact aux Bailleurs (suite)",
+    "chapterTag": "Chapitre 3",
+    "body": "Deuxième partie du chapitre : adapter le message au canal de communication, recueillir un témoignage de manière éthique, relier le récit au cadre de résultats du bailleur, et préparer une présentation orale.",
+    "points": [
+      {
+        "label": "3.5 Adapter le message au canal de communication",
+        "html": "<p>Le rapport formel n'est pas le seul vecteur de communication avec les bailleurs. Les mêmes données et récits peuvent être adaptés à d'autres formats.</p><div class=\"content-table-wrap\"><table class=\"content-table\"><thead><tr><th>Canal</th><th>Usage recommandé</th></tr></thead><tbody><tr><td>Rapport narratif complet</td><td>Reddition de comptes formelle, contractuelle, trimestrielle ou finale</td></tr><tr><td>Note de synthèse d'une page</td><td>Réunion de comité de pilotage ou visite de terrain du bailleur</td></tr><tr><td>Présentation visuelle</td><td>Restitution orale, assemblée générale, conseil d'administration</td></tr><tr><td>Bulletin ou lettre d'information</td><td>Communication régulière, mobilisation de nouveaux partenaires</td></tr></tbody></table></div><blockquote><em>Point de réflexion : pour le rapport final de Fond Sable, l'équipe pourrait envisager de compléter le document narratif par une courte vidéo de deux minutes présentant le témoignage de la famille Joseph.</em></blockquote>"
+      },
+      {
+        "label": "3.6 Recueillir un témoignage de manière éthique",
+        "html": "<p>La collecte de témoignages doit toujours respecter des principes éthiques stricts, en particulier lorsque des enfants ou des personnes vulnérables sont concernés.</p><ul><li>Obtenir le consentement libre et éclairé de la personne avant de recueillir et de publier son témoignage ou sa photo.</li><li>Expliquer clairement comment le témoignage sera utilisé.</li><li>Éviter toute formulation qui présenterait la personne comme incapable ou dépendante, en valorisant plutôt son rôle actif dans le changement.</li><li>Vérifier les faits rapportés avec l'équipe terrain avant de les intégrer au rapport final.</li></ul>"
+      },
+      {
+        "label": "3.7 Relier le récit au cadre de résultats du bailleur",
+        "html": "<p>Chaque bailleur possède généralement son propre cadre stratégique, avec des objectifs globaux auxquels chaque projet financé doit contribuer. Un rapport qui établit explicitement ce lien renforce la perception de valeur ajoutée du projet.</p><p><em>Exemple : les résultats du projet de Fond Sable contribuent directement à l'objectif stratégique du bailleur visant la réduction de moitié de la défécation à l'air libre dans les zones rurales prioritaires d'ici 2027, le taux étant passé de 78 % à 12 % dans la zone d'intervention en dix-huit mois.</em></p>"
+      },
+      {
+        "label": "3.8 Préparer la présentation orale des résultats",
+        "html": "<p>Au-delà du document écrit, les équipes S&amp;E sont régulièrement invitées à présenter oralement leurs résultats.</p><ul><li>Limiter la présentation à trois messages clés, appuyés chacun par une donnée et un exemple concret.</li><li>Préparer des réponses aux questions difficiles anticipées, notamment sur les résultats en deçà des cibles.</li><li>Prévoir un support visuel simple, avec peu de texte et des visuels lisibles à distance.</li><li>Se rendre disponible pour une visite de terrain, qui reste souvent le moyen le plus convaincant de démontrer l'impact réel du projet.</li></ul>"
+      }
+    ]
+  },
+  {
+    "type": "quiz",
+    "title": "Quiz — Chapitre 3 : Communiquer l'impact",
+    "questions": [
+      {
+        "type": "single",
+        "q": "Quelle attitude renforce la confiance d'un bailleur envers une organisation ?",
+        "options": [
+          "Ne présenter que les réussites et cacher les difficultés",
+          "Communiquer de façon honnête sur les réussites ET les difficultés rencontrées",
+          "Éviter de comparer les résultats aux objectifs initiaux"
+        ],
+        "correct": 1
+      },
+      {
+        "type": "single",
+        "q": "Dans l'exemple de la famille Joseph, quelle structure de témoignage a été utilisée ?",
+        "options": [
+          "Une liste de statistiques nationales",
+          "Une comparaison entre deux projets différents",
+          "Une structure en trois temps : avant, pendant, après"
+        ],
+        "correct": 2
+      },
+      {
+        "type": "single",
+        "q": "Que doit toujours accompagner une donnée chiffrée présentée dans un rapport S&E ?",
+        "options": [
+          "Une comparaison ou un élément de contexte qui lui donne du sens",
+          "Une citation d'un dirigeant de l'organisation",
+          "Un lien vers le site web du bailleur"
+        ],
+        "correct": 0
+      }
+    ]
+  },
+  {
+    "type": "lesson",
+    "title": "Synthèse et Étude de Cas Fond Sable",
+    "chapterTag": "Chapitre 4",
+    "body": "La structure, les données et la communication d'impact ne sont pas trois étapes séparées, mais trois dimensions d'un même effort de redevabilité. Découvrons comment elles s'articulent dans le rapport final du projet de Fond Sable.",
+    "points": [
+      {
+        "label": "4. Synthèse : les trois piliers en pratique",
+        "html": "<p>La structure, les données et la communication d'impact ne sont pas trois étapes séparées mais trois dimensions d'un même effort de redevabilité.</p><div class=\"content-table-wrap\"><table class=\"content-table\"><thead><tr><th>Pilier</th><th>Question clé à se poser</th></tr></thead><tbody><tr><td>Structure</td><td>Le lecteur peut-il suivre la logique du projet du début à la fin sans effort ?</td></tr><tr><td>Données</td><td>Chaque chiffre présenté répond-il à une question que se pose réellement le bailleur ?</td></tr><tr><td>Communication d'impact</td><td>Le rapport montre-t-il ce que le changement signifie concrètement pour les personnes ?</td></tr></tbody></table></div><blockquote><em>Message clé à retenir : un rapport S&amp;E convaincant ne se contente pas de rendre compte des activités réalisées — il démontre, avec rigueur et humanité, la valeur du changement produit pour les communautés bénéficiaires et pour la mission du bailleur.</em></blockquote>"
+      },
+      {
+        "label": "5.1 Contexte de fin de projet",
+        "html": "<p>Après dix-huit mois de mise en œuvre, le projet a atteint la fin de sa période de financement. L'équipe S&amp;E a préparé un rapport final destiné à documenter l'ensemble des résultats, à démontrer la pérennité des acquis et à formuler des recommandations pour une éventuelle seconde phase.</p>"
+      },
+      {
+        "label": "5.2 Résultats finaux consolidés",
+        "html": "<div class=\"content-table-wrap\"><table class=\"content-table\"><thead><tr><th>Indicateur</th><th>Cible finale</th><th>Résultat final</th><th>Taux</th></tr></thead><tbody><tr><td>Latrines familiales construites</td><td>420</td><td>417</td><td>99 %</td></tr><tr><td>Comités WASH fonctionnels</td><td>12</td><td>12</td><td>100 %</td></tr><tr><td>Relais communautaires actifs</td><td>60</td><td>58</td><td>97 %</td></tr><tr><td>Villages certifiés zéro défécation</td><td>6</td><td>6</td><td>100 %</td></tr><tr><td>Ménages utilisant régulièrement une latrine</td><td>486 (90 %)</td><td>472 (87 %)</td><td>97 %</td></tr><tr><td>Réduction des cas de diarrhée (enfants &lt;5 ans)</td><td>-40 %</td><td>-46 %</td><td>115 %</td></tr></tbody></table></div><p>Ces résultats montrent une trajectoire positive par rapport au rapport semestriel, avec un rattrapage complet sur la certification zéro défécation à l'air libre, grâce à l'intensification des visites de suivi des relais communautaires durant le dernier trimestre.</p>"
+      },
+      {
+        "label": "5.3 Facteurs de pérennité",
+        "html": "<p>La durabilité des résultats après la fin du financement constitue une préoccupation majeure pour les bailleurs.</p><ul><li>Les douze comités WASH villageois disposent chacun d'un plan d'entretien des infrastructures et d'une caisse communautaire alimentée par une cotisation symbolique mensuelle.</li><li>Les 58 relais communautaires ont été intégrés dans le système de santé communautaire existant.</li><li>Un protocole de transfert de responsabilité a été signé avec les autorités locales de Fond Sable.</li></ul>"
+      }
+    ]
+  },
+  {
+    "type": "lesson",
+    "title": "Synthèse et Étude de Cas Fond Sable (suite)",
+    "chapterTag": "Chapitre 4",
+    "body": "Suite de l'étude de cas : le récit d'impact final, les recommandations pour une seconde phase, et le glossaire des termes clés en S&E.",
+    "points": [
+      {
+        "label": "5.4 Extrait commenté du récit d'impact final",
+        "html": "<p><em>« Dix-huit mois après le lancement du projet, Fond Sable est devenue la première communauté du département du Sud certifiée zéro défécation à l'air libre dans l'ensemble de ses six villages. Madame Joseph, aujourd'hui coordinatrice des relais communautaires du hameau de Bòdè, résume ainsi ce changement : sa famille est passée d'une exposition quotidienne aux maladies liées à l'eau à une situation où ses enfants n'ont plus été malades depuis plus d'un an, et où elle accompagne désormais douze autres familles vers les mêmes pratiques. » </em></p><p>Cet extrait illustre l'articulation entre donnée de portée collective (la certification des six villages) et récit individuel incarné (le témoignage de madame Joseph).</p>"
+      },
+      {
+        "label": "5.5 Recommandations pour une seconde phase",
+        "html": "<ul><li>Étendre le modèle de latrine adapté aux ménages en situation de handicap à l'ensemble de la zone.</li><li>Renforcer le budget dédié au suivi, évaluation et apprentissage, dont le taux d'exécution est resté inférieur aux autres lignes budgétaires.</li><li>Documenter et diffuser le modèle de comité WASH de Fond Sable auprès d'autres communes du département.</li><li>Prévoir, dès la conception de la seconde phase, un plan de communication d'impact incluant un support audiovisuel.</li></ul>"
+      },
+      {
+        "label": "6. Glossaire des termes clés en S&amp;E",
+        "html": "<p>Une terminologie partagée et précise renforce la crédibilité d'un rapport et facilite la communication avec des bailleurs habitués aux standards internationaux du secteur.</p><div class=\"content-table-wrap\"><table class=\"content-table\"><thead><tr><th>Terme</th><th>Définition</th></tr></thead><tbody><tr><td>Extrant (output)</td><td>Produit ou service directement livré par le projet, par exemple une latrine construite</td></tr><tr><td>Résultat (outcome)</td><td>Changement de comportement, de connaissance ou de situation résultant de l'utilisation des extrants</td></tr><tr><td>Impact</td><td>Changement à long terme et de portée plus large, souvent mesuré au niveau de la communauté</td></tr><tr><td>Indicateur</td><td>Variable mesurable permettant de suivre l'atteinte d'un résultat ou d'un objectif</td></tr><tr><td>Cadre logique</td><td>Outil de planification présentant la chaîne de résultats du projet, des activités à l'impact</td></tr><tr><td>Valeur de référence (baseline)</td><td>Valeur d'un indicateur mesurée avant le démarrage des activités du projet</td></tr><tr><td>Valeur cible</td><td>Valeur qu'un indicateur doit atteindre à une échéance donnée</td></tr><tr><td>Désagrégation</td><td>Répartition d'une donnée selon des catégories telles que le sexe, l'âge ou la localisation</td></tr><tr><td>Redevabilité</td><td>Obligation de rendre compte de l'utilisation des ressources et des résultats obtenus</td></tr><tr><td>Pérennité</td><td>Capacité des résultats d'un projet à se maintenir après la fin du financement externe</td></tr></tbody></table></div>"
+      }
+    ]
+  },
+  {
+    "type": "quiz",
+    "title": "Quiz — Chapitre 4 : Synthèse, étude de cas & glossaire",
+    "questions": [
+      {
+        "type": "single",
+        "q": "Comment un rapport doit-il traiter les difficultés rencontrées pendant la mise en œuvre ?",
+        "options": [
+          "Les omettre pour ne pas inquiéter le bailleur",
+          "Les mentionner brièvement sans donner de détails",
+          "Les présenter avec transparence, accompagnées des mesures correctives"
+        ],
+        "correct": 2
+      },
+      {
+        "type": "single",
+        "q": "Selon le glossaire du module, qu'est-ce qui distingue un extrant (output) d'un résultat (outcome) ?",
+        "options": [
+          "L'extrant est un produit livré directement par le projet, le résultat est un changement de comportement ou de situation",
+          "L'extrant se mesure en dollars, le résultat se mesure en pourcentage",
+          "Ce sont deux termes synonymes utilisés indifféremment"
+        ],
+        "correct": 0
+      },
+      {
+        "type": "single",
+        "q": "Quel est le message clé à retenir de ce module ?",
+        "options": [
+          "Un rapport doit avant tout être long et détaillé",
+          "Un rapport convaincant relie rigueur des données et sens humain du changement",
+          "Un rapport doit éviter tout tableau pour rester simple"
+        ],
+        "correct": 1
+      }
+    ]
+  },
+  {
+    "type": "lesson",
+    "title": "Boîte à Outils et Visite de Terrain",
+    "chapterTag": "Chapitre 5",
+    "body": "Cette dernière section propose des modèles réutilisables ainsi que les bonnes pratiques pour préparer une visite de terrain du bailleur, qui prolonge et renforce la crédibilité du rapport écrit.",
+    "points": [
+      {
+        "label": "7.1 Modèle de plan de rapport S&amp;E",
+        "html": "<p>Modèle vierge, directement inspiré de la structure utilisée pour le projet de Fond Sable :</p><ul><li>Résumé exécutif, une page maximum.</li><li>Contexte et justification du projet.</li><li>Progrès par rapport aux objectifs du cadre logique.</li><li>Tableau de bord des indicateurs, avec cible, valeur atteinte et taux de réalisation.</li><li>Analyse et interprétation des écarts et tendances observées.</li><li>Histoires de changement et témoignages, recueillis dans le respect des principes éthiques.</li><li>Défis rencontrés et mesures correctives mises en œuvre.</li><li>Leçons apprises et recommandations pour la suite.</li><li>Annexes : données brutes, outils de collecte, suivi budgétaire détaillé.</li></ul>"
+      },
+      {
+        "label": "7.3 Grille d'autoévaluation avant soumission",
+        "html": "<p>Avant l'envoi du rapport au bailleur, il est recommandé de vérifier les points suivants :</p><div class=\"content-table-wrap\"><table class=\"content-table\"><thead><tr><th>Critère de qualité</th><th>Vérifié</th></tr></thead><tbody><tr><td>Le résumé exécutif tient sur une page et couvre les messages essentiels</td><td>Oui / Non</td></tr><tr><td>Chaque donnée chiffrée est accompagnée d'un élément de contexte ou de comparaison</td><td>Oui / Non</td></tr><tr><td>Les sources et méthodes de collecte des données sont précisées</td><td>Oui / Non</td></tr><tr><td>Au moins un témoignage ou une étude de cas illustre l'impact humain du projet</td><td>Oui / Non</td></tr><tr><td>Les défis rencontrés sont présentés avec transparence, avec mesures correctives</td><td>Oui / Non</td></tr><tr><td>Le document a été relu par une personne extérieure à l'équipe projet</td><td>Oui / Non</td></tr></tbody></table></div>"
+      },
+      {
+        "label": "8.1 Avant la visite du bailleur",
+        "html": "<p>La visite de terrain constitue souvent le prolongement naturel d'un rapport S&amp;E convaincant.</p><ul><li>Partager un itinéraire clair précisant les sites visités, en priorisant des exemples représentatifs plutôt que les seuls sites les plus performants.</li><li>Préparer les personnes rencontrées, notamment les membres des comités WASH et les relais communautaires, sans leur imposer un discours préformaté.</li><li>Réunir à l'avance les documents de suivi pertinents, en cas de demande de vérification.</li></ul>"
+      },
+      {
+        "label": "8.2 Pendant la visite",
+        "html": "<ul><li>Laisser une place réelle aux échanges directs entre le bailleur et les bénéficiaires.</li><li>Présenter aussi bien les réussites que les difficultés persistantes, en cohérence avec ce qui a été écrit dans le rapport.</li><li>Documenter la visite par des photographies et des notes, dans le respect du consentement des personnes présentes.</li></ul>"
+      }
+    ]
+  },
+  {
+    "type": "lesson",
+    "title": "Boîte à Outils et Visite de Terrain (suite)",
+    "chapterTag": "Chapitre 5",
+    "body": "Suite : comment rendre compte après une visite de terrain, assurer la coordination entre le rapport écrit et les observations de terrain, et les points clés à retenir de tout le module.",
+    "points": [
+      {
+        "label": "8.3 Après la visite",
+        "html": "<p>Un court compte rendu de la visite, envoyé quelques jours après, permet de consolider la relation de confiance avec le bailleur.</p><p><em>Exemple, visite de Fond Sable : le représentant du bailleur a pu échanger directement avec les membres du comité WASH du hameau de Bòdè et visiter deux latrines nouvellement construites. Il a également noté les retards liés à la saison des pluies déjà mentionnés dans le rapport semestriel, ce qui a renforcé la crédibilité du document écrit plutôt que de la remettre en question.</em></p>"
+      },
+      {
+        "label": "8.4 Coordination entre rapport écrit et communication de terrain",
+        "html": "<p>La cohérence entre ce qui est écrit dans le rapport et ce qui est observé sur le terrain constitue l'un des facteurs les plus déterminants de la confiance du bailleur.</p><div class=\"content-table-wrap\"><table class=\"content-table\"><thead><tr><th>Situation</th><th>Bonne pratique de communication</th></tr></thead><tbody><tr><td>Résultat inférieur à la cible constaté sur le terrain</td><td>Le mentionner de façon proactive dans le rapport avant la visite, avec les mesures correctives</td></tr><tr><td>Résultat supérieur aux attentes observé sur le terrain</td><td>Le documenter avec des données précises plutôt que des formulations générales</td></tr><tr><td>Changement de contexte non prévu (ex. catastrophe naturelle)</td><td>Informer rapidement le bailleur en dehors du cycle normal de rapportage</td></tr></tbody></table></div>"
+      },
+      {
+        "label": "Conclusion et points à retenir",
+        "html": "<p>La rédaction d'un rapport S&amp;E convaincant est une compétence qui se perfectionne avec la pratique et la relecture critique. Chaque rapport constitue une occasion de renforcer la confiance du bailleur et de valoriser le travail accompli sur le terrain.</p><ul><li>Une structure claire et cohérente avec le cadre logique facilite la lecture du bailleur.</li><li>Les données doivent être choisies, contextualisées et sourcées avec rigueur.</li><li>La communication d'impact transforme les chiffres en un récit humain crédible et durable.</li><li>La préparation d'une visite de terrain prolonge et renforce la crédibilité du rapport écrit.</li></ul>"
+      }
+    ]
+  },
+  {
+    "type": "quiz",
+    "title": "Quiz — Chapitre 5 : Visite de terrain et conclusion",
+    "questions": [
+      {
+        "type": "single",
+        "q": "Quel canal de communication est recommandé pour une réunion de comité de pilotage ou une visite de terrain du bailleur ?",
+        "options": [
+          "Le rapport narratif complet",
+          "Une note de synthèse d'une page",
+          "Les annexes financières détaillées"
+        ],
+        "correct": 1
+      },
+      {
+        "type": "single",
+        "q": "Que faire face à un résultat inférieur à la cible constaté sur le terrain ?",
+        "options": [
+          "Attendre que le bailleur le découvre lui-même",
+          "Le mentionner de façon proactive dans le rapport avant la visite, avec les mesures correctives",
+          "Le retirer du rapport final"
+        ],
+        "correct": 1
+      },
+      {
+        "type": "single",
+        "q": "Pour le rapport de Fond Sable, quelle source permettrait de vérifier le taux d'utilisation réelle des latrines par les ménages ?",
+        "options": [
+          "Une estimation approximative de l'équipe projet",
+          "Une enquête ménage avec un échantillon défini",
+          "Une recherche sur internet"
+        ],
+        "correct": 1
+      }
+    ]
+  },
+  {
+    "type": "quiz",
+    "title": "Quiz final du module 4",
+    "questions": [
+      {
+        "q": "Que doit contenir en priorité le résumé exécutif d'un rapport de S&E ?",
+        "options": [
+          "L'intégralité des données brutes collectées",
+          "Les messages clés du rapport, de façon concise",
+          "Uniquement le budget dépensé"
+        ],
+        "correct": 1
+      },
+      {
+        "q": "Pourquoi utiliser des graphiques plutôt que des tableaux de chiffres bruts dans un rapport ?",
+        "options": [
+          "Parce que les graphiques sont toujours plus précis que les chiffres",
+          "Parce qu'ils facilitent la compréhension rapide de l'information par le lecteur",
+          "Parce que les bailleurs l'exigent légalement dans tous les cas"
+        ],
+        "correct": 1
+      },
+      {
+        "q": "Quelle attitude renforce la confiance d'un bailleur envers une organisation ?",
+        "options": [
+          "Ne présenter que les réussites et cacher les difficultés",
+          "Communiquer de façon honnête sur les réussites ET les difficultés rencontrées",
+          "Éviter de comparer les résultats aux objectifs initiaux"
+        ],
+        "correct": 1
+      },
+      {
+        "type": "single",
+        "q": "Quelle est la durée totale du projet de latrinisation de Fond Sable ?",
+        "options": [
+          "12 mois",
+          "18 mois",
+          "24 mois",
+          "36 mois"
+        ],
+        "correct": 2
+      },
+      {
+        "type": "single",
+        "q": "Selon le glossaire du module, qu'est-ce qui distingue un extrant (output) d'un résultat (outcome) ?",
+        "options": [
+          "L'extrant est un produit livré directement par le projet, le résultat est un changement de comportement ou de situation",
+          "L'extrant se mesure en dollars, le résultat se mesure en pourcentage",
+          "L'extrant concerne le bailleur, le résultat concerne l'équipe projet",
+          "Ce sont deux termes synonymes utilisés indifféremment"
+        ],
+        "correct": 0
+      },
+      {
+        "type": "single",
+        "q": "Quel canal de communication est recommandé pour une réunion de comité de pilotage ou une visite de terrain du bailleur ?",
+        "options": [
+          "Le rapport narratif complet",
+          "Une note de synthèse d'une page",
+          "Un bulletin d'information mensuel",
+          "Les annexes financières détaillées"
+        ],
+        "correct": 1
+      },
+      {
+        "type": "single",
+        "q": "D'après le module, quel est le principal risque d'un rapport qui présente uniquement des données chiffrées, sans aucun récit humain ?",
+        "options": [
+          "Il coûte plus cher à produire",
+          "Il perd sa capacité à démontrer le sens réel du changement produit",
+          "Il ne respecte pas les normes de mise en page",
+          "Il devient trop long à lire"
+        ],
+        "correct": 1
+      },
+      {
+        "type": "fill",
+        "q": "Le ____ doit être rédigé en dernier, une fois que l'ensemble du rapport est finalisé, afin qu'il reflète fidèlement le contenu complet.",
+        "pairs": [
+          {
+            "left": "Complétez la phrase",
+            "right": "résumé exécutif"
+          }
+        ],
+        "decoys": [
+          "extrant",
+          "pérennité"
+        ]
+      },
+      {
+        "type": "fill",
+        "q": "La ____ des données permet de révéler des inégalités entre catégories de ménages, comme le sexe ou le handicap.",
+        "pairs": [
+          {
+            "left": "Complétez la phrase",
+            "right": "désagrégation"
+          }
+        ],
+        "decoys": [
+          "pérennité",
+          "budget total"
+        ]
+      },
+      {
+        "type": "fill",
+        "q": "Chaque section du rapport doit pouvoir être reliée à un objectif, un résultat ou un indicateur du ____ initial.",
+        "pairs": [
+          {
+            "left": "Complétez la phrase",
+            "right": "cadre logique"
+          }
+        ],
+        "decoys": [
+          "budget total",
+          "extrant"
+        ]
+      },
+      {
+        "type": "fill",
+        "q": "La ____ est l'obligation de rendre compte de l'utilisation des ressources et des résultats obtenus aux parties prenantes.",
+        "pairs": [
+          {
+            "left": "Complétez la phrase",
+            "right": "redevabilité"
+          }
+        ],
+        "decoys": [
+          "extrant",
+          "pérennité"
+        ]
+      },
+      {
+        "type": "fill",
+        "q": "La méthode du ____ structuré suit une structure en trois temps : avant, pendant, après.",
+        "pairs": [
+          {
+            "left": "Complétez la phrase",
+            "right": "témoignage"
+          }
+        ],
+        "decoys": [
+          "pérennité",
+          "budget total"
+        ]
+      },
+      {
+        "type": "fill",
+        "q": "La ____ est la valeur qu'un indicateur doit atteindre à une échéance donnée.",
+        "pairs": [
+          {
+            "left": "Complétez la phrase",
+            "right": "valeur cible"
+          }
+        ],
+        "decoys": [
+          "budget total",
+          "extrant"
+        ]
+      },
+      {
+        "type": "match",
+        "q": "Remettez dans l'ordre les trois temps de la méthode du témoignage structuré.",
+        "pairs": [
+          {
+            "left": "Étape 1",
+            "right": "La situation avant le projet"
+          },
+          {
+            "left": "Étape 2",
+            "right": "L'intervention vécue"
+          },
+          {
+            "left": "Étape 3",
+            "right": "La situation après le projet, avec les bénéfices concrets ressentis"
+          }
+        ],
+        "decoys": []
+      },
+      {
+        "type": "match",
+        "q": "Remettez dans l'ordre la progression logique recommandée pour un rapport S&E, du début à la fin.",
+        "pairs": [
+          {
+            "left": "Étape 1",
+            "right": "Le contexte"
+          },
+          {
+            "left": "Étape 2",
+            "right": "Les activités menées"
+          },
+          {
+            "left": "Étape 3",
+            "right": "Les résultats et les données"
+          },
+          {
+            "left": "Étape 4",
+            "right": "Les défis rencontrés et les leçons apprises"
+          },
+          {
+            "left": "Étape 5",
+            "right": "Les recommandations"
+          }
+        ],
+        "decoys": []
+      },
+      {
+        "type": "match",
+        "q": "Associez chaque définition du glossaire au bon terme.",
+        "pairs": [
+          {
+            "left": "Extrant",
+            "right": "Produit ou service directement livré par le projet, par exemple une latrine construite ou une formation dispensée"
+          },
+          {
+            "left": "Résultat",
+            "right": "Changement de comportement, de connaissance ou de situation résultant de l'utilisation des extrants"
+          },
+          {
+            "left": "Impact",
+            "right": "Changement à long terme et de portée plus large, souvent mesuré au niveau de la communauté ou de la population"
+          },
+          {
+            "left": "Indicateur",
+            "right": "Variable mesurable permettant de suivre l'atteinte d'un résultat ou d'un objectif"
+          },
+          {
+            "left": "Cadre logique",
+            "right": "Outil de planification présentant la chaîne de résultats du projet, des activités à l'impact"
+          },
+          {
+            "left": "Désagrégation",
+            "right": "Répartition d'une donnée selon des catégories telles que le sexe, l'âge ou la localisation"
+          },
+          {
+            "left": "Redevabilité",
+            "right": "Obligation de rendre compte de l'utilisation des ressources et des résultats obtenus aux parties prenantes"
+          },
+          {
+            "left": "Pérennité",
+            "right": "Capacité des résultats d'un projet à se maintenir après la fin du financement externe"
+          }
+        ],
+        "decoys": [
+          "Valeur de référence",
+          "Valeur cible"
+        ]
+      }
+    ]
+  }
+]
 };
 
   // ---- Suivi de progression (une leçon n'est marquée "terminée" QUE quand la personne l'a
@@ -5224,7 +5745,7 @@ header .wrap{
       btn.type = 'button';
       btn.className = 'lesson-row' + (done ? ' done' : '') + (isVideo ? ' lesson-video' : '');
       btn.disabled = !unlocked;
-      var titlePrefix = isVideo ? '🎥 ' : '';
+      var titlePrefix = isVideo ? '🎥 ' : '<i class="fi fi-tr-document"></i> ';
       btn.innerHTML =
         '<span class="lesson-status"><svg viewBox="0 0 12 12" fill="none"><path d="M2 6.2L4.7 9L10 3" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></span>' +
         '<span class="lesson-title">' + titlePrefix + item.title + '</span>' +
@@ -6920,7 +7441,11 @@ document.addEventListener('keydown', function(e){
         }
         if(locked){ locked.style.display = 'flex'; }
         if(status === 'pending'){
-          if(msg){ msg.textContent = "Paiement reçu — en attente de vérification de l'administrateur. Envoyez-nous la preuve de paiement via WhatsApp et vous recevrez l'accès dans les prochaines minutes suivant la confirmation."; }
+          if(msg){
+            msg.textContent = "Traitement du paiement en cours. Envoyez-nous la preuve de paiement via WhatsApp et vous recevrez l'accès dans les prochaines minutes suivant la confirmation.";
+            msg.style.color = '#16a34a';
+            msg.style.fontWeight = '600';
+          }
           if(btn){ btn.style.display = 'none'; }
         } else {
           if(msg){ msg.textContent = "Le contenu détaillé de ce module est réservé aux personnes inscrites. Achetez le module, puis attendez la confirmation du paiement pour y accéder."; }
@@ -7376,6 +7901,7 @@ document.addEventListener('keydown', function(e){
   var modalPrice = document.getElementById('modalPrice');
   var modilField = document.getElementById('modilField');
   var modIdField = document.getElementById('modIdField');
+  var bundleProcessingMessage = document.getElementById('bundleProcessingMessage');
   var lastFocused = null;
 
   function openEnskriModal(nomModil, pri, modId){
@@ -7439,6 +7965,11 @@ document.addEventListener('keydown', function(e){
       var modilField = document.getElementById('modilField');
       var modId = modIdField ? modIdField.value : '';
       if(!modId){ return; }
+
+      var isBundlePurchase = (modId === 'bundle-4-modules');
+      if(bundleProcessingMessage){
+        bundleProcessingMessage.style.display = isBundlePurchase ? 'block' : 'none';
+      }
 
       e.preventDefault();
       var proceeded = false;
