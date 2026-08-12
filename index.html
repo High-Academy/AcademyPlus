@@ -822,6 +822,15 @@
 }
 .card-duration svg{width:14px; height:14px; flex-shrink:0;}
 
+.card-enrolled{
+    display:inline-flex; align-items:center; gap:6px;
+    font-size:0.78rem; font-weight:600; color:var(--teal);
+    background:rgba(46,163,120,0.1); border-radius:999px;
+    padding:4px 10px; margin-bottom:10px; font-family:'IBM Plex Mono', monospace;
+}
+.card-enrolled svg{width:13px; height:13px; flex-shrink:0;}
+.card-enrolled .enrolled-loading{opacity:0.55;}
+
   .card-meta{display:flex; gap:16px; font-size:0.82rem; color:var(--ink-soft); font-family:'IBM Plex Mono', monospace;}
   .card-foot{
     margin-top:auto; display:flex; align-items:center; justify-content:space-between;
@@ -2162,6 +2171,10 @@ header .wrap{
             <h3>Introduction au Suivi &amp; Évaluation de Projet</h3>
             <span class="modnum">MODULE 01</span>
           </div>
+          <div class="card-enrolled" id="enrolledWrap-m1">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+            <span id="enrolledCount-m1" class="enrolled-loading">…</span>
+          </div>
           <p>Comprenez les concepts de base du S&amp;E, la différence entre suivi et évaluation, et leur rôle dans le cycle d'un projet.</p>
           
 		  <div class="card-rating">
@@ -2223,6 +2236,10 @@ header .wrap{
             <h3>Cadre Logique &amp; Indicateurs de Performance</h3>
             <span class="modnum">MODULE 02</span>
           </div>
+          <div class="card-enrolled" id="enrolledWrap-m2">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+            <span id="enrolledCount-m2" class="enrolled-loading">…</span>
+          </div>
           <p>Apprenez à bâtir un Cadre Logique (logframe), définir des indicateurs SMART et les relier aux objectifs du projet.</p>
            <div class="card-rating">
   <span class="card-stars">★★★★☆</span>
@@ -2283,6 +2300,10 @@ header .wrap{
             <h3>Collecte &amp; Analyse de Données sur le Terrain</h3>
             <span class="modnum">MODULE 03</span>
           </div>
+          <div class="card-enrolled" id="enrolledWrap-m3">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+            <span id="enrolledCount-m3" class="enrolled-loading">…</span>
+          </div>
           <p>Méthodes pour collecter des données fiables sur le terrain, outils numériques gratuits, et bases d'analyse quantitative/qualitative.</p>
            <div class="card-rating">
   <span class="card-stars">★★★★</span>
@@ -2340,6 +2361,10 @@ header .wrap{
           <div class="card-top">
             <h3>Rapport des Résultats &amp; Communication avec les Bailleurs</h3>
             <span class="modnum">MODULE 04</span>
+          </div>
+          <div class="card-enrolled" id="enrolledWrap-m4">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+            <span id="enrolledCount-m4" class="enrolled-loading">…</span>
           </div>
           <p>Structurez un rapport S&amp;E convaincant, présentez les données clés, et communiquez efficacement l'impact du projet.</p>
            <div class="card-rating">
@@ -2405,7 +2430,7 @@ header .wrap{
       <p>Profitez du parcours complet en une seule commande pour 15 000 HTG. Vous avez accès aux 4 modules du cours, avec le même formulaire d'inscription, puis le paiement via MonCash ou UNIBANK Online.</p>
     </div>
     <div style="display:flex; flex-direction:column; align-items:flex-start; gap:8px;">
-      <button type="button" class="btn-enroll" onclick="openBundleModal()">Acheter les 4 modules — 15 000 HTG</button>
+      <button type="button" class="btn-enroll" id="bundleBuyBtn" onclick="openBundleModal()">Acheter les 4 modules — 15 000 HTG</button>
       <p id="bundleProcessingMessage" style="display:none; margin:0; color:#16a34a; font-weight:600; font-size:0.95rem;">Traitement du paiement en cours, veuillez patienter.</p>
     </div>
   </div>
@@ -4168,69 +4193,93 @@ header .wrap{
         "questions": [
             {
                 "type": "single",
-                "q": "Quel est l'avantage principal de KoboToolbox par rapport à la collecte papier ?",
+                "q": "Quel est le rôle respectif de KoboToolbox et de KoboCollect dans une collecte de données ?",
                 "options": [
-                    "Un coût plus élevé",
-                    "Un risque d'erreur de saisie réduit",
-                    "L'obligation d'une connexion internet permanente",
-                    "L'absence de contrôle de qualité"
+                    "KoboToolbox sert à collecter les données sur le terrain, tandis que KoboCollect sert de serveur de stockage.",
+                    "KoboToolbox sert de serveur pour concevoir, déployer et stocker les formulaires, tandis que KoboCollect permet aux enquêteurs de collecter les données sur le terrain.",
+                    "Les deux outils remplissent exactement la même fonction et sont interchangeables.",
+                    "KoboToolbox ne fonctionne que sur smartphone Android."
                 ],
                 "correct": 1
             },
             {
                 "type": "single",
-                "q": "Quelle application mobile est associée au projet ODK pour remplir les formulaires sur le terrain ?",
+                "q": "Sur quel(s) système(s) d'exploitation l'application KoboCollect peut-elle être installée ?",
                 "options": [
-                    "KoboCollect",
-                    "ODK Collect",
-                    "SurveyCTO",
-                    "Google Forms"
+                    "iOS uniquement",
+                    "Windows uniquement",
+                    "Android uniquement",
+                    "Android, iOS et Windows indifféremment"
                 ],
-                "correct": 1
+                "correct": 2
+            },
+            {
+                "type": "fill",
+                "q": "En statistique, un ensemble d'individus représentatifs d'une population, permettant d'obtenir une meilleure connaissance de celle-ci sans devoir l'étudier en entier, est appelé un ____.",
+                "pairs": [{ "left": "Complétez la phrase", "right": "échantillon" }],
+                "decoys": ["recensement", "sondage d'opinion"]
+            },
+            {
+                "type": "fill",
+                "q": "Les informations qui existent déjà et qui ont été collectées par d'autres organismes ou individus (rapports gouvernementaux, bases de données publiques, articles de presse, études académiques) sont appelées des données ____.",
+                "pairs": [{ "left": "Complétez la phrase", "right": "secondaires" }],
+                "decoys": ["primaires", "brutes"]
+            },
+            {
+                "type": "fill",
+                "q": "Pour créer un formulaire sur Excel avant de le téléverser sur KoboToolbox, on utilise un format de fichier couramment appelé ____.",
+                "pairs": [{ "left": "Complétez la phrase", "right": "XLSForm" }],
+                "decoys": ["PDF Form", "GeoJSON"]
+            },
+            {
+                "type": "fill",
+                "q": "Dans les paramètres d'une question KoboToolbox, la fonctionnalité qui permet de faire afficher une question uniquement si une condition liée à une réponse précédente est remplie s'appelle le ____.",
+                "pairs": [{ "left": "Complétez la phrase", "right": "Skip Logic" }],
+                "decoys": ["Validation Criteria", "Data Column Name"]
             },
             {
                 "type": "match",
-                "q": "Associez chaque outil ou mode de collecte à sa caractéristique.",
+                "q": "Associez chaque méthode de collecte de données à sa description.",
                 "pairs": [
-                    {
-                        "left": "KoboToolbox",
-                        "right": "Interface clé en main, facilité de prise en main élevée"
-                    },
-                    {
-                        "left": "ODK",
-                        "right": "Nécessite parfois un serveur dédié"
-                    },
-                    {
-                        "left": "Collecte papier",
-                        "right": "Risque d'erreur de saisie élevé (double saisie)"
-                    },
-                    {
-                        "left": "Collecte numérique",
-                        "right": "Contrôle de qualité en temps réel possible"
-                    }
-                ]
+                    { "left": "Enquêtes et questionnaires", "right": "Des questions standardisées posées à un échantillon de personnes pour recueillir leurs opinions, expériences ou connaissances." },
+                    { "left": "Interviews et entretiens", "right": "Conversations plus approfondies avec des individus pour obtenir des informations qualitatives." },
+                    { "left": "Observations directes", "right": "L'observation de comportements ou d'événements dans des environnements spécifiques." },
+                    { "left": "Exploitation de documents ou de bases de données", "right": "Analyse de rapports, dossiers publics, documents légaux, etc." }
+                ],
+                "decoys": ["Vente de données personnelles à des organismes tiers.", "Collecte automatique et passive de données via des capteurs GPS embarqués."]
             },
             {
                 "type": "match",
-                "q": "Associez chaque bonne pratique de collecte numérique à son objectif.",
+                "q": "Associez chaque type de question KoboToolbox à son usage.",
                 "pairs": [
-                    {
-                        "left": "Tester le formulaire avant le lancement",
-                        "right": "Détecter tôt les difficultés (pilote)"
-                    },
-                    {
-                        "left": "Former les enquêteurs",
-                        "right": "Assurer la bonne utilisation de l'application"
-                    },
-                    {
-                        "left": "Sauvegarde régulière",
-                        "right": "Éviter la perte de données"
-                    },
-                    {
-                        "left": "Vérification quotidienne du taux de complétude",
-                        "right": "Repérer rapidement les formulaires incomplets"
-                    }
-                ]
+                    { "left": "Select One / Select Many", "right": "Type de question à choix (unique ou multiple)." },
+                    { "left": "Type Point", "right": "Enregistrer les coordonnées géographiques (GPS)." },
+                    { "left": "Type Photo / Audio / Video", "right": "Importer respectivement une photo, un enregistrement audio ou une vidéo." },
+                    { "left": "Type Calculate", "right": "Effectuer des calculs automatiques dans le formulaire." }
+                ],
+                "decoys": ["Recueillir une signature manuscrite du répondant.", "Imprimer directement le formulaire rempli."]
+            },
+            {
+                "type": "match",
+                "q": "Associez chaque onglet du serveur KoboToolbox à sa fonction.",
+                "pairs": [
+                    { "left": "Sommaire", "right": "Présente la description du formulaire, le nombre de questions et de soumissions." },
+                    { "left": "Formulaire", "right": "Présente les options de partage du formulaire (lien en ligne/hors ligne, intégration HTML5)." },
+                    { "left": "Données", "right": "Contient le tableau des données collectées, les rapports, la galerie photo et les options d'exportation." },
+                    { "left": "Paramètres", "right": "Permet de supprimer, archiver ou modifier le titre, la description, le secteur et le pays du formulaire." }
+                ],
+                "decoys": ["Gère la facturation et les paiements de l'abonnement KoboToolbox.", "Gère les droits d'administrateur de l'ensemble du compte KoboToolbox."]
+            },
+            {
+                "type": "match",
+                "q": "Remettez dans le bon ordre les étapes permettant de connecter l'application KoboCollect au serveur KoboToolbox.",
+                "pairs": [
+                    { "left": "Étape 1", "right": "Cliquer sur « Saisir les détails du projet »" },
+                    { "left": "Étape 2", "right": "Rentrer l'adresse du serveur dans la boîte URL (https://kc-eu.kobotoolbox.org)" },
+                    { "left": "Étape 3", "right": "Rentrer le nom d'utilisateur du compte KoboToolbox dans la boîte « Nom d'utilisateur »" },
+                    { "left": "Étape 4", "right": "Rentrer le mot de passe du compte KoboToolbox dans la boîte « Mot de passe »" }
+                ],
+                "decoys": ["Créer un compte sur Google Play Store", "Configurer un mot de passe d'administrateur pour l'application"]
             }
         ]
     },
@@ -5026,33 +5075,52 @@ header .wrap{
     "questions": [
       {
         "type": "single",
-        "q": "Que doit contenir en priorité le résumé exécutif d'un rapport de S&E ?",
-        "options": [
-          "L'intégralité des données brutes collectées",
-          "Les messages clés du rapport, de façon concise",
-          "Uniquement le budget dépensé"
-        ],
-        "correct": 1
-      },
-      {
-        "type": "single",
         "q": "Quelle est la première section attendue dans la plupart des rapports S&E destinés aux bailleurs ?",
         "options": [
           "Les annexes budgétaires",
           "Le résumé exécutif",
-          "La liste des relais communautaires formés"
+          "La liste des relais communautaires formés",
+          "Le plan de communication"
         ],
         "correct": 1
       },
       {
         "type": "single",
-        "q": "Quand faut-il rédiger le résumé exécutif ?",
+        "q": "Dans le plan type d'un rapport S&E, à quelle section appartient la description des difficultés rencontrées pendant la mise en œuvre ?",
         "options": [
-          "En premier, avant le reste du rapport",
-          "En dernier, une fois le rapport finalisé",
-          "Uniquement si le bailleur le demande"
+          "Contexte et justification",
+          "Données de suivi et indicateurs",
+          "Défis et mesures correctives",
+          "Histoires de changement"
+        ],
+        "correct": 2
+      },
+      {
+        "type": "single",
+        "q": "Pourquoi est-il recommandé de rédiger le résumé exécutif en dernier, une fois le rapport terminé ?",
+        "options": [
+          "Pour gagner du temps sur la mise en page",
+          "Pour qu'il reflète fidèlement le contenu complet du rapport",
+          "Parce que le bailleur l'exige toujours ainsi",
+          "Pour éviter d'avoir à inclure des chiffres"
         ],
         "correct": 1
+      },
+      {
+        "type": "fill",
+        "q": "Pour le rapport semestriel du projet de Fond Sable, l'équipe a utilisé un témoignage, celui de la famille ____, pour illustrer le changement de pratiques d'hygiène.",
+        "pairs": [{ "left": "Complétez la phrase", "right": "Joseph" }],
+        "decoys": ["Pierre", "Louissaint"]
+      },
+      {
+        "type": "match",
+        "q": "Associez chaque erreur fréquente dans un rapport S&E à sa conséquence pour le lecteur bailleur.",
+        "pairs": [
+          { "left": "Commencer par une longue description des activités internes", "right": "Le lecteur perd du temps avant d'accéder aux résultats" },
+          { "left": "Omettre la comparaison entre cible et valeur atteinte", "right": "Impossible d'évaluer objectivement la performance" },
+          { "left": "Multiplier les acronymes sans les définir", "right": "Le rapport devient difficile à suivre pour un lecteur externe" },
+          { "left": "Présenter uniquement les réussites", "right": "Le rapport perd en crédibilité et paraît peu transparent" }
+        ]
       }
     ]
   },
@@ -5114,29 +5182,47 @@ header .wrap{
         "options": [
           "Un indicateur d'impact",
           "Un indicateur de résultat",
-          "Un indicateur d'extrant (output)"
+          "Un indicateur d'extrant (output)",
+          "Un indicateur financier"
         ],
         "correct": 2
       },
       {
         "type": "single",
-        "q": "Pourquoi utiliser des graphiques plutôt que des tableaux de chiffres bruts dans un rapport ?",
+        "q": "Pourquoi est-il recommandé de présenter la cible, la valeur atteinte et le taux de réalisation dans un même tableau ?",
         "options": [
-          "Parce que les graphiques sont toujours plus précis que les chiffres",
-          "Parce qu'ils facilitent la compréhension rapide de l'information par le lecteur",
-          "Parce que les bailleurs l'exigent légalement dans tous les cas"
+          "Pour respecter une norme de mise en page imposée",
+          "Pour permettre une lecture immédiate de la performance du projet",
+          "Parce que les bailleurs n'acceptent pas les tableaux à deux colonnes",
+          "Pour remplacer entièrement le texte narratif"
         ],
         "correct": 1
       },
       {
         "type": "single",
-        "q": "Que révèle la désagrégation des données par catégorie de ménage à Fond Sable ?",
+        "q": "Que doit toujours accompagner une donnée chiffrée présentée dans un rapport S&E ?",
         "options": [
-          "Aucune différence significative entre catégories",
-          "Un taux d'utilisation de latrine inférieur chez les ménages dirigés par une femme ou en situation de handicap",
-          "Que seuls les hommes utilisent les latrines"
+          "Une comparaison ou un élément de contexte qui lui donne du sens",
+          "Une citation d'un dirigeant de l'organisation",
+          "Un lien vers le site web du bailleur",
+          "Une traduction en plusieurs langues"
         ],
-        "correct": 1
+        "correct": 0
+      },
+      {
+        "type": "fill",
+        "q": "À Fond Sable, la désagrégation du taux d'utilisation des latrines par type de ménage a révélé un taux plus faible chez les ménages en situation de ____.",
+        "pairs": [{ "left": "Complétez la phrase", "right": "handicap" }],
+        "decoys": ["pauvreté", "déplacement"]
+      },
+      {
+        "type": "match",
+        "q": "Associez chaque niveau d'indicateur du cadre logique à son exemple à Fond Sable.",
+        "pairs": [
+          { "left": "Indicateur d'extrant (output)", "right": "Nombre de latrines construites" },
+          { "left": "Indicateur de résultat (outcome)", "right": "Taux de ménages utilisant régulièrement une latrine" },
+          { "left": "Indicateur d'impact", "right": "Réduction des maladies diarrhéiques dans la communauté" }
+        ]
       }
     ]
   },
@@ -5194,33 +5280,52 @@ header .wrap{
     "questions": [
       {
         "type": "single",
-        "q": "Quelle attitude renforce la confiance d'un bailleur envers une organisation ?",
-        "options": [
-          "Ne présenter que les réussites et cacher les difficultés",
-          "Communiquer de façon honnête sur les réussites ET les difficultés rencontrées",
-          "Éviter de comparer les résultats aux objectifs initiaux"
-        ],
-        "correct": 1
-      },
-      {
-        "type": "single",
-        "q": "Dans l'exemple de la famille Joseph, quelle structure de témoignage a été utilisée ?",
+        "q": "Quelle structure en trois temps est utilisée dans la méthode du témoignage structuré ?",
         "options": [
           "Une liste de statistiques nationales",
           "Une comparaison entre deux projets différents",
-          "Une structure en trois temps : avant, pendant, après"
+          "La situation avant le projet, l'intervention vécue, puis la situation après",
+          "Un extrait du budget du projet"
         ],
         "correct": 2
       },
       {
         "type": "single",
-        "q": "Que doit toujours accompagner une donnée chiffrée présentée dans un rapport S&E ?",
+        "q": "Quel est le principal risque d'un rapport qui n'utilise que des données chiffrées, sans aucun récit humain ?",
         "options": [
-          "Une comparaison ou un élément de contexte qui lui donne du sens",
-          "Une citation d'un dirigeant de l'organisation",
-          "Un lien vers le site web du bailleur"
+          "Il devient trop court pour être publié",
+          "Il perd sa capacité à démontrer le sens réel du changement produit",
+          "Il coûte plus cher à produire",
+          "Il ne respecte pas les normes de formatage Word"
+        ],
+        "correct": 1
+      },
+      {
+        "type": "single",
+        "q": "Avant de recueillir un témoignage auprès d'un bénéficiaire, quelle est la première condition éthique à respecter ?",
+        "options": [
+          "Obtenir le consentement libre et éclairé de la personne",
+          "Vérifier que la personne sait lire",
+          "S'assurer que le témoignage sera publié sur les réseaux sociaux",
+          "Demander l'autorisation du bailleur uniquement"
         ],
         "correct": 0
+      },
+      {
+        "type": "fill",
+        "q": "Relier explicitement les résultats d'un projet au cadre stratégique du bailleur renforce la perception de la ____ du projet pour la mission du bailleur.",
+        "pairs": [{ "left": "Complétez la phrase", "right": "valeur ajoutée" }],
+        "decoys": ["complexité administrative", "ancienneté"]
+      },
+      {
+        "type": "match",
+        "q": "Associez chaque question implicite du bailleur à l'élément de réponse à apporter dans le rapport.",
+        "pairs": [
+          { "left": "Le projet est-il sur la bonne voie ?", "right": "Tableau de bord des indicateurs avec taux de réalisation" },
+          { "left": "Les fonds ont-ils été bien utilisés ?", "right": "Suivi budgétaire comparé aux dépenses réelles" },
+          { "left": "Le changement est-il durable ?", "right": "Analyse de la pérennité, comités WASH, relais formés" },
+          { "left": "Quel est l'impact humain réel ?", "right": "Témoignages, études de cas, citations de bénéficiaires" }
+        ]
       }
     ]
   },
@@ -6988,6 +7093,45 @@ document.addEventListener('keydown', function(e){
     }
   });
 
+  // ---- Nombre d'étudiants déjà inscrits, par module (affiché en haut de chaque carte) ----
+  // Appelle la fonction RPC "get_enrolled_counts" (SECURITY DEFINER, voir le script SQL
+  // fourni séparément) qui renvoie uniquement l'agrégat {module_id, enrolled_count} —
+  // jamais les lignes individuelles de "enrollments" — donc utilisable par un visiteur
+  // non connecté sans policy RLS "SELECT" publique sur la table.
+  function loadEnrolledCounts(){
+    supabaseClient
+      .rpc('get_enrolled_counts')
+      .then(function(result){
+        var counts = {}; // { m1: 12, m2: 5, ... } — uniquement les modules avec ≥1 inscription confirmée
+        if(result && !result.error && result.data){
+          result.data.forEach(function(row){
+            counts[row.module_id] = Number(row.enrolled_count) || 0;
+          });
+        }
+        MODULES.forEach(function(mod){
+          var el = document.getElementById('enrolledCount-' + mod);
+          var wrap = document.getElementById('enrolledWrap-' + mod);
+          if(!el || !wrap){ return; }
+          var n = counts[mod] || 0;
+          if(n <= 0){
+            wrap.style.display = 'none'; // aucune inscription confirmée : pas de badge
+            return;
+          }
+          el.classList.remove('enrolled-loading');
+          el.textContent = n + (n > 1 ? ' étudiants inscrits' : ' étudiant inscrit');
+        });
+      })
+      .catch(function(){
+        // Fonction RPC indisponible/erreur réseau : on masque tous les badges
+        // plutôt que de laisser l'état "…" affiché indéfiniment.
+        MODULES.forEach(function(mod){
+          var wrap = document.getElementById('enrolledWrap-' + mod);
+          if(wrap){ wrap.style.display = 'none'; }
+        });
+      });
+  }
+  loadEnrolledCounts();
+
   var loginModal = document.getElementById('loginModal');
   var loginForm = document.getElementById('loginForm');
   var loginError = document.getElementById('loginError');
@@ -7010,6 +7154,12 @@ document.addEventListener('keydown', function(e){
     if(pendingEnskri){
       var p = pendingEnskri;
       pendingEnskri = null;
+      // Si l'élève est déjà inscrit à ce module (statut "pending" ou "confirmed"
+      // dans Supabase "enrollments"), il n'y a pas lieu de rouvrir le formulaire
+      // d'achat : on laisse simplement applyAccessGate() refléter son statut réel.
+      if(p.modId && paymentStatus[p.modId]){
+        return;
+      }
       openEnskriModal(p.nomModil, p.pri, p.modId);
     }
   }
@@ -7415,6 +7565,7 @@ document.addEventListener('keydown', function(e){
     // toujours visibles, pour tout le monde. Le CONTENU de chaque leçon, lui, reste
     // verrouillé tant que le paiement n'a pas été confirmé manuellement dans Supabase
     // (colonne "status" = 'confirmed' dans la table "enrollments").
+    var anyConfirmed = false;
     MODULES.forEach(function(mod){
       var list = document.getElementById('lessonList-' + mod);
       var locked = document.getElementById('lessonLocked-' + mod);
@@ -7426,6 +7577,7 @@ document.addEventListener('keydown', function(e){
       var enrollBtn = document.getElementById('enrollBtn-' + mod);
 
       if(status === 'confirmed'){
+        anyConfirmed = true;
         if(locked){ locked.style.display = 'none'; }
         if(enrollBtn){
           enrollBtn.classList.add('btn-enroll-owned');
@@ -7453,6 +7605,11 @@ document.addEventListener('keydown', function(e){
         }
       }
     });
+
+    // Dès qu'au moins un module est confirmé ("confirmed" dans Supabase/enrollments),
+    // le bouton d'achat du pack complet (4 modules) n'a plus lieu d'être affiché.
+    var bundleBtn = document.getElementById('bundleBuyBtn');
+    if(bundleBtn){ bundleBtn.style.display = anyConfirmed ? 'none' : ''; }
   }
 
   if(loginToggleLink){
@@ -7507,9 +7664,8 @@ document.addEventListener('keydown', function(e){
         applyAccessGate();
         updateLoginButton();
         refreshAll();
-        loadPaymentStatus();
         loadLessonProgress();
-        resumePendingEnskri();
+        loadPaymentStatus().then(resumePendingEnskri);
       });
     });
   }
@@ -7880,9 +8036,8 @@ document.addEventListener('keydown', function(e){
         applyAccessGate();
         updateLoginButton();
         refreshAll();
-        loadPaymentStatus();
         loadLessonProgress();
-        resumePendingEnskri();
+        loadPaymentStatus().then(resumePendingEnskri);
       });
     });
   }
