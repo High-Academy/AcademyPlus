@@ -4289,80 +4289,106 @@ header .wrap{
             }
         ]
     },
-    {
-        "type": "video",
+	{
+        "type": "lesson",
         "title": "Excel — Tableau croisé dynamique",
-        "videoKey": "excel-tcd"
+        "chapterTag": "Module 3",
+        "body": "Le tableau croisé dynamique (TCD) est l'un des outils les plus puissants d'Excel pour résumer, organiser et analyser rapidement de grands volumes de données, sans écrire de formule.",
+        "points": [
+            {
+                "label": "1. Qu'est-ce qu'un tableau croisé dynamique ?",
+                "html": "<p>Un <strong>tableau croisé dynamique (TCD)</strong> est un outil d'Excel qui permet de résumer, organiser et analyser rapidement de grands volumes de données, sans écrire de formule. Il transforme une liste de données brutes (par exemple des lignes de ventes ou d'enquêtes ménages) en un tableau de synthèse interactif : sommes, moyennes, comptages, pourcentages, etc.</p><p>Un TCD permet de croiser plusieurs dimensions (produit, région, période…) en quelques clics, de repérer des tendances et de réorganiser l'analyse instantanément par glisser-déposer, sans toucher aux données source.</p>"
+            },
+            {
+                "label": "2. Préparer les données source",
+                "html": "<p>La qualité du TCD dépend directement de la qualité des données de départ. Avant de créer un tableau croisé dynamique, il faut vérifier que : chaque colonne possède un <strong>en-tête unique et explicite</strong> (pas de cellule vide en en-tête) ; il n'y a <strong>aucune ligne ni colonne totalement vide</strong> dans la plage ; chaque colonne contient un <strong>seul type de donnée</strong> (texte, nombre ou date, sans mélange) ; et les données sont idéalement converties en <strong>tableau structuré (Ctrl+T)</strong> pour s'étendre automatiquement.</p>"
+            },
+            {
+                "label": "3. Créer un tableau croisé dynamique",
+                "html": "<p>Pour créer un TCD : sélectionner une cellule à l'intérieur de la plage de données ; aller dans l'onglet <strong>Insertion</strong>, puis cliquer sur <strong>Tableau croisé dynamique</strong> ; vérifier la plage de données proposée et choisir l'emplacement du TCD (nouvelle feuille recommandé) ; cliquer sur <strong>OK</strong> pour afficher le volet des champs ; puis glisser les champs souhaités dans les zones <strong>Lignes, Colonnes, Valeurs et Filtres</strong>. Le type de calcul (somme, moyenne, nombre…) s'ajuste par un clic droit sur le champ dans la zone Valeurs.</p>"
+            },
+            {
+                "label": "4. Les quatre zones du TCD",
+                "html": "<p><strong>Filtres</strong> : restreint l'analyse à une ou plusieurs catégories (ex. afficher uniquement une année). <strong>Colonnes</strong> : définit les en-têtes de colonnes du tableau de synthèse (ex. les mois de l'année). <strong>Lignes</strong> : définit les catégories affichées en lignes (ex. les noms de produits ou de régions). <strong>Valeurs</strong> : contient les données chiffrées à agréger (ex. chiffre d'affaires, quantités vendues).</p>"
+            },
+            {
+                "label": "5. Fonctionnalités utiles pour l'analyse",
+                "html": "<p><strong>Segments (slicers)</strong> : boutons visuels pour filtrer rapidement les données d'un ou plusieurs TCD liés. <strong>Chronologie</strong> : filtre visuel dédié aux champs de type date. <strong>Regroupement</strong> : regrouper des dates par mois/trimestre/année, ou des nombres par tranches. <strong>Champs calculés</strong> : créer une formule personnalisée à partir des champs existants. <strong>Actualisation</strong> : le bouton « Actualiser » met à jour le TCD après modification des données source. <strong>Graphique croisé dynamique</strong> : une visualisation graphique directement connectée au TCD.</p>"
+            },
+            {
+                "label": "6. Bonnes pratiques et erreurs courantes",
+                "html": "<p>À faire : toujours partir d'un tableau structuré (Ctrl+T) ; nommer clairement les en-têtes de colonnes ; actualiser le TCD après toute modification des données source. À éviter : laisser des cellules fusionnées dans les données source ; mélanger du texte et des nombres dans une même colonne ; oublier d'actualiser le TCD avant de présenter une analyse.</p>"
+            }
+			
+        ]
     },
+	{
+               "type": "video",
+               "title": "Excel — Tableau croisé dynamique",
+			   "chapterTag": "Module 3",
+               "videoKey": "excel-tcd"
+    },
+   
     {
         "type": "quiz",
         "title": "Quiz — Section 3 : Excel — Le tableau croisé dynamique",
         "questions": [
             {
                 "type": "single",
-                "q": "Que signifie l'abréviation TCD utilisée dans le module ?",
+                "q": "Qu'est-ce qu'un tableau croisé dynamique (TCD) dans Excel ?",
                 "options": [
-                    "Tableau de Contrôle des Données",
-                    "Tableau Croisé Dynamique",
-                    "Tableau Comparatif de Données",
-                    "Test de Cohérence des Données"
+                    "Un graphique généré automatiquement à l'ouverture du fichier.",
+                    "Un outil permettant de résumer, organiser et analyser des données sans écrire de formule.",
+                    "Une macro VBA qui automatise la mise en forme des cellules.",
+                    "Une fonction Excel qui trie les colonnes par ordre alphabétique."
                 ],
                 "correct": 1
             },
             {
-                "type": "single",
-                "q": "D'après le tableau croisé dynamique construit à Fond Sable, quel pourcentage de ménages pratique la défécation à l'air libre ?",
-                "options": [
-                    "16,7 %",
-                    "19,2 %",
-                    "57,5 %",
-                    "6,7 %"
+                "type": "match",
+                "q": "Remettez dans le bon ordre les étapes de création d'un tableau croisé dynamique.",
+                "pairs": [
+                    { "left": "Étape 1", "right": "Sélectionner une cellule à l'intérieur de la plage de données" },
+                    { "left": "Étape 2", "right": "Aller dans l'onglet Insertion, puis cliquer sur Tableau croisé dynamique" },
+                    { "left": "Étape 3", "right": "Vérifier la plage de données proposée et choisir l'emplacement du TCD" },
+                    { "left": "Étape 4", "right": "Cliquer sur OK pour afficher le volet des champs de tableau croisé dynamique" },
+                    { "left": "Étape 5", "right": "Glisser les champs souhaités dans les zones Lignes, Colonnes, Valeurs et Filtres" }
                 ],
-                "correct": 2
+                "decoys": ["Envoyer le fichier par email à toute l'équipe", "Imprimer le tableau croisé dynamique"]
+            },
+            {
+                "type": "fill",
+                "q": "Avant de créer un tableau croisé dynamique, chaque colonne des données source doit posséder un ____ unique et explicite.",
+                "pairs": [{ "left": "Complétez la phrase", "right": "en-tête" }],
+                "decoys": ["numéro de ligne", "commentaire"]
+            },
+            {
+                "type": "fill",
+                "q": "Le raccourci clavier permettant de convertir une plage de données en tableau structuré, recommandé avant de créer un TCD, est ____.",
+                "pairs": [{ "left": "Complétez la phrase", "right": "Ctrl+T" }],
+                "decoys": ["Ctrl+E", "Ctrl+L"]
             },
             {
                 "type": "match",
-                "q": "Associez chaque étape de création d'un tableau croisé dynamique à sa description.",
+                "q": "Associez chaque zone du tableau croisé dynamique à sa fonction.",
                 "pairs": [
-                    {
-                        "left": "Étape 1",
-                        "right": "Organiser les données brutes avec des en-têtes clairs"
-                    },
-                    {
-                        "left": "Étape 2",
-                        "right": "Sélectionner les données puis Insertion > Tableau croisé dynamique"
-                    },
-                    {
-                        "left": "Étape 4",
-                        "right": "Glisser la variable à analyser dans la zone Lignes"
-                    },
-                    {
-                        "left": "Étape 6",
-                        "right": "Afficher les valeurs en % du total général"
-                    }
-                ]
+                    { "left": "Lignes", "right": "Définit les catégories affichées verticalement" },
+                    { "left": "Colonnes", "right": "Définit les en-têtes affichés horizontalement" },
+                    { "left": "Valeurs", "right": "Contient les données chiffrées à agréger" },
+                    { "left": "Filtres", "right": "Restreint l'analyse à une ou plusieurs catégories" }
+                ],
+                "decoys": ["Enregistre automatiquement le fichier toutes les 5 minutes", "Trie les données par ordre alphabétique"]
             },
             {
                 "type": "match",
-                "q": "Associez chaque fonction Excel à son utilité.",
+                "q": "Associez chaque fonctionnalité à sa définition.",
                 "pairs": [
-                    {
-                        "left": "NB.SI.ENS",
-                        "right": "Compter les ménages selon plusieurs conditions"
-                    },
-                    {
-                        "left": "MOYENNE.SI",
-                        "right": "Calculer une moyenne pour un sous-groupe seulement"
-                    },
-                    {
-                        "left": "RECHERCHEV / RECHERCHEX",
-                        "right": "Retrouver une information liée à un identifiant de ménage"
-                    },
-                    {
-                        "left": "Mise en forme conditionnelle",
-                        "right": "Repérer visuellement des valeurs incohérentes ou manquantes"
-                    }
-                ]
+                    { "left": "Segment (slicer)", "right": "Bouton visuel pour filtrer rapidement les données" },
+                    { "left": "Chronologie", "right": "Filtre visuel dédié aux champs de type date" },
+                    { "left": "Champ calculé", "right": "Formule personnalisée créée à partir des champs existants" },
+                    { "left": "Actualiser", "right": "Met à jour le TCD après modification des données source" }
+                ],
+                "decoys": ["Convertit automatiquement le TCD en graphique 3D", "Supprime les doublons des données source"]
             }
         ]
     },
@@ -5848,9 +5874,24 @@ header .wrap{
     ul.innerHTML = '';
     var modPaid = isModuleUnlocked(mod);
     items.forEach(function(item, idx){
-      var done = isLessonDone(mod, idx);
-      var unlocked = modPaid && ((idx === 0) || isLessonDone(mod, idx - 1));
+      // Une vidéo dont le titre reprend celui de la leçon précédente est fusionnée
+      // dans la ligne de cette leçon (voir plus bas) : elle n'a pas sa propre ligne
+      // et s'ouvre automatiquement à la suite de la leçon (goToNextLesson).
+      if(item.type === 'video' && idx > 0 && items[idx - 1].type === 'lesson' && items[idx - 1].title === item.title){
+        return;
+      }
+
+      var pairedVideoIdx = null;
+      if(item.type === 'lesson' && items[idx + 1] && items[idx + 1].type === 'video' && items[idx + 1].title === item.title){
+        pairedVideoIdx = idx + 1;
+      }
+
       var isVideo = item.type === 'video';
+      // Pour une paire leçon+vidéo fusionnée, la coche "terminé" reflète l'état de
+      // la vidéo (dernière étape réelle), pas seulement celui de la leçon.
+      var completionIdx = (pairedVideoIdx !== null) ? pairedVideoIdx : idx;
+      var done = isLessonDone(mod, completionIdx);
+      var unlocked = modPaid && ((idx === 0) || isLessonDone(mod, idx - 1));
       var li = document.createElement('li');
       var btn = document.createElement('button');
       btn.type = 'button';
@@ -5948,7 +5989,7 @@ header .wrap{
 
   setTimeout(function(){
     if(nextItem.type === 'video'){
-      openVideoModal(nextItem.url, nextItem.title, mod, nextIdx);
+      openVideoModal(nextItem, mod, nextIdx);
     } else {
       openLessonModal(mod, nextIdx);
     }
