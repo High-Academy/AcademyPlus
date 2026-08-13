@@ -1701,6 +1701,12 @@ header .wrap{
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script src="https://fast.wistia.com/assets/external/E-v1.js" async></script>
+<script>
+  // ⚠️ À REMPLACER par tes vraies valeurs (Supabase > Settings > API pour la clé anon,
+  // et l'URL de la fonction déployée pour SUPABASE_VIDEO_FN_URL).
+  var SUPABASE_VIDEO_FN_URL = 'https://lgohbjmbhprvjibkforn.supabase.co/functions/v1/get-video';
+  var SUPABASE_ANON_KEY = 'sb_publishable_EmDRarwrfmft7DGnsWsgXA_LgeJV-sI';
+</script>
 </head>
 
 <body>
@@ -4286,7 +4292,7 @@ header .wrap{
     {
         "type": "video",
         "title": "Excel — Tableau croisé dynamique",
-        "videoId": "7hfae5gsnf"
+        "videoKey": "excel-tcd"
     },
     {
         "type": "quiz",
@@ -5859,7 +5865,7 @@ header .wrap{
       if(unlocked){
         btn.addEventListener('click', function(){
           if(isVideo){
-            openVideoModal(item.videoId, item.title, mod, idx);
+            openVideoModal(item, mod, idx);
           } else {
             openLessonModal(mod, idx);
           }
@@ -5876,7 +5882,7 @@ header .wrap{
     var item = getModuleItems(mod)[idx];
     if(!item){ return; }
     if(item.type === 'video'){
-      openVideoModal(item.videoId, item.title, mod, idx);
+      openVideoModal(item, mod, idx);
     } else {
       openLessonModal(mod, idx);
     }
@@ -6276,7 +6282,7 @@ var videoModalState = null; // { mod, idx }
 
 var currentWistiaHandle = null;
 
-function openVideoModal(mediaId, title, mod, idx){
+function openVideoModal(item, mod, idx){
   var overlay = document.getElementById('videoModal');
   var container = document.getElementById('videoModalPlayer');
   var titleEl = document.getElementById('videoModalTitle');
@@ -6285,7 +6291,7 @@ function openVideoModal(mediaId, title, mod, idx){
   if(!overlay || !container){ return; }
 
   videoModalState = { mod: mod, idx: idx };
-  if(titleEl){ titleEl.textContent = title || ''; }
+  if(titleEl){ titleEl.textContent = item.title || ''; }
   actionBtn.disabled = true;
 
   if(backBtn){
@@ -6298,25 +6304,58 @@ function openVideoModal(mediaId, title, mod, idx){
     };
   }
 
-  container.innerHTML = '<div class="wistia_embed wistia_async_' + mediaId + '" style="width:100%;height:100%;"></div>';
-
-  actionBtn.onclick = function(){
-    setLessonDone(mod, idx, true);
-    closeVideoModal();
-    refreshAll();
-    goToNextLesson(mod, idx);
-  };
+  // On n'a plus l'ID Wistia en clair dans la page : on l'affiche seulement après
+  // l'avoir récupéré via la Edge Function Supabase (protégée par vérification de domaine).
+  container.innerHTML = '<p style="padding:2rem;text-align:center;color:#fff;">Chargement de la vidéo…</p>';
 
   overlay.classList.add('open');
   overlay.setAttribute('aria-hidden', 'false');
   document.body.style.overflow = 'hidden';
 
-  window._wq = window._wq || [];
-  window._wq.push({ id: mediaId, onReady: function(video){
-    currentWistiaHandle = video;
-    video.bind('end', onVideoEnded);
-    video.play();
-  }});
+  var requestedKey = item.videoKey;
+
+  fetchProtectedWistiaId(item.videoKey).then(function(mediaId){
+    // Si l'utilisateur a fermé la modale ou ouvert une autre vidéo entre-temps, on annule.
+    if(!videoModalState || videoModalState.mod !== mod || videoModalState.idx !== idx){ return; }
+
+    if(!mediaId){
+      container.innerHTML = '<p style="padding:2rem;text-align:center;color:#fff;">Vidéo indisponible pour le moment.</p>';
+      return;
+    }
+
+    container.innerHTML = '<div class="wistia_embed wistia_async_' + mediaId + '" style="width:100%;height:100%;"></div>';
+
+    actionBtn.onclick = function(){
+      setLessonDone(mod, idx, true);
+      closeVideoModal();
+      refreshAll();
+      goToNextLesson(mod, idx);
+    };
+
+    window._wq = window._wq || [];
+    window._wq.push({ id: mediaId, onReady: function(video){
+      currentWistiaHandle = video;
+      video.bind('end', onVideoEnded);
+      video.play();
+    }});
+  }).catch(function(err){
+    console.error('Erreur de chargement vidéo:', err);
+    container.innerHTML = '<p style="padding:2rem;text-align:center;color:#fff;">Erreur de chargement de la vidéo.</p>';
+  });
+}
+
+// Récupère l'ID Wistia réel via la Edge Function Supabase "get-video".
+// L'ID n'est jamais présent dans le code source de cette page : il n'est renvoyé
+// que si la requête vient bien du domaine autorisé (vérifié côté serveur).
+function fetchProtectedWistiaId(videoKey){
+  return fetch(SUPABASE_VIDEO_FN_URL + '?key=' + encodeURIComponent(videoKey), {
+    headers: { 'Authorization': 'Bearer ' + SUPABASE_ANON_KEY }
+  }).then(function(res){
+    if(!res.ok){ return null; }
+    return res.json();
+  }).then(function(data){
+    return data && data.wistia_id ? data.wistia_id : null;
+  });
 }
 
 function onVideoEnded(){
