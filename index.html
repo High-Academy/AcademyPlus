@@ -15,6 +15,7 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600;9..144,700&family=Inter:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
 <link rel='stylesheet' href='https://cdn-uicons.flaticon.com/4.0.0/uicons-thin-rounded/css/uicons-thin-rounded.css'>
+<link rel='stylesheet' href='https://cdn-uicons.flaticon.com/4.0.0/uicons-brands/css/uicons-brands.css'>
 <style>
   :root{
     --bg: #FFFFFF;
@@ -2149,6 +2150,18 @@ header .wrap{
       <h3 style="text-align:center; color:#fff"> Choisissez la formation qui correspond à vos besoins </h3>
       <p style="text-align:center; color:#fff">Chaque module s'appuie sur le précédent — en commençant par les fondamentaux, jusqu'au rapport des résultats de projet.</p>
     </div>
+	<div class="wrap" style="margin-bottom: 12px; margin-top:0px">
+  <div class="bundle-cta">
+    <div class="bundle-cta-text">
+      <h3 style="color:red">Pack complet : les 4 modules</h3>
+      <p>Profitez du parcours complet en une seule commande pour 15 000 HTG. Vous avez accès aux 4 modules du cours, avec le même formulaire d'inscription, puis le paiement via MonCash ou UNIBANK Online.</p>
+    </div>
+    <div style="display:flex; flex-direction:column; align-items:flex-start; gap:8px;">
+      <button type="button" class="btn-enroll" id="bundleBuyBtn" onclick="openBundleModal()">Acheter les 4 modules — 15 000 HTG</button>
+      <p id="bundleProcessingMessage" style="display:none; margin:0; color:#16a34a; font-weight:600; font-size:0.95rem;">Traitement du paiement en cours, veuillez patienter.</p>
+    </div>
+  </div>
+</div>
 
     <div class="course-body">
       <aside class="curriculum" aria-label="Plan du cours">
@@ -2429,18 +2442,7 @@ header .wrap{
   </div>
 </section>
 
-<div class="wrap" style="margin-bottom: 12px; margin-top:0px">
-  <div class="bundle-cta">
-    <div class="bundle-cta-text">
-      <h3 style="color:red">Pack complet : les 4 modules</h3>
-      <p>Profitez du parcours complet en une seule commande pour 15 000 HTG. Vous avez accès aux 4 modules du cours, avec le même formulaire d'inscription, puis le paiement via MonCash ou UNIBANK Online.</p>
-    </div>
-    <div style="display:flex; flex-direction:column; align-items:flex-start; gap:8px;">
-      <button type="button" class="btn-enroll" id="bundleBuyBtn" onclick="openBundleModal()">Acheter les 4 modules — 15 000 HTG</button>
-      <p id="bundleProcessingMessage" style="display:none; margin:0; color:#16a34a; font-weight:600; font-size:0.95rem;">Traitement du paiement en cours, veuillez patienter.</p>
-    </div>
-  </div>
-</div>
+
 
 <section style="background-color:#8B5CF629" id="kijan">
   <div class="wrap">
@@ -3150,6 +3152,13 @@ header .wrap{
   // Sert de base unique de vérité pour le nombre de leçons ET pour le suivi de progression.
   var LESSON_CONTENT = {
   "m1": [
+    {
+      "type": "video",
+      "title": "Voir le module 1 en vidéo",
+      "chapterTag": "Module 1",
+      "videoKey": "vm1",
+      "icon": "<i class=\"fi fi-brands-youtube\"></i> "
+    },
     {
       "type": "lesson",
       "title": "Qu'est-ce que le Suivi & Évaluation ?",
@@ -5897,7 +5906,7 @@ header .wrap{
       btn.type = 'button';
       btn.className = 'lesson-row' + (done ? ' done' : '') + (isVideo ? ' lesson-video' : '');
       btn.disabled = !unlocked;
-      var titlePrefix = isVideo ? '🎥 ' : '<i class="fi fi-tr-document"></i> ';
+      var titlePrefix = isVideo ? (item.icon || '🎥 ') : '<i class="fi fi-tr-document"></i> ';
       btn.innerHTML =
         '<span class="lesson-status"><svg viewBox="0 0 12 12" fill="none"><path d="M2 6.2L4.7 9L10 3" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></span>' +
         '<span class="lesson-title">' + titlePrefix + item.title + '</span>' +
@@ -6249,7 +6258,7 @@ function goToCertificate(mod){
     if(mod === 'm3'){
       var docs = document.createElement('aside');
       docs.className = 'module3-lesson-docs';
-      docs.innerHTML = '<h4>DOCUMENT DE COURS</h4><div class="module3-doc-stack"><a class="module3-doc-link primary" href="https://drive.google.com/uc?export=download&id=1USVYZk8g4fQQJDv8qPWRjDJzU2uOpKtz" target="_self" rel="noopener noreferrer" download="module-3-formation.pdf"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3v12"/><path d="M7 20l5 5 5-5"/><path d="M5 10l7-7 7 7"/></svg>Télécharger le module 3 de la formation</a><a class="module3-doc-link secondary" href="https://drive.google.com/uc?export=download&id=1KGn-E88AfPW9vqZKtNq1F4xfl3UtSg6N" target="_self" rel="noopener noreferrer" download="module-collecte-donnees.pdf"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3v12"/><path d="M7 20l5 5 5-5"/><path d="M5 10l7-7 7 7"/></svg>Télécharger le module collecte des données</a></div>';
+      docs.innerHTML = '<h4>DOCUMENT DE COURS</h4><div class="module3-doc-stack"><a class="module3-doc-link primary" href="https://drive.google.com/uc?export=download&id=1USVYZk8g4fQQJDv8qPWRjDJzU2uOpKtz" target="_self" rel="noopener noreferrer" download="module-3-formation.pdf"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3v12"/><path d="M7 20l5 5 5-5"/><path d="M5 10l7-7 7 7"/></svg>Télécharger le module 3 de la formation</a><a class="module3-doc-link secondary" href="https://drive.google.com/uc?export=download&id=1KGn-E88AfPW9vqZKtNq1F4xfl3UtSg6N" target="_self" rel="noopener noreferrer" download="module-collecte-donnees.pdf"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3v12"/><path d="M7 20l5 5 5-5"/><path d="M5 10l7-7 7 7"/></svg>Télécharger le module collecte des données</a><a class="module3-doc-link secondary" href="https://drive.google.com/uc?export=download&id=1cJzaYsl5zu0fikC5M-RF3ZMDPhhyAz_K" target="_self" rel="noopener noreferrer" download="module-tcd.pdf"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3v12"/><path d="M7 20l5 5 5-5"/><path d="M5 10l7-7 7 7"/></svg>Télécharger le module TCD</a><a class="module3-doc-link secondary" href="https://drive.google.com/uc?export=download&id=1QUU8ThE_4na8f2fLvObY_4nuwgIFGaZS" target="_self" rel="noopener noreferrer" download="exo-pratique-tcd.pdf"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3v12"/><path d="M7 20l5 5 5-5"/><path d="M5 10l7-7 7 7"/></svg>Télécharger l\'exo pratique TCD</a></div>';
       wrap.appendChild(docs);
     }
         if(mod === 'm4'){
@@ -7240,6 +7249,12 @@ document.addEventListener('keydown', function(e){
       if(p.modId && paymentStatus[p.modId]){
         return;
       }
+      // Cas du pack "4 modules" : ce modId n'existe pas dans paymentStatus (qui n'est
+      // indexé que par m1..m4) — il faut donc vérifier individuellement si l'élève a
+      // déjà une inscription (pending ou confirmed) pour chacun des 4 modules.
+      if(p.modId === 'bundle-4-modules' && MODULES.every(function(mod){ return !!paymentStatus[mod]; })){
+        return;
+      }
       openEnskriModal(p.nomModil, p.pri, p.modId);
     }
   }
@@ -7662,7 +7677,6 @@ document.addEventListener('keydown', function(e){
         if(enrollBtn){
           enrollBtn.classList.add('btn-enroll-owned');
           enrollBtn.disabled = true;
-          enrollBtn.onclick = null;
           enrollBtn.innerHTML = '<span class="owned-check"><svg viewBox="0 0 12 12" fill="none"><path d="M2 6.2L4.7 9L10 3" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></span>Cours acheté';
         }
       } else {
