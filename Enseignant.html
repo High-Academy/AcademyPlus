@@ -1,0 +1,1119 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Espace Enseignant — NOVACC</title>
+<meta name="robots" content="noindex, nofollow">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600;9..144,700&family=Inter:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<style>
+  :root{
+    --bg: #FFFFFF;
+    --bg-alt: #F7F9FA;
+    --panel: #FFFFFF;
+    --ink: #1C1D1F;
+    --ink-soft: #6A6F73;
+    --navy: #1C1D1F;
+    --gold: #E59819;
+    --gold-deep: #B4690E;
+    --teal: #1E7A34;
+    --line: #D1D7DC;
+    --radius: 4px;
+    --shadow: 0 1px 3px rgba(0,0,0,0.12);
+    --blue: #A435F0;
+    --blue-deep: #8710D8;
+    --blue-tint: #F2E5FC;
+    --danger: #C4362D;
+    --danger-tint: #FBEAE9;
+  }
+  *{box-sizing:border-box;}
+  html{scroll-behavior:smooth;}
+  body{
+    margin:0; background:var(--bg-alt); color:var(--ink);
+    font-family:'Inter', sans-serif; line-height:1.55; -webkit-font-smoothing:antialiased;
+  }
+  h1,h2,h3{font-family:'Inter', sans-serif; font-weight:600; letter-spacing:-0.01em; color:var(--navy); margin:0;}
+  .mono{font-family:'IBM Plex Mono', monospace;}
+  a{color:inherit;}
+  button{font-family:inherit;}
+  img,svg{display:block; max-width:100%;}
+  :focus-visible{outline:2px solid var(--blue); outline-offset:3px;}
+
+  /* ---------- HEADER (identité visuelle reprise de index.html) ---------- */
+  header{
+    position:sticky; top:0; z-index:40;
+    background-color:#2563EB; color:#fff;
+    display:flex; align-items:center; justify-content:space-between;
+    padding:14px 20px; gap:16px;
+  }
+  .brand{display:flex; align-items:center; gap:10px; text-decoration:none; color:#fff;}
+  .brand-name{font-weight:700; font-size:1.15rem; line-height:1;}
+  .brand-tag{font-family:'IBM Plex Mono', monospace; font-size:0.62rem; letter-spacing:.1em; text-transform:uppercase; color:#FFD98A; display:block;}
+  .header-right{display:flex; align-items:center; gap:14px;}
+  .header-role{
+    font-family:'IBM Plex Mono', monospace; font-size:0.7rem; letter-spacing:.06em; text-transform:uppercase;
+    background:rgba(255,255,255,0.18); padding:5px 10px; border-radius:999px;
+  }
+  .btn-logout{
+    background:transparent; border:1px solid rgba(255,255,255,0.5); color:#fff;
+    padding:7px 14px; border-radius:4px; font-weight:600; font-size:0.85rem; cursor:pointer;
+  }
+  .btn-logout:hover{background:rgba(255,255,255,0.12);}
+
+  /* ---------- LAYOUT ---------- */
+  .shell{display:flex; min-height:calc(100vh - 60px);}
+  .sidebar{
+    width:230px; flex-shrink:0; background:var(--panel); border-right:1px solid var(--line);
+    padding:20px 0; position:sticky; top:60px; align-self:flex-start; height:calc(100vh - 60px);
+  }
+  .side-link{
+    display:flex; align-items:center; gap:10px; padding:11px 22px; color:var(--ink-soft);
+    text-decoration:none; font-weight:600; font-size:0.92rem; cursor:pointer; border-left:3px solid transparent;
+  }
+  .side-link:hover{background:var(--bg-alt); color:var(--ink);}
+  .side-link.active{color:var(--blue-deep); border-left-color:var(--blue); background:var(--blue-tint);}
+  .side-link svg{width:18px; height:18px; flex-shrink:0;}
+
+  .sidebar-stat{
+    margin:20px 22px 0; padding:6px 16px; border:1px solid var(--line); border-radius:10px;
+    background:var(--bg-alt);
+  }
+  .sidebar-stat-row{padding:12px 0;}
+  .sidebar-stat-row + .sidebar-stat-row{border-top:1px solid var(--line);}
+  .sidebar-stat-label{
+    display:block; font-size:0.72rem; font-weight:700; text-transform:uppercase; letter-spacing:.04em;
+    color:var(--ink-soft); margin-bottom:5px;
+  }
+  .sidebar-stat-value{display:block; font-size:1.7rem; font-weight:800; color:var(--blue-deep); line-height:1.1;}
+  .sidebar-stat-value.small{font-size:0.98rem; font-weight:700; color:var(--ink);}
+  .sidebar-stat-value.loading{color:var(--ink-soft); font-size:0.9rem; font-weight:600;}
+
+  main{flex:1; padding:28px 32px; max-width:1100px;}
+  .view{display:none;}
+  .view.active{display:block;}
+
+  .page-head{display:flex; align-items:flex-start; justify-content:space-between; gap:16px; margin-bottom:22px; flex-wrap:wrap;}
+  .page-head p{color:var(--ink-soft); margin:6px 0 0; font-size:0.95rem;}
+
+  .btn-primary{
+    background:var(--blue); color:#fff; border:none; padding:12px 22px;
+    border-radius:4px; font-weight:700; font-size:0.92rem; cursor:pointer;
+    transition:background .15s ease, transform .1s ease;
+  }
+  .btn-primary:hover{background:var(--blue-deep); transform:translateY(-1px);}
+  .btn-primary:disabled{background:#B0B4B9; cursor:not-allowed; transform:none;}
+  .btn-secondary{
+    background:#fff; border:1px solid var(--line); color:var(--ink); padding:11px 20px;
+    border-radius:4px; font-weight:600; font-size:0.9rem; cursor:pointer;
+  }
+  .btn-secondary:hover{border-color:var(--navy);}
+  .btn-danger{
+    background:var(--danger-tint); border:1px solid var(--danger); color:var(--danger); padding:9px 16px;
+    border-radius:4px; font-weight:600; font-size:0.85rem; cursor:pointer;
+  }
+  .btn-icon{background:none; border:none; cursor:pointer; color:var(--ink-soft); padding:6px;}
+  .btn-icon:hover{color:var(--danger);}
+
+  /* ---------- LISTE DES COURS ---------- */
+  .course-grid{display:grid; grid-template-columns:repeat(auto-fill, minmax(260px,1fr)); gap:18px;}
+  .course-card{
+    background:var(--panel); border:1px solid var(--line); border-radius:14px; padding:20px;
+    display:flex; flex-direction:column; gap:10px; box-shadow:var(--shadow); cursor:pointer;
+    transition:transform .15s ease, box-shadow .15s ease;
+  }
+  .course-card:hover{transform:translateY(-3px); box-shadow:0 16px 30px -20px rgba(0,0,0,0.3);}
+  .status-badge{
+    font-family:'IBM Plex Mono', monospace; font-size:0.66rem; font-weight:700; letter-spacing:.05em;
+    text-transform:uppercase; padding:4px 10px; border-radius:999px; width:fit-content;
+  }
+  .status-draft{background:#F1F2F4; color:var(--ink-soft);}
+  .status-pending{background:#FFF3DE; color:var(--gold-deep);}
+  .status-published{background:#E6F4EA; color:var(--teal);}
+  .course-card h3{font-size:1.08rem; line-height:1.3;}
+  .course-card .meta{display:flex; gap:14px; font-size:0.8rem; color:var(--ink-soft); font-family:'IBM Plex Mono', monospace;}
+  .empty-state{
+    text-align:center; padding:60px 20px; color:var(--ink-soft); border:1.5px dashed var(--line);
+    border-radius:14px; background:var(--panel);
+  }
+  .empty-state h3{margin-bottom:8px; color:var(--ink);}
+
+  /* ---------- FORMULAIRE COURS ---------- */
+  .panel{background:var(--panel); border:1px solid var(--line); border-radius:14px; padding:24px; margin-bottom:20px;}
+  .field-row{display:grid; grid-template-columns:1fr 1fr; gap:16px; margin-bottom:16px;}
+  .field{display:flex; flex-direction:column; gap:6px; margin-bottom:16px;}
+  .field label{font-weight:600; font-size:0.85rem;}
+  .field .hint{font-size:0.78rem; color:var(--ink-soft); font-weight:400;}
+  .field input, .field textarea, .field select{
+    padding:11px 13px; border:1px solid var(--line); border-radius:4px; font-family:inherit;
+    font-size:0.95rem; background:#fff; color:var(--ink);
+  }
+  .field input:focus, .field textarea:focus, .field select:focus{border-color:var(--blue); outline:none;}
+  .field textarea{resize:vertical; min-height:90px;}
+  .readonly-badge{
+    font-family:'IBM Plex Mono', monospace; font-size:0.72rem; color:var(--ink-soft);
+    background:var(--bg-alt); padding:8px 12px; border-radius:4px; width:fit-content;
+  }
+  .status-picker{display:flex; gap:10px; flex-wrap:wrap;}
+  .status-picker button{
+    padding:8px 16px; border-radius:999px; border:1px solid var(--line); background:#fff;
+    font-size:0.82rem; font-weight:600; cursor:pointer; color:var(--ink-soft);
+  }
+  .status-picker button.selected{border-color:var(--blue); color:var(--blue-deep); background:var(--blue-tint);}
+
+  /* ---------- LEÇONS (liste + éditeur carrousel) ---------- */
+  .lesson-list{display:flex; flex-direction:column; gap:10px; margin-bottom:16px;}
+  .lesson-row{
+    display:flex; align-items:center; justify-content:space-between; gap:12px;
+    padding:12px 16px; border:1px solid var(--line); border-radius:8px; background:#fff;
+  }
+  .lesson-row .lesson-title{font-weight:600; font-size:0.92rem;}
+  .lesson-row .lesson-sub{font-size:0.78rem; color:var(--ink-soft); font-family:'IBM Plex Mono', monospace;}
+  .lesson-actions{display:flex; gap:6px;}
+
+  .point-editor{border:1px solid var(--line); border-radius:8px; padding:14px; margin-bottom:12px; background:var(--bg-alt);}
+  .point-editor-head{display:flex; justify-content:space-between; align-items:center; margin-bottom:10px;}
+  .point-editor-head span{font-family:'IBM Plex Mono', monospace; font-size:0.72rem; color:var(--ink-soft);}
+  .table-toggle{display:flex; align-items:center; gap:8px; font-size:0.85rem; margin-top:8px; cursor:pointer;}
+  .table-grid-editor textarea{font-family:'IBM Plex Mono', monospace; font-size:0.82rem;}
+
+  /* ---------- APERÇU CARROUSEL (identique au rendu étudiant) ---------- */
+  .preview-wrap{
+    background:#fff; border:1px solid var(--line); border-radius:14px; padding:36px 20px;
+    display:flex; align-items:center; justify-content:center; min-height:420px; position:relative;
+  }
+  .preview-circle{
+    width:150px; height:150px; border-radius:50%; background:var(--blue-tint); border:2px solid var(--blue);
+    display:flex; align-items:center; justify-content:center; text-align:center; padding:14px;
+    font-weight:700; color:var(--blue-deep); font-size:0.95rem; position:absolute; left:50%; top:50%;
+    transform:translate(-50%,-50%); z-index:1;
+  }
+  .preview-item{position:absolute; left:50%; top:50%; transform:translate(-50%,-50%); display:flex; flex-direction:column; align-items:center; z-index:2;}
+  .preview-plus{
+    width:34px; height:34px; border-radius:50%; background:var(--blue); color:#fff;
+    border:none; font-size:1.2rem; font-weight:700; cursor:pointer; display:flex; align-items:center; justify-content:center;
+    flex-shrink:0; box-shadow:0 3px 10px rgba(0,0,0,.18); transition:background .15s ease, transform .15s ease;
+  }
+  .preview-plus:hover{background:var(--blue-deep); transform:scale(1.06);}
+  .preview-item.is-seen .preview-plus{background:var(--teal);}
+  .preview-label{
+    position:absolute; top:calc(100% + 6px); left:50%; transform:translateX(-50%); width:110px;
+    font-size:0.72rem; font-weight:700; text-align:center; color:var(--ink); line-height:1.25; pointer-events:none;
+  }
+  .preview-backdrop{
+    display:none; position:fixed; inset:0; background:rgba(15,35,65,0.45); z-index:299;
+    backdrop-filter:blur(2px); -webkit-backdrop-filter:blur(2px);
+  }
+  .preview-backdrop.active{display:block;}
+  .preview-popup{
+    display:none; position:fixed; top:50%; left:50%; transform:translate(-50%,-50%);
+    width:min(480px, 90vw); max-height:70vh; z-index:300;
+  }
+  .preview-popup.is-shown{display:block;}
+  .preview-popup-box{
+    background:#fff; border-radius:14px; padding:22px 24px; box-shadow:0 24px 60px rgba(15,35,65,.35);
+    max-height:70vh; overflow-y:auto;
+  }
+  .preview-popup-header{
+    display:flex; align-items:center; justify-content:space-between; gap:12px;
+    font-weight:800; font-size:0.98rem; color:var(--navy); margin:0 0 14px; padding-bottom:11px;
+    border-bottom:2px solid var(--blue);
+  }
+  .preview-popup-header button{
+    background:none; border:none; font-size:1.3rem; line-height:1; cursor:pointer; color:var(--ink-soft);
+    padding:2px 6px; border-radius:6px; flex-shrink:0;
+  }
+  .preview-popup-header button:hover{background:var(--bg-alt);}
+  .preview-popup-content{font-size:0.9rem; line-height:1.6; color:var(--ink); white-space:pre-line;}
+
+  /* ---------- UPLOAD VIDÉO ---------- */
+  .upload-box{
+    border:1.5px dashed var(--line); border-radius:8px; padding:20px; text-align:center; background:#fff;
+  }
+  .upload-box input[type=file]{margin-top:10px;}
+  .upload-progress{height:6px; border-radius:99px; background:var(--bg-alt); overflow:hidden; margin-top:10px; display:none;}
+  .upload-progress-bar{height:100%; width:0%; background:var(--blue); transition:width .2s ease;}
+  .upload-status{font-size:0.8rem; color:var(--ink-soft); margin-top:8px;}
+
+  .toast{
+    position:fixed; bottom:24px; right:24px; background:var(--navy); color:#fff; padding:13px 18px;
+    border-radius:8px; font-size:0.88rem; box-shadow:0 10px 30px rgba(0,0,0,0.25); z-index:100;
+    opacity:0; transform:translateY(10px); transition:all .25s ease; pointer-events:none;
+  }
+  .toast.show{opacity:1; transform:translateY(0);}
+  .toast.error{background:var(--danger);}
+
+  .gate{display:flex; align-items:center; justify-content:center; min-height:70vh; padding:20px;}
+  .gate-box{text-align:center; max-width:380px;}
+
+  @media(max-width:860px){
+    .shell{flex-direction:column;}
+    .sidebar{
+      width:100%; height:auto; position:static; padding:10px; display:flex; overflow-x:auto;
+      border-right:none; border-bottom:1px solid var(--line); gap:4px;
+    }
+    .side-link{border-left:none; border-bottom:3px solid transparent; white-space:nowrap; padding:10px 16px;}
+    .side-link.active{border-left:none; border-bottom-color:var(--blue);}
+    main{padding:20px 16px;}
+    .field-row{grid-template-columns:1fr;}
+    .preview-wrap{padding:24px 12px; min-height:300px;}
+    .preview-circle{width:120px; height:120px; font-size:0.85rem;}
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <a href="index.html" class="brand">
+    <span>
+      <span class="brand-name">NOVACC</span>
+      <span class="brand-tag">Espace Enseignant</span>
+    </span>
+  </a>
+  <div class="header-right">
+    <span class="header-role" id="teacherEmail">…</span>
+    <button class="btn-logout" id="logoutBtn">Se déconnecter</button>
+  </div>
+</header>
+
+<!-- ============ PORTE D'ACCÈS (auth + vérification du rôle) ============ -->
+<div class="gate" id="gateView">
+  <div class="gate-box">
+    <h2 id="gateTitle">Vérification de l'accès…</h2>
+    <p id="gateMessage" style="color:var(--ink-soft); margin-top:10px;">Merci de patienter.</p>
+  </div>
+</div>
+
+<!-- ============ APPLICATION (visible seulement après validation du rôle enseignant) ============ -->
+<div class="shell" id="appShell" style="display:none;">
+  <aside class="sidebar">
+    <a class="side-link active" data-view="viewCourses">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="16" rx="2"/><path d="M3 9h18"/></svg>
+      Mes cours
+    </a>
+    <a class="side-link" data-view="viewNewCourse" id="sideNewCourse">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 5v14M5 12h14"/></svg>
+      Nouveau cours
+    </a>
+
+    <div class="sidebar-stat" id="sidebarEnrollStat" style="display:none;">
+      <div class="sidebar-stat-row">
+        <span class="sidebar-stat-label">Étudiants inscrits</span>
+        <span class="sidebar-stat-value" id="sidebarEnrollValue">—</span>
+      </div>
+      <div class="sidebar-stat-row">
+        <span class="sidebar-stat-label">En attente de paiement</span>
+        <span class="sidebar-stat-value small" id="sidebarPendingValue">—</span>
+      </div>
+      <div class="sidebar-stat-row">
+        <span class="sidebar-stat-label">Revenu net estimé</span>
+        <span class="sidebar-stat-value small" id="sidebarRevenueValue">—</span>
+      </div>
+      <div class="sidebar-stat-row">
+        <span class="sidebar-stat-label">Statut du cours</span>
+        <span class="sidebar-stat-value small" id="sidebarStatusValue">—</span>
+      </div>
+      <div class="sidebar-stat-row">
+        <span class="sidebar-stat-label">Créé le</span>
+        <span class="sidebar-stat-value small" id="sidebarCreatedValue">—</span>
+      </div>
+    </div>
+  </aside>
+
+  <main>
+    <!-- ---------- VUE : LISTE DES COURS ---------- -->
+    <section class="view active" id="viewCourses">
+      <div class="page-head">
+        <div>
+          <h1>Mes cours</h1>
+          <p>Gérez vos cours, ajoutez des leçons et suivez leur statut de publication.</p>
+        </div>
+        <button class="btn-primary" id="btnGoNewCourse">+ Nouveau cours</button>
+      </div>
+      <div class="course-grid" id="courseGrid"></div>
+      <div class="empty-state" id="emptyState" style="display:none;">
+        <h3>Aucun cours pour l'instant</h3>
+        <p>Créez votre premier cours pour commencer à ajouter des leçons.</p>
+      </div>
+    </section>
+
+    <!-- ---------- VUE : ÉDITEUR DE COURS ---------- -->
+    <section class="view" id="viewNewCourse">
+      <div class="page-head">
+        <div>
+          <h1 id="courseFormTitle">Nouveau cours</h1>
+          <p>Un cours publié doit d'abord être validé par l'administrateur.</p>
+        </div>
+        <button class="btn-secondary" id="btnBackToList">← Retour à mes cours</button>
+      </div>
+
+      <div class="panel">
+        <div class="field-row">
+          <div class="field">
+            <label for="courseTitle">Titre du cours</label>
+            <input type="text" id="courseTitle" placeholder="Ex. Introduction à la gestion de projet">
+          </div>
+          <div class="field">
+            <label for="courseSlug">Identifiant (slug) <span class="hint">généré automatiquement</span></label>
+            <input type="text" id="courseSlug" class="mono" readonly>
+          </div>
+        </div>
+        <div class="field">
+          <label for="courseDescription">Description</label>
+          <textarea id="courseDescription" placeholder="Ce que les étudiants vont apprendre…"></textarea>
+        </div>
+        <div class="field-row">
+          <div class="field">
+            <label for="coursePrice">Prix (HTG)</label>
+            <input type="number" id="coursePrice" min="0" step="1" placeholder="0">
+          </div>
+          <div class="field">
+            <label>Votre part sur chaque vente</label>
+            <span class="readonly-badge" id="commissionBadge">70% reversés — commission NOVACC 30%</span>
+          </div>
+        </div>
+        <div class="field">
+          <label>Statut</label>
+          <div class="status-picker" id="statusPicker">
+            <button type="button" data-status="draft" class="selected">Brouillon</button>
+            <button type="button" data-status="pending">Soumettre à validation</button>
+          </div>
+          <span class="hint" id="statusHint">Un cours en brouillon n'est visible que par vous.</span>
+        </div>
+        <button class="btn-primary" id="btnSaveCourse">Enregistrer le cours</button>
+      </div>
+
+      <!-- ---------- LEÇONS ---------- -->
+      <div class="panel" id="lessonsPanel" style="display:none;">
+        <div class="page-head" style="margin-bottom:14px;">
+          <h2 style="font-size:1.15rem;">Leçons</h2>
+          <button class="btn-secondary" id="btnAddLesson">+ Ajouter une leçon</button>
+        </div>
+        <div class="lesson-list" id="lessonList"></div>
+        <p class="hint" id="noLessonsHint">Aucune leçon pour l'instant.</p>
+      </div>
+    </section>
+
+    <!-- ---------- VUE : ÉDITEUR DE LEÇON (format carrousel) ---------- -->
+    <section class="view" id="viewLessonEditor">
+      <div class="page-head">
+        <div>
+          <h1>Éditer la leçon</h1>
+          <p>Chaque point devient un bouton "+" autour du cercle, comme dans les cours existants.</p>
+        </div>
+        <button class="btn-secondary" id="btnBackToCourse">← Retour au cours</button>
+      </div>
+
+      <div class="panel">
+        <div class="field">
+          <label for="lessonChapterTitle">Titre du chapitre</label>
+          <input type="text" id="lessonChapterTitle" placeholder="Ex. Chapitre 1 — Définitions fondamentales">
+        </div>
+
+        <div class="upload-box">
+          <strong>Vidéo de la leçon</strong>
+          <p class="hint" style="margin:4px 0 0;">Formats acceptés : MP4. L'upload se fait directement dans Supabase Storage.</p>
+          <input type="file" id="videoInput" accept="video/mp4">
+          <div class="upload-progress" id="uploadProgress"><div class="upload-progress-bar" id="uploadProgressBar"></div></div>
+          <div class="upload-status" id="uploadStatus"></div>
+        </div>
+      </div>
+
+      <div class="panel">
+        <div class="page-head" style="margin-bottom:10px;">
+          <h2 style="font-size:1.1rem;">Points du carrousel</h2>
+          <button class="btn-secondary" id="btnAddPoint">+ Ajouter un point</button>
+        </div>
+        <div id="pointsEditor"></div>
+      </div>
+
+      <div class="panel">
+        <h2 style="font-size:1.1rem; margin-bottom:14px;">Aperçu (rendu identique à celui vu par les étudiants)</h2>
+        <div class="preview-wrap" id="previewWrap">
+          <div class="preview-circle" id="previewCircle">Ajoutez des points pour voir l'aperçu</div>
+        </div>
+      </div>
+
+      <button class="btn-primary" id="btnSaveLesson">Enregistrer la leçon</button>
+    </section>
+  </main>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<div class="preview-backdrop" id="previewBackdrop"></div>
+<div class="preview-popup" id="previewPopup">
+  <div class="preview-popup-box">
+    <div class="preview-popup-header">
+      <span id="previewPopupTitle"></span>
+      <button type="button" id="previewPopupClose" aria-label="Fermer">&times;</button>
+    </div>
+    <div class="preview-popup-content" id="previewPopupContent"></div>
+  </div>
+</div>
+
+<script>
+/* =====================================================================
+   CONFIG SUPABASE — même projet que le site principal (clé publique anon)
+   ===================================================================== */
+var SUPABASE_URL = 'https://lgohbjmbhprvjibkforn.supabase.co';
+var SUPABASE_ANON_KEY = 'sb_publishable_EmDRarwrfmft7DGnsWsgXA_LgeJV-sI';
+var supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+
+var STORAGE_BUCKET = 'course-videos';
+var COMMISSION_RATE = 0.30; // doit rester cohérent avec courses.commission_rate côté base
+
+var state = {
+  user: null,
+  courses: [],
+  currentCourse: null,   // cours en cours d'édition
+  lessons: [],           // leçons du cours en cours d'édition
+  currentLesson: null,   // leçon en cours d'édition (objet ou null = nouvelle)
+  points: []             // points de la leçon en cours d'édition
+};
+
+/* =====================================================================
+   UTILITAIRES
+   ===================================================================== */
+function toast(msg, isError){
+  var el = document.getElementById('toast');
+  el.textContent = msg;
+  el.className = 'toast show' + (isError ? ' error' : '');
+  setTimeout(function(){ el.className = 'toast'; }, 3200);
+}
+
+function slugify(str){
+  return (str || '')
+    .toLowerCase()
+    .normalize('NFD').replace(/[\u0300-\u036f]/g, '')
+    .replace(/[^a-z0-9]+/g, '-')
+    .replace(/(^-|-$)/g, '');
+}
+
+function uid(prefix){
+  return prefix + '_' + Math.random().toString(36).slice(2, 9);
+}
+
+function showView(id){
+  document.querySelectorAll('.view').forEach(function(v){ v.classList.remove('active'); });
+  document.getElementById(id).classList.add('active');
+  document.querySelectorAll('.side-link').forEach(function(l){
+    l.classList.toggle('active', l.dataset.view === id);
+  });
+}
+
+/* =====================================================================
+   AUTHENTIFICATION + VÉRIFICATION DU RÔLE
+   Même système d'auth que le reste de NOVACC (Supabase Auth unique) :
+   on vérifie profiles.role === 'enseignant' avant d'afficher le tableau de bord.
+   ===================================================================== */
+async function initGate(){
+  try{
+    var sessionRes = await supabaseClient.auth.getSession();
+    var session = sessionRes.data.session;
+
+    if (!session){
+      document.getElementById('gateTitle').textContent = 'Connexion requise';
+      document.getElementById('gateMessage').innerHTML =
+        'Vous devez être connecté avec un compte enseignant pour accéder à cet espace. ' +
+        '<br><a href="index.html" style="color:var(--blue-deep); font-weight:600;">Retour à l\'accueil</a>';
+      return;
+    }
+
+    state.user = session.user;
+
+    var profileRes = await supabaseClient
+      .from('profiles')
+      .select('role, email')
+      .eq('id', state.user.id)
+      .single();
+
+    if (profileRes.error){
+      throw profileRes.error;
+    }
+
+    if (profileRes.data.role !== 'enseignant' && profileRes.data.role !== 'admin'){
+      document.getElementById('gateTitle').textContent = 'Accès réservé aux enseignants';
+      document.getElementById('gateMessage').textContent =
+        'Ce compte n\'a pas encore les droits enseignant. Contactez l\'administration de NOVACC pour activer votre accès.';
+      return;
+    }
+
+    document.getElementById('teacherEmail').textContent = profileRes.data.email || state.user.email || '';
+    document.getElementById('gateView').style.display = 'none';
+    document.getElementById('appShell').style.display = 'flex';
+    loadCourses();
+
+  } catch (err){
+    console.error('Erreur de vérification d\'accès :', err);
+    document.getElementById('gateTitle').textContent = 'Une erreur est survenue';
+    document.getElementById('gateMessage').textContent =
+      'Impossible de vérifier votre accès pour le moment. Réessayez dans un instant.';
+  }
+}
+
+document.getElementById('logoutBtn').addEventListener('click', async function(){
+  await supabaseClient.auth.signOut();
+  window.location.href = 'index.html';
+});
+
+/* =====================================================================
+   NAVIGATION LATÉRALE
+   ===================================================================== */
+document.querySelectorAll('.side-link[data-view]').forEach(function(link){
+  link.addEventListener('click', function(){
+    if (link.id === 'sideNewCourse') resetCourseForm();
+    if (link.dataset.view === 'viewCourses') hideEnrollStat();
+    showView(link.dataset.view);
+  });
+});
+document.getElementById('btnGoNewCourse').addEventListener('click', function(){
+  resetCourseForm();
+  showView('viewNewCourse');
+});
+document.getElementById('btnBackToList').addEventListener('click', function(){
+  hideEnrollStat();
+  loadCourses();
+  showView('viewCourses');
+});
+document.getElementById('btnBackToCourse').addEventListener('click', function(){
+  showView('viewNewCourse');
+});
+
+var STATUS_LABELS = { draft: 'Brouillon', pending: 'En attente de validation', published: 'Publié', archived: 'Archivé' };
+var STATUS_CLASS = { draft: 'status-draft', pending: 'status-pending', published: 'status-published', archived: 'status-draft' };
+
+/* =====================================================================
+   LISTE DES COURS (courses.created_by = auth.uid() via RLS)
+   ===================================================================== */
+async function loadCourses(){
+  var grid = document.getElementById('courseGrid');
+  var empty = document.getElementById('emptyState');
+  grid.innerHTML = '<p class="hint">Chargement…</p>';
+
+  var res = await supabaseClient
+    .from('courses')
+    .select('id, title, status, price, commission_rate, created_at')
+    .order('created_at', { ascending: false });
+
+  if (res.error){
+    toast('Impossible de charger vos cours : ' + res.error.message, true);
+    grid.innerHTML = '';
+    return;
+  }
+
+  state.courses = res.data || [];
+  grid.innerHTML = '';
+
+  if (state.courses.length === 0){
+    empty.style.display = 'block';
+    return;
+  }
+  empty.style.display = 'none';
+
+  state.courses.forEach(function(course){
+    var card = document.createElement('div');
+    card.className = 'course-card';
+    card.innerHTML =
+      '<span class="status-badge ' + (STATUS_CLASS[course.status] || 'status-draft') + '">' +
+        (STATUS_LABELS[course.status] || course.status) +
+      '</span>' +
+      '<h3>' + escapeHtml(course.title) + '</h3>' +
+      '<div class="meta">' +
+        '<span>' + (course.price ? course.price + ' HTG' : 'Gratuit') + '</span>' +
+        '<span>Commission ' + Math.round((course.commission_rate != null ? course.commission_rate : COMMISSION_RATE) * 100) + '%</span>' +
+      '</div>';
+    card.addEventListener('click', function(){ openCourse(course.id); });
+    grid.appendChild(card);
+  });
+}
+
+function escapeHtml(str){
+  var div = document.createElement('div');
+  div.textContent = str || '';
+  return div.innerHTML;
+}
+
+/* =====================================================================
+   FORMULAIRE COURS (création / édition)
+   ===================================================================== */
+function resetCourseForm(){
+  state.currentCourse = null;
+  state.lessons = [];
+  document.getElementById('courseFormTitle').textContent = 'Nouveau cours';
+  document.getElementById('courseTitle').value = '';
+  document.getElementById('courseSlug').value = '';
+  document.getElementById('courseDescription').value = '';
+  document.getElementById('coursePrice').value = '';
+  setStatusPicker('draft');
+  document.getElementById('lessonsPanel').style.display = 'none';
+  hideEnrollStat();
+}
+
+/* =====================================================================
+   INFOS DU COURS (marge gauche) — puisées depuis Supabase :
+   - étudiants inscrits / en attente : table "enrollments" (module_id = courses.id)
+   - revenu net, statut, date de création : table "courses"
+   ===================================================================== */
+function hideEnrollStat(){
+  document.getElementById('sidebarEnrollStat').style.display = 'none';
+}
+
+function formatHTG(amount){
+  return Math.round(amount).toLocaleString('fr-FR') + ' HTG';
+}
+
+function formatDateFr(isoDate){
+  if (!isoDate) return '—';
+  try{
+    return new Date(isoDate).toLocaleDateString('fr-FR', { day: '2-digit', month: 'short', year: 'numeric' });
+  }catch(e){ return '—'; }
+}
+
+async function loadEnrollmentCount(course){
+  var statBox = document.getElementById('sidebarEnrollStat');
+  var enrollEl = document.getElementById('sidebarEnrollValue');
+  var pendingEl = document.getElementById('sidebarPendingValue');
+  var revenueEl = document.getElementById('sidebarRevenueValue');
+  var statusEl = document.getElementById('sidebarStatusValue');
+  var createdEl = document.getElementById('sidebarCreatedValue');
+
+  statBox.style.display = 'block';
+  enrollEl.textContent = '…';
+  enrollEl.classList.add('loading');
+  pendingEl.textContent = '…';
+  revenueEl.textContent = '…';
+
+  statusEl.textContent = STATUS_LABELS[course.status] || course.status || '—';
+  createdEl.textContent = formatDateFr(course.created_at);
+
+  try{
+    var res = await supabaseClient
+      .from('enrollments')
+      .select('status')
+      .eq('module_id', course.id);
+
+    enrollEl.classList.remove('loading');
+
+    if (res.error){
+      enrollEl.textContent = '—';
+      pendingEl.textContent = '—';
+      revenueEl.textContent = '—';
+      return;
+    }
+
+    var rows = res.data || [];
+    var confirmedCount = rows.filter(function(r){ return r.status === 'confirmed'; }).length;
+    var pendingCount = rows.filter(function(r){ return r.status === 'pending'; }).length;
+
+    enrollEl.textContent = confirmedCount;
+    pendingEl.textContent = pendingCount;
+
+    var price = Number(course.price) || 0;
+    var commissionRate = course.commission_rate != null ? Number(course.commission_rate) : COMMISSION_RATE;
+    var netRevenue = confirmedCount * price * (1 - commissionRate);
+    revenueEl.textContent = formatHTG(netRevenue);
+  } catch (err){
+    enrollEl.classList.remove('loading');
+    enrollEl.textContent = '—';
+    pendingEl.textContent = '—';
+    revenueEl.textContent = '—';
+  }
+}
+
+document.getElementById('courseTitle').addEventListener('input', function(e){
+  document.getElementById('courseSlug').value = slugify(e.target.value);
+});
+
+document.querySelectorAll('#statusPicker button').forEach(function(btn){
+  btn.addEventListener('click', function(){ setStatusPicker(btn.dataset.status); });
+});
+function setStatusPicker(status){
+  document.querySelectorAll('#statusPicker button').forEach(function(b){
+    b.classList.toggle('selected', b.dataset.status === status);
+  });
+  document.getElementById('statusHint').textContent = status === 'pending'
+    ? 'Votre cours sera visible par l\'administrateur pour validation avant publication.'
+    : 'Un cours en brouillon n\'est visible que par vous.';
+}
+function getSelectedStatus(){
+  var el = document.querySelector('#statusPicker button.selected');
+  return el ? el.dataset.status : 'draft';
+}
+
+async function openCourse(courseId){
+  var course = state.courses.find(function(c){ return c.id === courseId; });
+  var full = await supabaseClient.from('courses').select('*').eq('id', courseId).single();
+  if (full.error){ toast('Impossible d\'ouvrir ce cours.', true); return; }
+  course = full.data;
+
+  state.currentCourse = course;
+  document.getElementById('courseFormTitle').textContent = 'Modifier : ' + course.title;
+  document.getElementById('courseTitle').value = course.title;
+  document.getElementById('courseSlug').value = course.slug;
+  document.getElementById('courseDescription').value = course.description || '';
+  document.getElementById('coursePrice').value = course.price || '';
+  setStatusPicker(course.status === 'draft' ? 'draft' : 'pending');
+
+  document.getElementById('lessonsPanel').style.display = 'block';
+  await loadLessons(course.id);
+  loadEnrollmentCount(course);
+  showView('viewNewCourse');
+}
+
+document.getElementById('btnSaveCourse').addEventListener('click', async function(){
+  var title = document.getElementById('courseTitle').value.trim();
+  if (!title){ toast('Le titre du cours est requis.', true); return; }
+
+  var payload = {
+    title: title,
+    slug: document.getElementById('courseSlug').value || slugify(title) + '-' + Date.now(),
+    description: document.getElementById('courseDescription').value.trim(),
+    price: Number(document.getElementById('coursePrice').value) || 0,
+    status: getSelectedStatus(),
+    commission_rate: COMMISSION_RATE
+  };
+
+  var btn = document.getElementById('btnSaveCourse');
+  btn.disabled = true;
+
+  try{
+    var res;
+    if (state.currentCourse){
+      res = await supabaseClient.from('courses').update(payload).eq('id', state.currentCourse.id).select().single();
+    } else {
+      payload.created_by = state.user.id;
+      res = await supabaseClient.from('courses').insert(payload).select().single();
+    }
+    if (res.error) throw res.error;
+
+    state.currentCourse = res.data;
+    document.getElementById('lessonsPanel').style.display = 'block';
+    await loadLessons(state.currentCourse.id);
+    toast('Cours enregistré.');
+  } catch (err){
+    console.error(err);
+    toast('Erreur lors de l\'enregistrement : ' + err.message, true);
+  } finally {
+    btn.disabled = false;
+  }
+});
+
+/* =====================================================================
+   LEÇONS D'UN COURS
+   ===================================================================== */
+async function loadLessons(courseId){
+  var res = await supabaseClient
+    .from('lessons')
+    .select('id, position, chapter_title, content, video_path')
+    .eq('course_id', courseId)
+    .order('position', { ascending: true });
+
+  if (res.error){ toast('Impossible de charger les leçons.', true); return; }
+  state.lessons = res.data || [];
+  renderLessonList();
+}
+
+function renderLessonList(){
+  var list = document.getElementById('lessonList');
+  var hint = document.getElementById('noLessonsHint');
+  list.innerHTML = '';
+
+  if (state.lessons.length === 0){
+    hint.style.display = 'block';
+    return;
+  }
+  hint.style.display = 'none';
+
+  state.lessons.forEach(function(lesson){
+    var row = document.createElement('div');
+    row.className = 'lesson-row';
+    var pointCount = (lesson.content && lesson.content.points) ? lesson.content.points.length : 0;
+    row.innerHTML =
+      '<div>' +
+        '<div class="lesson-title">' + escapeHtml(lesson.chapter_title) + '</div>' +
+        '<div class="lesson-sub">' + pointCount + ' point(s)' + (lesson.video_path ? ' · vidéo ajoutée' : ' · pas de vidéo') + '</div>' +
+      '</div>' +
+      '<div class="lesson-actions">' +
+        '<button class="btn-secondary" data-edit>Éditer</button>' +
+        '<button class="btn-icon" data-delete title="Supprimer">✕</button>' +
+      '</div>';
+    row.querySelector('[data-edit]').addEventListener('click', function(){ openLessonEditor(lesson); });
+    row.querySelector('[data-delete]').addEventListener('click', function(){ deleteLesson(lesson.id); });
+    list.appendChild(row);
+  });
+}
+
+document.getElementById('btnAddLesson').addEventListener('click', function(){
+  if (!state.currentCourse){ toast('Enregistrez d\'abord le cours.', true); return; }
+  openLessonEditor(null);
+});
+
+async function deleteLesson(lessonId){
+  if (!confirm('Supprimer définitivement cette leçon ?')) return;
+  var res = await supabaseClient.from('lessons').delete().eq('id', lessonId);
+  if (res.error){ toast('Suppression impossible.', true); return; }
+  toast('Leçon supprimée.');
+  loadLessons(state.currentCourse.id);
+}
+
+/* =====================================================================
+   ÉDITEUR DE LEÇON — format carrousel imposé (points affichés en cercle + boutons "+")
+   ===================================================================== */
+function openLessonEditor(lesson){
+  state.currentLesson = lesson;
+  document.getElementById('lessonChapterTitle').value = lesson ? lesson.chapter_title : '';
+  document.getElementById('uploadStatus').textContent = lesson && lesson.video_path ? 'Vidéo actuelle : ' + lesson.video_path : '';
+  state.points = (lesson && lesson.content && lesson.content.points) ? JSON.parse(JSON.stringify(lesson.content.points)) : [];
+  renderPointsEditor();
+  showView('viewLessonEditor');
+}
+
+document.getElementById('btnAddPoint').addEventListener('click', function(){
+  state.points.push({ id: uid('p'), label: '', body: '', table: null });
+  renderPointsEditor();
+});
+
+function renderPointsEditor(){
+  var wrap = document.getElementById('pointsEditor');
+  wrap.innerHTML = '';
+
+  state.points.forEach(function(point, index){
+    var box = document.createElement('div');
+    box.className = 'point-editor';
+    box.innerHTML =
+      '<div class="point-editor-head">' +
+        '<span>Point ' + (index + 1) + '</span>' +
+        '<button class="btn-icon" data-remove title="Retirer ce point">✕</button>' +
+      '</div>' +
+      '<div class="field">' +
+        '<label>Libellé court (affiché près du bouton +)</label>' +
+        '<input type="text" data-field="label" value="' + escapeHtml(point.label) + '" placeholder="Ex. Définitions fondamentales">' +
+      '</div>' +
+      '<div class="field">' +
+        '<label>Contenu détaillé (révélé au clic)</label>' +
+        '<textarea data-field="body" placeholder="Texte complet du point…">' + escapeHtml(point.body) + '</textarea>' +
+      '</div>' +
+      '<label class="table-toggle">' +
+        '<input type="checkbox" data-field="hasTable" ' + (point.table ? 'checked' : '') + '>' +
+        'Ce point contient un tableau' +
+      '</label>' +
+      '<div class="table-grid-editor field" data-table-editor style="display:' + (point.table ? 'flex' : 'none') + ';">' +
+        '<label>Tableau (une ligne par ligne du tableau, colonnes séparées par « | »)</label>' +
+        '<textarea data-field="tableRaw" placeholder="Colonne A | Colonne B\nValeur 1 | Valeur 2">' + (point.table ? tableToRaw(point.table) : '') + '</textarea>' +
+      '</div>';
+
+    box.querySelector('[data-remove]').addEventListener('click', function(){
+      state.points.splice(index, 1);
+      renderPointsEditor();
+    });
+    box.querySelector('[data-field="label"]').addEventListener('input', function(e){
+      point.label = e.target.value; updatePreview();
+    });
+    box.querySelector('[data-field="body"]').addEventListener('input', function(e){
+      point.body = e.target.value; updatePreview();
+    });
+    var tableToggle = box.querySelector('[data-field="hasTable"]');
+    var tableEditorEl = box.querySelector('[data-table-editor]');
+    tableToggle.addEventListener('change', function(e){
+      tableEditorEl.style.display = e.target.checked ? 'flex' : 'none';
+      if (!e.target.checked) point.table = null;
+    });
+    box.querySelector('[data-field="tableRaw"]').addEventListener('input', function(e){
+      point.table = rawToTable(e.target.value);
+    });
+
+    wrap.appendChild(box);
+  });
+
+  updatePreview();
+}
+
+function tableToRaw(table){
+  var lines = [table.headers.join(' | ')];
+  table.rows.forEach(function(row){ lines.push(row.join(' | ')); });
+  return lines.join('\n');
+}
+function rawToTable(raw){
+  var lines = raw.split('\n').map(function(l){ return l.trim(); }).filter(Boolean);
+  if (lines.length === 0) return null;
+  var headers = lines[0].split('|').map(function(c){ return c.trim(); });
+  var rows = lines.slice(1).map(function(l){ return l.split('|').map(function(c){ return c.trim(); }); });
+  return { headers: headers, rows: rows };
+}
+
+/* ---- Aperçu carrousel : même logique visuelle que renderCarousel() côté étudiant ---- */
+function closePreviewPopup(){
+  var popup = document.getElementById('previewPopup');
+  var backdrop = document.getElementById('previewBackdrop');
+  if(popup) popup.classList.remove('is-shown');
+  if(backdrop) backdrop.classList.remove('active');
+  document.querySelectorAll('#previewWrap .preview-item.is-open').forEach(function(n){ n.classList.remove('is-open'); });
+}
+
+function openPreviewPopup(point){
+  var popup = document.getElementById('previewPopup');
+  var backdrop = document.getElementById('previewBackdrop');
+  var titleEl = document.getElementById('previewPopupTitle');
+  var contentEl = document.getElementById('previewPopupContent');
+  if(titleEl) titleEl.textContent = point.label || 'Sans titre';
+  if(contentEl){
+    contentEl.innerHTML = '<p>' + escapeHtml(point.body || '') + '</p>' + (point.table ? renderTablePreview(point.table) : '');
+  }
+  if(popup) popup.classList.add('is-shown');
+  if(backdrop) backdrop.classList.add('active');
+}
+
+function updatePreview(){
+  var wrap = document.getElementById('previewWrap');
+  wrap.querySelectorAll('.preview-item').forEach(function(el){ el.remove(); });
+
+  var circle = document.getElementById('previewCircle');
+  var title = document.getElementById('lessonChapterTitle').value.trim();
+  circle.textContent = title || 'Titre du chapitre';
+
+  if (state.points.length === 0) return;
+
+  // Positionnement en pourcentage (calc(50% + Xpx)) plutôt qu'en pixels mesurés sur le
+  // conteneur : ça évite que les boutons partent très loin du cercle quand l'aperçu est
+  // calculé pendant que le panneau est encore cachée ou en cours de redimensionnement.
+  var radius = 130;
+  var total = state.points.length;
+
+  state.points.forEach(function(point, index){
+    var angle = (index / total) * 2 * Math.PI - Math.PI / 2;
+    var x = radius * Math.cos(angle);
+    var y = radius * Math.sin(angle);
+
+    var item = document.createElement('div');
+    item.className = 'preview-item';
+    item.style.left = 'calc(50% + ' + x.toFixed(1) + 'px)';
+    item.style.top = 'calc(50% + ' + y.toFixed(1) + 'px)';
+
+    var btn = document.createElement('button');
+    btn.type = 'button';
+    btn.className = 'preview-plus';
+    btn.textContent = '+';
+    btn.setAttribute('aria-label', 'Afficher : ' + (point.label || 'Point ' + (index + 1)));
+
+    var label = document.createElement('div');
+    label.className = 'preview-label';
+    label.textContent = point.label || ('Point ' + (index + 1));
+
+    btn.addEventListener('click', function(){
+      document.querySelectorAll('#previewWrap .preview-item.is-open').forEach(function(n){ n.classList.remove('is-open'); });
+      item.classList.add('is-open', 'is-seen');
+      openPreviewPopup(point);
+    });
+
+    item.appendChild(btn);
+    item.appendChild(label);
+    wrap.appendChild(item);
+  });
+}
+
+document.getElementById('previewPopupClose').addEventListener('click', closePreviewPopup);
+document.getElementById('previewBackdrop').addEventListener('click', closePreviewPopup);
+
+
+function renderTablePreview(table){
+  var html = '<table style="width:100%; border-collapse:collapse; margin-top:8px; font-size:0.78rem;"><thead><tr>';
+  table.headers.forEach(function(h){ html += '<th style="border:1px solid var(--line); padding:4px 6px; text-align:left;">' + escapeHtml(h) + '</th>'; });
+  html += '</tr></thead><tbody>';
+  table.rows.forEach(function(row){
+    html += '<tr>';
+    row.forEach(function(cell){ html += '<td style="border:1px solid var(--line); padding:4px 6px;">' + escapeHtml(cell) + '</td>'; });
+    html += '</tr>';
+  });
+  html += '</tbody></table>';
+  return html;
+}
+
+document.getElementById('lessonChapterTitle').addEventListener('input', updatePreview);
+
+/* =====================================================================
+   UPLOAD VIDÉO — Supabase Storage, bucket privé "course-videos"
+   Chemin : {course_id}/{lesson_id ou temp}.mp4 — cohérent avec les policies RLS du bucket
+   ===================================================================== */
+var pendingVideoPath = null;
+
+document.getElementById('videoInput').addEventListener('change', async function(e){
+  var file = e.target.files[0];
+  if (!file || !state.currentCourse) return;
+
+  var progressWrap = document.getElementById('uploadProgress');
+  var progressBar = document.getElementById('uploadProgressBar');
+  var status = document.getElementById('uploadStatus');
+  progressWrap.style.display = 'block';
+  progressBar.style.width = '10%';
+  status.textContent = 'Envoi en cours…';
+
+  var lessonKey = state.currentLesson ? state.currentLesson.id : uid('draft');
+  var path = state.currentCourse.id + '/' + lessonKey + '.mp4';
+
+  try{
+    var res = await supabaseClient.storage.from(STORAGE_BUCKET).upload(path, file, { upsert: true });
+    if (res.error) throw res.error;
+    progressBar.style.width = '100%';
+    pendingVideoPath = path;
+    status.textContent = 'Vidéo envoyée : ' + path;
+    toast('Vidéo téléversée avec succès.');
+  } catch (err){
+    console.error(err);
+    status.textContent = 'Échec de l\'envoi : ' + err.message;
+    toast('Échec de l\'envoi de la vidéo.', true);
+  }
+});
+
+/* =====================================================================
+   ENREGISTREMENT DE LA LEÇON
+   ===================================================================== */
+document.getElementById('btnSaveLesson').addEventListener('click', async function(){
+  var chapterTitle = document.getElementById('lessonChapterTitle').value.trim();
+  if (!chapterTitle){ toast('Le titre du chapitre est requis.', true); return; }
+  if (state.points.some(function(p){ return !p.label.trim(); })){
+    toast('Chaque point doit avoir un libellé.', true); return;
+  }
+
+  var payload = {
+    course_id: state.currentCourse.id,
+    chapter_title: chapterTitle,
+    content: { points: state.points },
+    position: state.currentLesson ? state.currentLesson.position : (state.lessons.length + 1)
+  };
+  if (pendingVideoPath) payload.video_path = pendingVideoPath;
+
+  var btn = document.getElementById('btnSaveLesson');
+  btn.disabled = true;
+
+  try{
+    var res;
+    if (state.currentLesson){
+      res = await supabaseClient.from('lessons').update(payload).eq('id', state.currentLesson.id).select().single();
+    } else {
+      res = await supabaseClient.from('lessons').insert(payload).select().single();
+    }
+    if (res.error) throw res.error;
+
+    toast('Leçon enregistrée.');
+    pendingVideoPath = null;
+    await loadLessons(state.currentCourse.id);
+    showView('viewNewCourse');
+  } catch (err){
+    console.error(err);
+    toast('Erreur lors de l\'enregistrement de la leçon : ' + err.message, true);
+  } finally {
+    btn.disabled = false;
+  }
+});
+
+window.addEventListener('resize', updatePreview);
+
+/* =====================================================================
+   DÉMARRAGE
+   ===================================================================== */
+initGate();
+</script>
+</body>
+</html>
