@@ -531,6 +531,9 @@
     display:inline-flex; align-items:center;
   }
   .btn-ghost:hover{border-color:var(--navy);}
+  .course-more-cta{display:flex; justify-content:center; margin-top:28px; grid-column:1 / -1;}
+  .course-more-cta .btn-ghost{background:var(--blue); color:#fff; border-color:var(--blue);}
+  .course-more-cta .btn-ghost:hover{background:var(--blue-deep); border-color:var(--blue-deep);}
 
   .seal-wrap{position:relative; display:flex; align-items:center; justify-content:center;}
   .seal-wrap svg{width:100%; max-width:380px;}
@@ -792,7 +795,7 @@
 
   .card{
     background:var(--panel); border-radius:14px; padding:24px;
-    border:1px solid var(--line); box-shadow:var(--shadow); display:flex; flex-direction:column; gap:14px; height:100%;
+    border:1px solid var(--line); box-shadow:var(--shadow); display:flex; flex-direction:column; gap:8px; height:100%;
     transition:transform .15s ease, box-shadow .15s ease;
   }
   .card:hover{transform:translateY(-3px); box-shadow:0 16px 30px -20px rgba(0,0,0,0.3);}
@@ -806,7 +809,7 @@
   
   .card-rating{
     display:flex; align-items:center; gap:6px;
-    margin-bottom:8px; font-size:0.85rem;
+    margin-bottom:2px; font-size:0.85rem;
 }
 .card-stars{
     color:#FBBF24; /* jaune/or */
@@ -819,7 +822,7 @@
     display:flex; align-items:center; gap:6px;
     font-size:0.82rem; color:var(--ink-soft);
     font-family:'IBM Plex Mono', monospace;
-    margin-bottom:8px;
+    margin-bottom:2px;
 }
 .card-duration svg{width:14px; height:14px; flex-shrink:0;}
 
@@ -848,9 +851,9 @@
   .btn-enroll:disabled{background:var(--lock-grey); cursor:not-allowed;}
 
   /* ---------- COURSE PROGRESS ---------- */
-  .progress-track{height:6px; background:var(--bg-alt); border:1px solid var(--line); border-radius:999px; overflow:hidden; margin-top:2px;}
+  .progress-track{height:6px; background:var(--bg-alt); border:1px solid var(--line); border-radius:999px; overflow:hidden; margin-top:0;}
   .progress-fill{height:100%; width:0%; background:linear-gradient(90deg, var(--teal), var(--gold)); border-radius:999px; transition:width .35s ease;}
-  .progress-label{display:flex; justify-content:space-between; align-items:baseline; margin-top:6px; font-family:'IBM Plex Mono', monospace; font-size:0.72rem; color:var(--ink-soft);}
+  .progress-label{display:flex; justify-content:space-between; align-items:baseline; margin-top:2px; font-family:'IBM Plex Mono', monospace; font-size:0.72rem; color:var(--ink-soft);}
   .progress-label .ppct{font-weight:600; color:var(--teal);}
   .lesson-toggle{margin-top:2px;}
   .lesson-toggle summary{
@@ -867,6 +870,12 @@
   .lesson-list input[type="checkbox"]:disabled{cursor:not-allowed; accent-color:var(--lock-grey);}
   .lesson-list li:has(input:disabled) label{color:var(--lock-grey); cursor:not-allowed;}
   .lesson-list li .lesson-lock{margin-left:auto; flex-shrink:0; width:14px; height:14px; color:var(--lock-grey);}
+  .lesson-list li.lesson-extra{display:none;}
+  .lesson-list.is-open li.lesson-extra{display:flex;}
+  .lesson-more-btn{display:flex; align-items:center; gap:8px; width:100%; margin:8px 0 0; padding:8px 10px; background:none; border:1px dashed var(--line); border-radius:4px; cursor:pointer; font-family:inherit; font-size:0.8rem; color:var(--ink-soft); text-align:left; transition:background .15s, border-color .15s;}
+  .lesson-more-btn:hover{background:var(--bg-alt); border-color:var(--teal);}
+  .lesson-more-icon{display:inline-flex; align-items:center; justify-content:center; width:18px; height:18px; border-radius:50%; background:var(--teal); color:#fff; font-size:0.85rem; line-height:1; flex-shrink:0; transition:transform .2s ease;}
+  .lesson-more-btn[aria-expanded="true"] .lesson-more-icon{transform:rotate(45deg);}
 
   /* ---------- LEÇONS CLIQUABLES (suivi automatique, sans case à cocher manuelle) ---------- */
   .lesson-row{display:flex; align-items:flex-start; gap:9px; font-size:0.85rem; color:var(--ink); line-height:1.35; width:100%; background:none; border:none; padding:0; text-align:left; font-family:inherit; cursor:pointer;}
@@ -1245,7 +1254,8 @@
     cursor:pointer; transition:transform .15s ease, box-shadow .15s ease; font-family:inherit;
   }
   .btn-pay:hover{transform:translateY(-1px);}
-  .btn-moncash{background:var(--gold); color:var(--navy-deep); box-shadow:0 14px 30px -14px rgba(217,164,65,0.65);}
+  .btn-moncash{background:red; color:#fff; box-shadow:0 14px 30px -14px rgba(217,164,65,0.65);}
+  .btn-natcash{background:var(--gold); color:#fff; box-shadow:0 14px 30px -14px rgba(228,3,46,0.55);}
   .btn-unibank{background:#0A2C5C; color:#fff; box-shadow:0 14px 30px -14px rgba(10,44,92,0.55);}
   .pay-logo{flex-shrink:0; display:flex; align-items:center; justify-content:center; border-radius:4px; background:#fff; padding:2px; box-shadow:0 0 0 1px rgba(0,0,0,0.06);}
   .pay-logo img{display:block; border-radius:4px;}
@@ -1257,7 +1267,16 @@
   }
   .pay-account-row{display:flex; align-items:center; justify-content:space-between; gap:12px; font-size:0.85rem;}
   .pay-account-label{color:var(--ink-soft); font-weight:600;}
+  .pay-account-value-wrap{display:flex; align-items:center; gap:6px;}
   .pay-account-value{color:var(--navy); font-weight:700; letter-spacing:.02em;}
+  .copy-btn{
+    display:inline-flex; align-items:center; justify-content:center; flex-shrink:0;
+    width:24px; height:24px; padding:0; border:none; border-radius:4px; background:transparent;
+    color:var(--ink-soft); cursor:pointer; transition:background .15s ease, color .15s ease;
+  }
+  .copy-btn:hover{background:rgba(0,0,0,0.06); color:var(--navy);}
+  .copy-btn.copied{color:#2F6F52;}
+  .copy-btn svg{width:15px; height:15px; display:block;}
 
   /* ---------- HOW IT WORKS ---------- */
   .steps{display:grid; grid-template-columns:repeat(3,1fr); gap:20px; position:relative;}
@@ -1729,7 +1748,7 @@ header .wrap{
       <input type="text" id="siteSearchInput" class="nav-search-input" placeholder="Recherche" autocomplete="off">
     </form>
     <nav class="links" id="navLinks">
-     <a href="a-propos.html" class="nav-formations-link">Qui sommes-nous?</a>
+     <a href="a-propos.html" class="nav-formations-link">A propos</a>
       <div class="nav-dropdown" id="navFormationsLink">
        <a href="#kous" class="nav-formations-link" onclick="event.preventDefault(); event.stopPropagation(); this.closest('.nav-dropdown').classList.toggle('open');">
           Formations
@@ -1737,6 +1756,7 @@ header .wrap{
         </a>
         <div class="nav-dropdown-menu">
           <a href="#formations" class="nav-dropdown-item">Suivi-évaluation</a>
+		  <a href="Cours.html" class="nav-dropdown-item">Excel</a>
         </div>
       </div>
       
@@ -1744,7 +1764,7 @@ header .wrap{
 
         <div class="nav-item" id="serviceNavItem">
           <div class="nav-item-label" id="serviceNavToggle" onclick="event.preventDefault(); event.stopPropagation(); this.closest('#serviceNavItem').classList.toggle('open');">
-            Demander un service
+            Nos services
             <svg class="nav-dropdown-caret" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"></polyline></svg>
           </div>
           <div class="dropdown-panel" id="dropdownPanel">
@@ -1774,6 +1794,7 @@ header .wrap{
             </button>
           </div>
         </div>
+		<a href="Enseignant.html" class="nav-formations-link">Ajouter Cours</a>
 
       <a href="#kontak">Contact</a>
      
@@ -2141,6 +2162,17 @@ header .wrap{
     card.classList.toggle('is-open', !isOpen);
     button.setAttribute('aria-expanded', String(!isOpen));
   });
+
+  // ---- Modules : bouton "Voir plus de leçon..." ----
+  document.addEventListener('click', function(e){
+    var btn = e.target.closest('.lesson-more-btn');
+    if(!btn) return;
+    var list = btn.previousElementSibling;
+    if(!list || !list.classList.contains('lesson-list')) return;
+    var isOpen = list.classList.contains('is-open');
+    list.classList.toggle('is-open', !isOpen);
+    btn.setAttribute('aria-expanded', String(!isOpen));
+  });
 </script>
 
 <section class="courses" id="formations">
@@ -2232,9 +2264,13 @@ header .wrap{
                 <ul class="lesson-list" id="lessonList-m1">
               <li> Qu'est-ce que le Suivi &amp; Évaluation ?</li>
               <li> Différence entre suivi et évaluation</li>
-              <li> Le cycle de vie d'un projet</li>
-              <li> Quiz — Introduction au S&amp;E</li>
+              <li class="lesson-extra"> Le cycle de vie d'un projet</li>
+              <li class="lesson-extra"> Quiz — Introduction au S&amp;E</li>
             </ul>
+            <button type="button" class="lesson-more-btn" aria-expanded="false">
+              <span class="lesson-more-icon">+</span>
+              <span class="lesson-more-label">Voir plus de leçon...</span>
+            </button>
             <div class="lesson-locked" id="lessonLocked-m1">
               <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="5" y="11" width="14" height="9" rx="1.5"/><path d="M8 11V8a4 4 0 0 1 8 0v3"/></svg>
               <p id="lessonLockedMsg-m1">Le contenu détaillé de ce module est réservé aux personnes inscrites. Inscrivez-vous, puis connectez-vous avec le code d'accès reçu après vérification du paiement.</p>
@@ -2295,10 +2331,14 @@ header .wrap{
 			  <ul class="lesson-list" id="lessonList-m2">
               <li> Construire un Cadre Logique (logframe)</li>
               <li> Définir des indicateurs SMART</li>
-              <li> Relier indicateurs et objectifs</li>
-              <li> Étude de cas pratique</li>
-              <li> Quiz — Cadre Logique et Indicateurs</li>
+              <li class="lesson-extra"> Relier indicateurs et objectifs</li>
+              <li class="lesson-extra"> Étude de cas pratique</li>
+              <li class="lesson-extra"> Quiz — Cadre Logique et Indicateurs</li>
             </ul>
+            <button type="button" class="lesson-more-btn" aria-expanded="false">
+              <span class="lesson-more-icon">+</span>
+              <span class="lesson-more-label">Voir plus de leçon...</span>
+            </button>
             <div class="lesson-locked" id="lessonLocked-m2">
               <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="5" y="11" width="14" height="9" rx="1.5"/><path d="M8 11V8a4 4 0 0 1 8 0v3"/></svg>
               <p id="lessonLockedMsg-m2">Le contenu détaillé de ce module est réservé aux personnes inscrites. Inscrivez-vous, puis connectez-vous avec le code d'accès reçu après vérification du paiement.</p>
@@ -2358,11 +2398,15 @@ header .wrap{
                 <ul class="lesson-list" id="lessonList-m3">
               <li> Méthodes de collecte sur le terrain</li>
               <li> Outils numériques gratuits (KoboToolbox, ODK)</li>
-			  <li> Échantillonnage et fiabilité des données</li>
-              <li> Analyse quantitative de base</li>
-              <li> Analyse qualitative de base</li>
-              <li> Quiz — Collecte &amp; Analyse de Données</li>
+			  <li class="lesson-extra"> Échantillonnage et fiabilité des données</li>
+              <li class="lesson-extra"> Analyse quantitative de base</li>
+              <li class="lesson-extra"> Analyse qualitative de base</li>
+              <li class="lesson-extra"> Quiz — Collecte &amp; Analyse de Données</li>
                </ul>
+            <button type="button" class="lesson-more-btn" aria-expanded="false">
+              <span class="lesson-more-icon">+</span>
+              <span class="lesson-more-label">Voir plus de leçon...</span>
+            </button>
             <div class="lesson-locked" id="lessonLocked-m3">
               <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="5" y="11" width="14" height="9" rx="1.5"/><path d="M8 11V8a4 4 0 0 1 8 0v3"/></svg>
               <p id="lessonLockedMsg-m3">Le contenu détaillé de ce module est réservé aux personnes inscrites. Inscrivez-vous, puis connectez-vous avec le code d'accès reçu après vérification du paiement.</p>
@@ -2422,9 +2466,13 @@ header .wrap{
                 <ul class="lesson-list" id="lessonList-m4">
                 <li> Structurer un rapport S&amp;E</li>
                 <li> Présenter les données clés</li>
-                <li> Communiquer l'impact aux bailleurs</li>
-                <li> Quiz — Rapport des Résultats</li>
+                <li class="lesson-extra"> Communiquer l'impact aux bailleurs</li>
+                <li class="lesson-extra"> Quiz — Rapport des Résultats</li>
                 </ul>
+            <button type="button" class="lesson-more-btn" aria-expanded="false">
+              <span class="lesson-more-icon">+</span>
+              <span class="lesson-more-label">Voir plus de leçon...</span>
+            </button>
             <div class="lesson-locked" id="lessonLocked-m4">
               <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="5" y="11" width="14" height="9" rx="1.5"/><path d="M8 11V8a4 4 0 0 1 8 0v3"/></svg>
               <p id="lessonLockedMsg-m4">Le contenu détaillé de ce module est réservé aux personnes inscrites. Inscrivez-vous, puis connectez-vous avec le code d'accès reçu après vérification du paiement.</p>
@@ -2437,6 +2485,10 @@ header .wrap{
             </div>
         </div>
        </div>
+      </div>
+
+      <div class="course-more-cta">
+        <button type="button" class="btn-ghost" onclick="window.location.href='Cours.html'">Voir plus de cours</button>
       </div>
     </div>
   </div>
@@ -2640,6 +2692,13 @@ header .wrap{
           PAYER AVEC MONCASH
         </button>
 
+        <button type="submit" class="btn-pay btn-natcash" onclick="setPaymentMethod('natcash')">
+          <span class="pay-logo">
+            <img src="https://play-lh.googleusercontent.com/VSzs3X7r3DNthDl1jvhmtrAY7p1jX2LeX3i7l9uZsolwVU85CapsmKYPdPzkp4ZQrEKf6nsHmuk9qUbbZWKp2bc=w96-h96" width="26" height="26" alt="Natcash" style="border-radius:6px;">
+          </span>
+          PAYER AVEC NATCASH
+        </button>
+
         <div class="pay-divider">ou</div>
 
         <button type="submit" class="btn-pay btn-unibank" onclick="setPaymentMethod('unibank')">
@@ -2653,15 +2712,34 @@ header .wrap{
       <div class="pay-account-numbers">
         <div class="pay-account-row">
           <span class="pay-account-label">MonCash</span>
-          <span class="pay-account-value mono">48 21 9522</span>
+          <span class="pay-account-value-wrap">
+            <span class="pay-account-value mono" id="acctMoncash">48 21 9522</span>
+            <button type="button" class="copy-btn" onclick="copyAccountNumber('acctMoncash', this)" aria-label="Copier le numéro MonCash" title="Copier">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="12" height="12" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
+            </button>
+          </span>
+        </div>
+        <div class="pay-account-row">
+          <span class="pay-account-label">Natcash</span>
+          <span class="pay-account-value-wrap">
+            <span class="pay-account-value mono" id="acctNatcash">4173 6388</span>
+            <button type="button" class="copy-btn" onclick="copyAccountNumber('acctNatcash', this)" aria-label="Copier le numéro Natcash" title="Copier">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="12" height="12" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
+            </button>
+          </span>
         </div>
         <div class="pay-account-row">
           <span class="pay-account-label">Compte bancaire (UNIBANK)</span>
-          <span class="pay-account-value mono">270-2015-25791574</span>
+          <span class="pay-account-value-wrap">
+            <span class="pay-account-value mono" id="acctUnibank">270-2015-25791574</span>
+            <button type="button" class="copy-btn" onclick="copyAccountNumber('acctUnibank', this)" aria-label="Copier le numéro de compte UNIBANK" title="Copier">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="12" height="12" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
+            </button>
+          </span>
         </div>
       </div>
 
-      <p class="form-note">Après avoir rempli le formulaire, vos informations nous seront envoyées, puis vous serez redirigé vers MonCash ou vers le portail UNIBANKOnline (pour vous connecter à votre compte) selon le bouton choisi.</p>
+      <p class="form-note">Après avoir rempli le formulaire, vos informations nous seront envoyées, puis vous serez redirigé vers MonCash, Natcash ou vers le portail UNIBANKOnline (pour vous connecter à votre compte) selon le bouton choisi.</p>
     </form>
   </div>
 </div>
@@ -3057,7 +3135,7 @@ header .wrap{
           <span>MonCash — <span class="mono">48 21 9522</span></span>
         </div>
 		<div class="foot-pay-row">
-          <img src="https://play-lh.googleusercontent.com/VSzs3X7r3DNthDl1jvhmtrAY7p1jX2LeX3i7l9uZsolwVU85CapsmKYPdPzkp4ZQrEKf6nsHmuk9qUbbZWKp2bc=w480-h960-rw" width="22" height="22" alt="MonCash" style="border-radius:5px; flex-shrink:0;">
+          <img src="https://play-lh.googleusercontent.com/VSzs3X7r3DNthDl1jvhmtrAY7p1jX2LeX3i7l9uZsolwVU85CapsmKYPdPzkp4ZQrEKf6nsHmuk9qUbbZWKp2bc=w480-h960-rw" width="22" height="22" alt="Natcash" style="border-radius:5px; flex-shrink:0;">
           <span>Natcash — <span class="mono">41 73 63 88</span></span>
         </div>
         <div class="foot-pay-row">
@@ -3130,16 +3208,61 @@ header .wrap{
   // ---- Moyens de paiement ----
   var PAY_REDIRECTS = {
     moncash: 'https://play.google.com/store/apps/details?id=com.useboom.htwallet',
+    natcash: 'https://play.google.com/store/apps/details?id=com.natcash',
     unibank: 'https://www.unibankhaiti.com/'
+  };
+  var PAY_LABELS = {
+    moncash: 'MonCash',
+    natcash: 'Natcash',
+    unibank: 'UNIBANK Online'
   };
   var nextField = document.getElementById('nextField');
   var payMethodField = document.getElementById('payMethodField');
 
   function setPaymentMethod(method){
-    payMethodField.value = (method === 'unibank') ? 'UNIBANK Online' : 'MonCash';
+    payMethodField.value = PAY_LABELS[method] || 'MonCash';
     nextField.value = PAY_REDIRECTS[method] || PAY_REDIRECTS.moncash;
     // Le formulaire continue sa soumission normale vers le même email,
     // seule la redirection finale change selon le bouton choisi.
+  }
+
+  // ---- Copier un numéro (MonCash / Natcash / UNIBANK) dans le presse-papiers ----
+  function copyAccountNumber(elId, btn){
+    var el = document.getElementById(elId);
+    if(!el) return;
+    var text = el.textContent.trim();
+    function showCopied(){
+      if(!btn) return;
+      var original = btn.innerHTML;
+      btn.classList.add('copied');
+      btn.innerHTML = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>';
+      setTimeout(function(){
+        btn.innerHTML = original;
+        btn.classList.remove('copied');
+      }, 1500);
+    }
+    if(navigator.clipboard && navigator.clipboard.writeText){
+      navigator.clipboard.writeText(text).then(showCopied, function(){
+        fallbackCopy(text, showCopied);
+      });
+    } else {
+      fallbackCopy(text, showCopied);
+    }
+  }
+
+  function fallbackCopy(text, cb){
+    try{
+      var ta = document.createElement('textarea');
+      ta.value = text;
+      ta.style.position = 'fixed';
+      ta.style.opacity = '0';
+      document.body.appendChild(ta);
+      ta.focus();
+      ta.select();
+      document.execCommand('copy');
+      document.body.removeChild(ta);
+      if(cb) cb();
+    }catch(e){}
   }
 
   // ---- Progression des cours (sauvegardée dans ce navigateur) ----
@@ -5889,6 +6012,7 @@ header .wrap{
     var items = getModuleItems(mod);
     ul.innerHTML = '';
     var modPaid = isModuleUnlocked(mod);
+    var renderedCount = 0;
     items.forEach(function(item, idx){
       // Une vidéo dont le titre reprend celui de la leçon précédente est fusionnée
       // dans la ligne de cette leçon (voir plus bas) : elle n'a pas sa propre ligne
@@ -5909,6 +6033,8 @@ header .wrap{
       var done = isLessonDone(mod, completionIdx);
       var unlocked = modPaid && ((idx === 0) || isLessonDone(mod, idx - 1));
       var li = document.createElement('li');
+      if(renderedCount >= 2){ li.className = 'lesson-extra'; }
+      renderedCount++;
       var btn = document.createElement('button');
       btn.type = 'button';
       btn.className = 'lesson-row' + (done ? ' done' : '') + (isVideo ? ' lesson-video' : '');
