@@ -298,22 +298,9 @@
 
   <section class="card">
     <h3>Confirmer un paiement</h3>
-    <div class="card-sub">Passe une inscription de "en attente" à "confirmée" après vérification du paiement (MonCash/UNIBANK).</div>
-    <div class="reset-form">
-      <div class="field">
-        <label for="confirmEnrollEmail">Email de l'étudiant</label>
-        <input type="email" id="confirmEnrollEmail" placeholder="etudiant@exemple.com">
-      </div>
-      <div class="field">
-        <label for="confirmEnrollModule">Module</label>
-        <select id="confirmEnrollModule">
-          <option value="m1">Module 01</option>
-          <option value="m2">Module 02</option>
-          <option value="m3">Module 03</option>
-          <option value="m4">Module 04</option>
-        </select>
-      </div>
-      <button id="confirmEnrollBtn" type="button">Confirmer</button>
+    <div class="card-sub">Inscriptions en attente de confirmation — cliquez sur "Confirmer" après vérification du paiement (MonCash/UNIBANK).</div>
+    <div id="pendingEnrollList" style="margin-top:16px;">
+      <p style="color:var(--ink-soft);font-size:0.9rem;">Chargement…</p>
     </div>
     <div id="confirmEnrollStatus"></div>
   </section>
@@ -692,6 +679,7 @@
     loadDashboardData();
     loadCourses();
     loadPayouts();
+    loadPendingEnrollments();
   }
 
   document.getElementById('refreshBtn').addEventListener('click', loadAll);
@@ -747,12 +735,93 @@
     }
   });
 
-  document.getElementById('confirmEnrollBtn').addEventListener('click', async function(){
-    var btn = this;
-    var emailInput = document.getElementById('confirmEnrollEmail');
-    var moduleSelect = document.getElementById('confirmEnrollModule');
-    var email = emailInput.value.trim();
-    var moduleId = moduleSelect.value;
+  // ---- Chargement et affichage des inscriptions en attente ----
+  async function loadPendingEnrollments(){
+    var listEl = document.getElementById('pendingEnrollList');
+    var statusBox = document.getElementById('confirmEnrollStatus');
+    listEl.innerHTML = '<p style="color:var(--ink-soft);font-size:0.9rem;">Chargement…</p>';
+    statusBox.className = '';
+    statusBox.textContent = '';
+
+    try {
+      // Récupère les inscriptions pending avec l'email via auth.users (join profiles si disponible)
+      var res = await supabaseClient
+        .from('enrollments')
+        .select('id, user_id, module_id, module_name, course_id, amount_paid, payment_method, created_at')
+        .eq('status', 'pending')
+        .order('created_at', { ascending: false });
+
+      if(res.error) throw res.error;
+
+      var rows = res.data || [];
+      if(rows.length === 0){
+        listEl.innerHTML = '<p style="color:var(--ink-soft);font-size:0.9rem;">✓ Aucune inscription en attente pour le moment.</p>';
+        return;
+      }
+
+      // Récupère les emails depuis la table profiles (colonne email si elle existe, sinon user_id court)
+      var userIds = [...new Set(rows.map(function(r){ return r.user_id; }))];
+      var emailMap = {};
+      try {
+        var profRes = await supabaseClient
+          .from('profiles')
+          .select('id, email')
+          .in('id', userIds);
+        if(!profRes.error && profRes.data){
+          profRes.data.forEach(function(p){ if(p.email) emailMap[p.id] = p.email; });
+        }
+      } catch(e){ /* profiles sans email — on affichera l'id court */ }
+
+      var tableHTML = '<table style="width:100%;border-collapse:collapse;font-size:0.88rem;">' +
+        '<thead><tr style="background:var(--surface-alt,#f5f5f5);text-align:left;">' +
+        '<th style="padding:8px 10px;">Date</th>' +
+        '<th style="padding:8px 10px;">Étudiant</th>' +
+        '<th style="padding:8px 10px;">Formation</th>' +
+        '<th style="padding:8px 10px;">Montant</th>' +
+        '<th style="padding:8px 10px;">Paiement</th>' +
+        '<th style="padding:8px 10px;"></th>' +
+        '</tr></thead><tbody>';
+
+      rows.forEach(function(r){
+        var dateStr = r.created_at ? new Date(r.created_at).toLocaleDateString('fr-FR') : '—';
+        var email = emailMap[r.user_id] || ('id:' + r.user_id.slice(0,8) + '…');
+        var formation = r.module_name || r.module_id || '—';
+        var montant = r.amount_paid ? r.amount_paid + ' HTG' : '—';
+        var paiement = r.payment_method || '—';
+
+        tableHTML += '<tr style="border-bottom:1px solid var(--line,#eee);">' +
+          '<td style="padding:8px 10px;">' + dateStr + '</td>' +
+          '<td style="padding:8px 10px;">' + email + '</td>' +
+          '<td style="padding:8px 10px;">' + formation + '</td>' +
+          '<td style="padding:8px 10px;">' + montant + '</td>' +
+          '<td style="padding:8px 10px;">' + paiement + '</td>' +
+          '<td style="padding:8px 10px;">' +
+            '<button type="button" ' +
+              'data-id="' + r.id + '" ' +
+              'data-email="' + email + '" ' +
+              'data-formation="' + formation + '" ' +
+              'style="background:var(--teal,#1E7A34);color:#fff;border:none;padding:6px 14px;border-radius:5px;cursor:pointer;font-size:0.82rem;font-weight:600;" ' +
+              'onclick="confirmSingleEnrollment(this)">' +
+              'Confirmer' +
+            '</button>' +
+          '</td>' +
+        '</tr>';
+      });
+
+      tableHTML += '</tbody></table>';
+      listEl.innerHTML = tableHTML;
+
+    } catch(err){
+      console.error(err);
+      listEl.innerHTML = '<p style="color:var(--red,#c0392b);font-size:0.9rem;">Erreur de chargement : ' + (err.message || err) + '</p>';
+    }
+  }
+
+  // Confirmation d'une inscription individuelle par son ID
+  window.confirmSingleEnrollment = async function(btn){
+    var enrollmentId = btn.getAttribute('data-id');
+    var email = btn.getAttribute('data-email');
+    var formation = btn.getAttribute('data-formation');
     var statusBox = document.getElementById('confirmEnrollStatus');
 
     function showConfirmStatus(msg, isError){
@@ -760,39 +829,30 @@
       statusBox.className = 'show ' + (isError ? 'error' : 'success');
     }
 
-    if(!email){
-      showConfirmStatus('Merci de saisir l\'email de l\'étudiant.', true);
-      return;
-    }
-
     btn.disabled = true;
-    var originalLabel = btn.textContent;
-    btn.textContent = 'Confirmation…';
+    btn.textContent = '…';
 
     try {
-      var res = await supabaseClient.rpc('admin_confirm_enrollment', {
-        p_email: email,
-        p_module_id: moduleId
-      });
+      // Mise à jour directe par ID (fonctionne pour les deux types : module_id et course_id)
+      var res = await supabaseClient
+        .from('enrollments')
+        .update({ status: 'confirmed' })
+        .eq('id', enrollmentId)
+        .eq('status', 'pending');
+
       if(res.error) throw res.error;
 
-      var count = res.data || 0;
-      if(count === 0){
-        showConfirmStatus('Aucune inscription en attente trouvée pour cet email / ce module.', true);
-      } else {
-        var moduleLabel = moduleSelect.options[moduleSelect.selectedIndex].textContent;
-        showConfirmStatus('✓ Paiement confirmé — ' + email + ' a maintenant accès à ' + moduleLabel + '.', false);
-        emailInput.value = '';
-        loadDashboardData();
-      }
+      showConfirmStatus('✓ Paiement confirmé — ' + email + ' a maintenant accès à ' + formation + '.', false);
+      loadDashboardData();
+      loadPendingEnrollments();
+
     } catch(err){
       console.error(err);
       showConfirmStatus('Erreur : ' + (err.message || err), true);
-    } finally {
       btn.disabled = false;
-      btn.textContent = originalLabel;
+      btn.textContent = 'Confirmer';
     }
-  });
+  };
 
   (async function init(){
     var ok = await checkAdminAccess();
