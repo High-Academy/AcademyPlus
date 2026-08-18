@@ -725,7 +725,7 @@
   .cert-actions a, .cert-actions button{text-decoration:none;}
   .cert-note-small{font-size:0.78rem; color:var(--ink-soft); margin-top:10px;}
 
-  .course-grid{display:grid; grid-template-columns:repeat(2,1fr); gap:18px;}
+  .course-grid{display:grid; grid-template-columns:repeat(2, minmax(0, 0.5fr)); gap:18px;}
   @media(max-width:760px){ .course-grid{grid-template-columns:1fr;} }
 
   #card-m3 .module3-layout{
@@ -2614,6 +2614,7 @@ header .wrap{
     var dashSection = document.getElementById('dashboard');
     if(dashSection){ dashSection.classList.toggle('active', logged); }
 
+    loadPublishedCourses();
     updateDashboard();
   }
 
@@ -2968,12 +2969,19 @@ header .wrap{
     return div.innerHTML;
   }
 
-  function courseCardHtml(course, index){
+  function courseCardHtml(course, index, ownershipMap){
     var price = course.price ? (course.price + ' HTG') : 'Gratuit';
     var num = String(index + 1).padStart(2, '0');
     var titleAttr = escapeHtml(course.title || '').replace(/'/g, "\\'");
     var priceAttr = (course.price ? (course.price + ' HTG') : '').replace(/'/g, "\\'");
     var idAttr = escapeHtml(String(course.id || '')).replace(/'/g, "\\'");
+    var courseId = String(course.id || '');
+    var isOwned = !!(ownershipMap && ownershipMap[courseId]);
+
+    var actionHtml = isOwned
+      ? '<button type="button" class="btn-enroll btn-enroll-owned" disabled aria-disabled="true"><span class="owned-check"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></span>Cours Acheté</button>'
+      : '<button type="button" class="btn-enroll" onclick="openEnskriModal(\'' + titleAttr + '\', \'' + priceAttr + '\', \'' + idAttr + '\')">Acheter le cours</button>';
+
     return (
       '<div class="card">' +
         '<div class="card-top">' +
@@ -2983,7 +2991,7 @@ header .wrap{
         '<p>' + escapeHtml(course.description || '') + '</p>' +
         '<div class="card-foot">' +
           '<div class="price">' + price + '</div>' +
-          '<button type="button" class="btn-enroll" onclick="openEnskriModal(\'' + titleAttr + '\', \'' + priceAttr + '\', \'' + idAttr + '\')">Acheter le cours</button>' +
+          actionHtml +
         '</div>' +
       '</div>'
     );
@@ -3002,26 +3010,44 @@ header .wrap{
         .eq('status', 'published')
         .order('created_at', { ascending: false });
 
-      loadingEl.style.display = 'none';
-
+      if(loadingEl){ loadingEl.style.display = 'none'; }
       if(res.error){ throw res.error; }
 
       var courses = res.data || [];
+      var ownershipMap = {};
+
+      if(isLoggedIn() && currentSession && currentSession.user && currentSession.user.id){
+        var enrollRes = await supabaseClient
+          .from('enrollments')
+          .select('course_id, status')
+          .eq('user_id', currentSession.user.id);
+
+        if(!enrollRes.error && enrollRes.data){
+          enrollRes.data.forEach(function(row){
+            if(row && row.course_id && row.status === 'confirmed'){
+              ownershipMap[String(row.course_id)] = true;
+            }
+          });
+        }
+      }
+
+      if(grid){ grid.innerHTML = ''; }
+
       if(courses.length === 0){
-        emptyEl.style.display = 'block';
+        if(emptyEl){ emptyEl.style.display = 'block'; }
         return;
       }
 
       var html = '';
       courses.forEach(function(course, index){
-        html += courseCardHtml(course, index);
+        html += courseCardHtml(course, index, ownershipMap);
       });
-      grid.insertAdjacentHTML('beforeend', html);
+      if(grid){ grid.insertAdjacentHTML('beforeend', html); }
 
     } catch(err){
       console.error('Erreur de chargement des cours publies :', err);
-      loadingEl.style.display = 'none';
-      errorEl.style.display = 'block';
+      if(loadingEl){ loadingEl.style.display = 'none'; }
+      if(errorEl){ errorEl.style.display = 'block'; }
     }
   }
 
