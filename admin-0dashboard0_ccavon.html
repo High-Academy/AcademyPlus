@@ -135,6 +135,15 @@
   .course-actions button.act-archive:hover{background:#F0F0F0;}
   .courses-empty-hint{font-size:0.85rem; color:var(--ink-soft); margin-top:10px; display:none;}
   .courses-empty-hint.show{display:block;}
+
+  /* Paiements enseignants */
+  .payouts-table-wrap{overflow-x:auto;}
+  .payouts-table-wrap table{min-width:720px;}
+  .payouts-table-wrap td.num, .payouts-table-wrap th.num{text-align:right;}
+  .payouts-table-wrap td.num{font-family:'IBM Plex Mono',monospace;}
+  .payouts-table-wrap tfoot td{font-weight:700; border-top:1.5px solid var(--line); border-bottom:none;}
+  .payouts-empty-hint{font-size:0.85rem; color:var(--ink-soft); margin-top:10px; display:none;}
+  .payouts-empty-hint.show{display:block;}
 </style>
 </head>
 <body>
@@ -234,6 +243,33 @@
       </table>
     </div>
     <p class="courses-empty-hint" id="coursesEmptyHint">Aucun cours pour le moment.</p>
+  </section>
+
+  <section class="card">
+    <h3>Paiements enseignants</h3>
+    <div class="card-sub">Ventes confirmées, revenu et part à reverser par cours (calculé automatiquement).</div>
+    <div class="payouts-table-wrap">
+      <table>
+        <thead>
+          <tr>
+            <th>Cours</th><th>Enseignant</th>
+            <th class="num">Ventes conf.</th><th class="num">Revenu total</th>
+            <th class="num">À reverser</th><th class="num">Commission NOVACC</th>
+          </tr>
+        </thead>
+        <tbody id="payoutsTableBody"><tr><td colspan="6">Chargement…</td></tr></tbody>
+        <tfoot>
+          <tr>
+            <td colspan="2">Total</td>
+            <td class="num" id="payoutsTotalVentes">—</td>
+            <td class="num" id="payoutsTotalRevenu">—</td>
+            <td class="num" id="payoutsTotalReverser">—</td>
+            <td class="num" id="payoutsTotalCommission">—</td>
+          </tr>
+        </tfoot>
+      </table>
+    </div>
+    <p class="payouts-empty-hint" id="payoutsEmptyHint">Aucun paiement à afficher pour le moment.</p>
   </section>
 
   <section class="card">
@@ -593,9 +629,69 @@
     }
   });
 
+  function formatHTG(n){
+    n = Number(n) || 0;
+    return n.toLocaleString('fr-FR', { minimumFractionDigits: 0, maximumFractionDigits: 2 }) + ' HTG';
+  }
+
+  function renderPayouts(rows){
+    var tbody = document.getElementById('payoutsTableBody');
+    var hint = document.getElementById('payoutsEmptyHint');
+
+    if(!rows || rows.length === 0){
+      tbody.innerHTML = '<tr><td colspan="6">Aucune donnée.</td></tr>';
+      hint.classList.add('show');
+      ['payoutsTotalVentes','payoutsTotalRevenu','payoutsTotalReverser','payoutsTotalCommission'].forEach(function(id){
+        document.getElementById(id).textContent = '—';
+      });
+      return;
+    }
+    hint.classList.remove('show');
+
+    var totVentes = 0, totRevenu = 0, totReverser = 0, totCommission = 0;
+
+    tbody.innerHTML = rows.map(function(r){
+      totVentes += Number(r.ventes_confirmees) || 0;
+      totRevenu += Number(r.revenu_total) || 0;
+      totReverser += Number(r.a_reverser_enseignant) || 0;
+      totCommission += Number(r.commission_novacc) || 0;
+
+      return '<tr>' +
+        '<td class="course-title-cell">' + (r.title || '—') + '</td>' +
+        '<td>' + (r.teacher_email || '—') + '</td>' +
+        '<td class="num">' + (r.ventes_confirmees || 0) + '</td>' +
+        '<td class="num">' + formatHTG(r.revenu_total) + '</td>' +
+        '<td class="num">' + formatHTG(r.a_reverser_enseignant) + '</td>' +
+        '<td class="num">' + formatHTG(r.commission_novacc) + '</td>' +
+        '</tr>';
+    }).join('');
+
+    document.getElementById('payoutsTotalVentes').textContent = totVentes;
+    document.getElementById('payoutsTotalRevenu').textContent = formatHTG(totRevenu);
+    document.getElementById('payoutsTotalReverser').textContent = formatHTG(totReverser);
+    document.getElementById('payoutsTotalCommission').textContent = formatHTG(totCommission);
+  }
+
+  async function loadPayouts(){
+    try {
+      // admin_teacher_payouts() : RPC "security definer" (créée côté Supabase) qui vérifie
+      // que l'appelant est admin, puis renvoie la vue teacher_payouts jointe à profiles
+      // pour l'email de l'enseignant. La vue elle-même calcule tout à partir de courses +
+      // enrollments confirmées, donc ces chiffres ne se modifient jamais à la main.
+      var res = await supabaseClient.rpc('admin_teacher_payouts');
+      if(res.error) throw res.error;
+      renderPayouts(res.data || []);
+    } catch(err){
+      console.error(err);
+      document.getElementById('payoutsTableBody').innerHTML =
+        '<tr><td colspan="6">Erreur de chargement : ' + (err.message || err) + '</td></tr>';
+    }
+  }
+
   function loadAll(){
     loadDashboardData();
     loadCourses();
+    loadPayouts();
   }
 
   document.getElementById('refreshBtn').addEventListener('click', loadAll);
