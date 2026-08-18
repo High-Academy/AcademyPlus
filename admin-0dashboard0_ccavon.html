@@ -833,12 +833,10 @@
     btn.textContent = '…';
 
     try {
-      // Mise à jour directe par ID (fonctionne pour les deux types : module_id et course_id)
-      var res = await supabaseClient
-        .from('enrollments')
-        .update({ status: 'confirmed' })
-        .eq('id', enrollmentId)
-        .eq('status', 'pending');
+      // Passe par la RPC "security definer" pour contourner la RLS
+      var res = await supabaseClient.rpc('admin_confirm_enrollment', {
+        p_enrollment_id: enrollmentId
+      });
 
       if(res.error) throw res.error;
 
