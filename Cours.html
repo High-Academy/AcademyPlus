@@ -839,6 +839,18 @@
   .btn-enroll:hover{background:var(--blue-deep);}
   .btn-enroll:disabled{background:var(--lock-grey); cursor:not-allowed;}
 
+  /* ---------- APERÇU DES LEÇONS (liste sous le titre du cours, hors du bouton) ---------- */
+  .lesson-preview-list{list-style:none; margin:2px 0 0; padding:10px 12px; display:flex; flex-direction:column; gap:9px; background:var(--bg-alt); border-radius:4px;}
+  .lesson-preview-list li{display:flex; align-items:flex-start; gap:8px; font-size:0.85rem; color:var(--ink); line-height:1.35;}
+  .lesson-preview-list li::before{content:"▸"; color:var(--gold-deep); font-size:0.7rem; margin-top:3px; flex-shrink:0;}
+  .lesson-preview-list li.lesson-extra{display:none;}
+  .lesson-preview-list.is-open li.lesson-extra{display:flex;}
+  .lesson-preview-hint{color:var(--ink-soft); font-size:0.85rem; margin:2px 0 0;}
+  .lesson-more-btn{display:flex; align-items:center; gap:8px; width:100%; margin:0; padding:8px 10px; background:none; border:1px dashed var(--line); border-radius:4px; cursor:pointer; font-family:inherit; font-size:0.8rem; color:var(--ink-soft); text-align:left; transition:background .15s, border-color .15s;}
+  .lesson-more-btn:hover{background:var(--bg-alt); border-color:var(--teal);}
+  .lesson-more-icon{display:inline-flex; align-items:center; justify-content:center; width:18px; height:18px; border-radius:50%; background:var(--teal); color:#fff; font-size:0.85rem; line-height:1; flex-shrink:0; transition:transform .2s ease;}
+  .lesson-more-btn[aria-expanded="true"] .lesson-more-icon{transform:rotate(45deg);}
+
   /* ---------- COURSE PROGRESS ---------- */
   .progress-track{height:6px; background:var(--bg-alt); border:1px solid var(--line); border-radius:999px; overflow:hidden; margin-top:2px;}
   .progress-fill{height:100%; width:0%; background:linear-gradient(90deg, var(--teal), var(--gold)); border-radius:999px; transition:width .35s ease;}
@@ -1804,8 +1816,13 @@ header .wrap{
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><polygon points="6 3 20 12 6 21 6 3"/></svg>
         </div>
         <div>
-          <div class="dash-card-label">Cours suivis</div>
-          <div class="dash-card-value" id="dashTotalCourses">0</div>
+          <div class="dash-card-label">Reprendre</div>
+          <div class="dash-card-value" id="dashResumeTitle">—</div>
+          <button type="button" class="dash-quick-btn" id="dashResumeBtn" style="display:none;">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><polygon points="5 3 19 12 5 21 5 3"/></svg>
+            Reprendre le cours
+          </button>
+          <div class="dash-quick-empty" id="dashResumeEmpty">Aucune leçon commencée</div>
         </div>
       </div>
 
@@ -1814,8 +1831,8 @@ header .wrap{
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><polyline points="12 7 12 12 15 14"/></svg>
         </div>
         <div>
-          <div class="dash-card-label">En attente de confirmation</div>
-          <div class="dash-card-value" id="dashPendingCount">0</div>
+          <div class="dash-card-label">Temps total d'apprentissage</div>
+          <div class="dash-card-value" id="dashTotalTime">0 min</div>
         </div>
       </div>
 
@@ -1824,8 +1841,8 @@ header .wrap{
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 20V10"/><path d="M18 20V4"/><path d="M6 20v-6"/></svg>
         </div>
         <div>
-          <div class="dash-card-label">Cours confirmés</div>
-          <div class="dash-card-value" id="dashConfirmedCount">0</div>
+          <div class="dash-card-label">Progression moyenne</div>
+          <div class="dash-card-value" id="dashAvgPct">0%</div>
         </div>
       </div>
     </div>
@@ -1845,6 +1862,11 @@ header .wrap{
 
     <form class="signup-form" id="profileForm" style="max-width:none;">
       <div class="profile-form-grid">
+
+        <span class="profile-section-label">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="8" r="4"/><path d="M4 20c1.5-4 5-6 8-6s6.5 2 8 6"/></svg>
+          Identité
+        </span>
 
         <div class="profile-avatar-row">
           <div class="profile-avatar-preview" id="profileAvatarPreview">É</div>
@@ -1867,12 +1889,18 @@ header .wrap{
           <label for="profileRole">Rôle</label>
           <select id="profileRole" style="width:100%; padding:12px 14px; border:1.5px solid var(--line); border-radius:8px; font-family:inherit; font-size:0.95rem; color:var(--ink); background:#fff;">
             <option value="etudiant">Étudiant(e)</option>
-            <option value="professionnel">Professionnel(le)</option>
+            <option value="agent_ong">Agent d'ONG</option>
+            <option value="cadre_etat">Cadre de l'État</option>
+            <option value="gestionnaire_projet">Gestionnaire de projet</option>
             <option value="autre">Autre</option>
           </select>
         </div>
+        <div></div>
 
-        <span class="profile-section-label">Coordonnées</span>
+        <span class="profile-section-label">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="M3 7l9 6 9-6"/></svg>
+          Contact
+        </span>
 
         <div class="form-group">
           <label for="profileEmail">Adresse e-mail</label>
@@ -1882,6 +1910,7 @@ header .wrap{
           <label for="profileTelephone">Numéro de téléphone</label>
           <input type="tel" id="profileTelephone" placeholder="+509 XXXX XXXX" autocomplete="tel">
         </div>
+
         <div class="form-group">
           <label for="profilePays">Pays</label>
           <input type="text" id="profilePays" placeholder="Haïti" autocomplete="country-name">
@@ -1890,15 +1919,21 @@ header .wrap{
           <label for="profileLangue">Langue</label>
           <select id="profileLangue" style="width:100%; padding:12px 14px; border:1.5px solid var(--line); border-radius:8px; font-family:inherit; font-size:0.95rem; color:var(--ink); background:#fff;">
             <option value="fr">Français</option>
-            <option value="ht">Kreyòl</option>
+            <option value="ht">Kreyòl ayisyen</option>
             <option value="en">English</option>
+            <option value="es">Español</option>
           </select>
         </div>
 
-        <span class="profile-section-label">À propos</span>
-        <div class="form-group" style="grid-column:1 / -1;">
-          <label for="profileBio">Courte description ou objectifs d'apprentissage</label>
-          <textarea id="profileBio" class="profile-bio" placeholder="Ex. Chargé de suivi-évaluation dans une ONG, je veux structurer mes indicateurs de projet."></textarea>
+        <span class="profile-section-label">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M12 20h9"/><path d="M16.5 3.5a2.1 2.1 0 0 1 3 3L7 19l-4 1 1-4Z"/></svg>
+          Bio
+        </span>
+        <div class="form-row full" style="grid-column:1/-1;">
+          <div class="form-group" style="width:100%;">
+            <label for="profileBio">Courte description ou objectifs d'apprentissage</label>
+            <textarea id="profileBio" class="profile-bio" placeholder="Ex. Chargé de suivi-évaluation dans une ONG, je veux structurer mes indicateurs de projet."></textarea>
+          </div>
         </div>
       </div>
 
@@ -3061,9 +3096,32 @@ header .wrap{
     return div.innerHTML;
   }
 
-  function courseCardHtml(course, index, ownershipMap){
+  // Nombre de titres de leçons visibles d'emblée sous le titre du cours,
+  // le reste apparaît derrière le bouton "Voir plus de leçon..." (comme sur l'index).
+  var LESSON_PREVIEW_VISIBLE_COUNT = 2;
+
+  function lessonPreviewListHtml(courseId, lessonsByCourse){
+    var lessons = (lessonsByCourse && lessonsByCourse[String(courseId)]) || [];
+
+    if(lessons.length === 0){
+      return '<p class="lesson-preview-hint">Le contenu détaillé de ce cours sera bientôt disponible.</p>';
+    }
+
+    var itemsHtml = '';
+    lessons.forEach(function(lesson, idx){
+      var extraClass = idx >= LESSON_PREVIEW_VISIBLE_COUNT ? ' class="lesson-extra"' : '';
+      itemsHtml += '<li' + extraClass + '>' + escapeHtml(lesson.chapter_title || 'Leçon') + '</li>';
+    });
+
+    var moreBtnHtml = lessons.length > LESSON_PREVIEW_VISIBLE_COUNT
+      ? '<button type="button" class="lesson-more-btn" aria-expanded="false"><span class="lesson-more-icon">+</span><span class="lesson-more-label">Voir plus de leçon...</span></button>'
+      : '';
+
+    return '<ul class="lesson-preview-list">' + itemsHtml + '</ul>' + moreBtnHtml;
+  }
+
+  function courseCardHtml(course, index, ownershipMap, lessonsByCourse){
     var price = course.price ? (course.price + ' HTG') : 'Gratuit';
-    var num = String(index + 1).padStart(2, '0');
     var titleAttr = escapeHtml(course.title || '').replace(/'/g, "\\'");
     var priceAttr = (course.price ? (course.price + ' HTG') : '').replace(/'/g, "\\'");
     var idAttr = escapeHtml(String(course.id || '')).replace(/'/g, "\\'");
@@ -3075,12 +3133,17 @@ header .wrap{
       : '<button type="button" class="btn-enroll" onclick="openEnskriModal(\'' + titleAttr + '\', \'' + priceAttr + '\', \'' + idAttr + '\')">Acheter le cours</button>';
 
     return (
-      '<div class="card">' +
+      '<div class="card" id="card-' + courseId + '">' +
         '<div class="card-top">' +
           '<h3>' + escapeHtml(course.title) + '</h3>' +
-          '<span class="modnum">MODULE ' + num + '</span>' +
+          '<span class="modnum">COURS</span>' +
+        '</div>' +
+        '<div class="card-enrolled" id="enrolledWrap-' + courseId + '">' +
+          '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>' +
+          '<span id="enrolledCount-' + courseId + '" class="enrolled-loading">…</span>' +
         '</div>' +
         '<p>' + escapeHtml(course.description || '') + '</p>' +
+        lessonPreviewListHtml(courseId, lessonsByCourse) +
         '<div class="card-foot">' +
           '<div class="price">' + price + '</div>' +
           actionHtml +
@@ -3089,7 +3152,60 @@ header .wrap{
     );
   }
 
+  // Nombre d'étudiants déjà inscrits (paiement confirmé) par cours — même principe que
+  // loadEnrolledCounts() sur l'index : passe par une fonction Supabase RPC publique qui ne
+  // renvoie que l'agrégat {course_id, enrolled_count}, jamais les lignes individuelles de
+  // "enrollments" (donc utilisable sans policy RLS "SELECT" publique sur la table).
+  // Nécessite côté Supabase une fonction "get_course_enrolled_counts", symétrique de
+  // "get_enrolled_counts" (déjà utilisée sur l'index pour les modules m1-m4) mais groupée
+  // sur enrollments.course_id, par ex. :
+  //   create or replace function get_course_enrolled_counts()
+  //   returns table(course_id uuid, enrolled_count bigint)
+  //   language sql security definer as $$
+  //     select course_id, count(*) from enrollments
+  //     where status = 'confirmed' and course_id is not null
+  //     group by course_id;
+  //   $$;
+  function loadEnrolledCounts(courseIds){
+    supabaseClient
+      .rpc('get_course_enrolled_counts')
+      .then(function(result){
+        var counts = {};
+        if(result && !result.error && result.data){
+          result.data.forEach(function(row){
+            counts[String(row.course_id)] = Number(row.enrolled_count) || 0;
+          });
+        }
+        courseIds.forEach(function(courseId){
+          var el = document.getElementById('enrolledCount-' + courseId);
+          var wrap = document.getElementById('enrolledWrap-' + courseId);
+          if(!el || !wrap){ return; }
+          var n = counts[courseId] || 0;
+          if(n <= 0){
+            wrap.style.display = 'none';
+            return;
+          }
+          el.classList.remove('enrolled-loading');
+          el.textContent = n + (n > 1 ? ' étudiants inscrits' : ' étudiant inscrit');
+        });
+      })
+      .catch(function(){
+        // RPC indisponible/erreur réseau : on masque tous les badges plutôt que de
+        // laisser l'état "…" affiché indéfiniment (même comportement que l'index).
+        courseIds.forEach(function(courseId){
+          var wrap = document.getElementById('enrolledWrap-' + courseId);
+          if(wrap){ wrap.style.display = 'none'; }
+        });
+      });
+  }
+
+  // Jeton de course : seul le dernier appel en date a le droit de dessiner la grille.
+  // Évite les doublons de cartes quand plusieurs appels se chevauchent (ex. l'état de
+  // connexion qui se met à jour juste après le chargement initial de la page).
+  var coursesLoadSeq = 0;
+
   async function loadPublishedCourses(){
+    var mySeq = ++coursesLoadSeq;
     var grid = document.getElementById('coursesGrid');
     var loadingEl = document.getElementById('coursesLoading');
     var emptyEl = document.getElementById('coursesEmpty');
@@ -3102,17 +3218,22 @@ header .wrap{
         .eq('status', 'published')
         .order('created_at', { ascending: false });
 
+      if(mySeq !== coursesLoadSeq){ return; } // un appel plus récent a pris le relais
+
       if(loadingEl){ loadingEl.style.display = 'none'; }
       if(res.error){ throw res.error; }
 
       var courses = res.data || [];
       var ownershipMap = {};
+      var lessonsByCourse = {};
 
       if(isLoggedIn() && currentSession && currentSession.user && currentSession.user.id){
         var enrollRes = await supabaseClient
           .from('enrollments')
           .select('course_id, status')
           .eq('user_id', currentSession.user.id);
+
+        if(mySeq !== coursesLoadSeq){ return; }
 
         if(!enrollRes.error && enrollRes.data){
           enrollRes.data.forEach(function(row){
@@ -3123,6 +3244,8 @@ header .wrap{
         }
       }
 
+      if(emptyEl){ emptyEl.style.display = 'none'; }
+      if(errorEl){ errorEl.style.display = 'none'; }
       if(grid){ grid.innerHTML = ''; }
 
       if(courses.length === 0){
@@ -3130,20 +3253,51 @@ header .wrap{
         return;
       }
 
+      // Titres des leçons de chaque cours (pour l'aperçu affiché sous le titre,
+      // en dehors du bouton "Acheter le cours" / "Continuer le cours").
+      var courseIds = courses.map(function(c){ return c.id; });
+      var lessonsRes = await supabaseClient
+        .from('lessons')
+        .select('course_id, position, chapter_title')
+        .in('course_id', courseIds)
+        .order('position', { ascending: true });
+
+      if(mySeq !== coursesLoadSeq){ return; }
+
+      if(!lessonsRes.error && lessonsRes.data){
+        lessonsRes.data.forEach(function(lesson){
+          var key = String(lesson.course_id);
+          if(!lessonsByCourse[key]){ lessonsByCourse[key] = []; }
+          lessonsByCourse[key].push(lesson);
+        });
+      }
+
       var html = '';
       courses.forEach(function(course, index){
-        html += courseCardHtml(course, index, ownershipMap);
+        html += courseCardHtml(course, index, ownershipMap, lessonsByCourse);
       });
       if(grid){ grid.insertAdjacentHTML('beforeend', html); }
 
+      loadEnrolledCounts(courseIds.map(function(id){ return String(id); }));
+
     } catch(err){
+      if(mySeq !== coursesLoadSeq){ return; }
       console.error('Erreur de chargement des cours publies :', err);
       if(loadingEl){ loadingEl.style.display = 'none'; }
       if(errorEl){ errorEl.style.display = 'block'; }
     }
   }
 
-  loadPublishedCourses();
+  // ---- Aperçu des leçons : bouton "Voir plus de leçon..." (comme sur l'index) ----
+  document.addEventListener('click', function(e){
+    var btn = e.target.closest('.lesson-more-btn');
+    if(!btn) return;
+    var list = btn.previousElementSibling;
+    if(!list || !list.classList.contains('lesson-preview-list')) return;
+    var isOpen = list.classList.contains('is-open');
+    list.classList.toggle('is-open', !isOpen);
+    btn.setAttribute('aria-expanded', String(!isOpen));
+  });
 
   // ================= LEÇONS DES COURS (table "lessons") =================
   // Affiche, pour un cours acheté, la liste de ses leçons puis, au clic sur
@@ -3773,67 +3927,156 @@ header .wrap{
   }
 
   // ================= TABLEAU DE BORD (mes formations, via "enrollments") =================
-  var DASH_STATUS_LABELS = { pending: 'En attente', confirmed: 'Confirmé', cancelled: 'Annulé', refunded: 'Remboursé' };
-  var DASH_STATUS_CLASSES = { pending: 'status-pending', confirmed: 'status-confirmed', cancelled: 'status-cancelled', refunded: 'status-cancelled' };
-
-  function dashCourseRowHtml(row){
-    var label = DASH_STATUS_LABELS[row.status] || row.status || 'En cours';
-    var cls = DASH_STATUS_CLASSES[row.status] || 'status-pending';
-    var priceTxt = (row.amount_paid !== null && row.amount_paid !== undefined && row.amount_paid !== '')
-      ? (row.amount_paid + ' HTG') : '';
-    var dateTxt = row.created_at ? new Date(row.created_at).toLocaleDateString('fr-FR', { day:'numeric', month:'long', year:'numeric' }) : '';
-    var metaParts = [priceTxt, row.payment_method, dateTxt].filter(Boolean);
-    return (
-      '<div class="dash-course-card">' +
-        '<div class="dash-course-top">' +
-          '<span>' + escapeHtml(row.module_name || 'Formation') + '</span>' +
-          '<span class="dash-status-badge ' + cls + '">' + escapeHtml(label) + '</span>' +
-        '</div>' +
-        '<div class="dash-course-meta">' + escapeHtml(metaParts.join(' · ')) + '</div>' +
-      '</div>'
-    );
+  // Convertit un nombre de secondes en texte lisible ("45 min", "2h 10min"),
+  // même logique que le tableau de bord de l'index.
+  function formatLearningDuration(totalSeconds){
+    var totalMin = Math.round((totalSeconds || 0) / 60);
+    if(totalMin < 60){ return totalMin + ' min'; }
+    var h = Math.floor(totalMin / 60);
+    var m = totalMin % 60;
+    return h + 'h' + (m ? (' ' + m + 'min') : '');
   }
 
   async function updateDashboard(){
     var listEl = document.getElementById('dashCourseList');
-    var totalEl = document.getElementById('dashTotalCourses');
-    var pendingEl = document.getElementById('dashPendingCount');
-    var confirmedEl = document.getElementById('dashConfirmedCount');
+    var totalTimeEl = document.getElementById('dashTotalTime');
+    var avgEl = document.getElementById('dashAvgPct');
+    var resumeTitleEl = document.getElementById('dashResumeTitle');
+    var resumeBtnEl = document.getElementById('dashResumeBtn');
+    var resumeEmptyEl = document.getElementById('dashResumeEmpty');
     if(!listEl){ return; }
 
-    if(!isLoggedIn()){
-      listEl.innerHTML = '';
-      if(totalEl){ totalEl.textContent = '0'; }
-      if(pendingEl){ pendingEl.textContent = '0'; }
-      if(confirmedEl){ confirmedEl.textContent = '0'; }
-      return;
+    function resetToEmpty(){
+      if(listEl){ listEl.innerHTML = ''; }
+      if(totalTimeEl){ totalTimeEl.textContent = '0 min'; }
+      if(avgEl){ avgEl.textContent = '0%'; }
+      if(resumeTitleEl){ resumeTitleEl.textContent = '—'; }
+      if(resumeBtnEl){ resumeBtnEl.style.display = 'none'; }
+      if(resumeEmptyEl){ resumeEmptyEl.style.display = 'block'; }
     }
+
+    if(!isLoggedIn()){ resetToEmpty(); return; }
 
     listEl.innerHTML = '<p class="dash-courses-empty">Chargement de vos formations...</p>';
 
     try{
-      var res = await supabaseClient
+      // Seules les formations déjà confirmées (payées) apparaissent au tableau de bord,
+      // comme sur l'index où seuls les modules débloqués y figurent.
+      var enrollRes = await supabaseClient
         .from('enrollments')
-        .select('id, course_id, module_name, status, amount_paid, payment_method, created_at')
+        .select('course_id, status')
         .eq('user_id', currentSession.user.id)
-        .order('created_at', { ascending: false });
+        .eq('status', 'confirmed');
+      if(enrollRes.error){ throw enrollRes.error; }
 
-      if(res.error){ throw res.error; }
+      var courseIds = (enrollRes.data || [])
+        .map(function(r){ return String(r.course_id || ''); })
+        .filter(function(id, i, arr){ return id && arr.indexOf(id) === i; });
 
-      var rows = res.data || [];
-      var pending = rows.filter(function(r){ return r.status === 'pending'; }).length;
-      var confirmed = rows.filter(function(r){ return r.status === 'confirmed'; }).length;
-
-      if(totalEl){ totalEl.textContent = String(rows.length); }
-      if(pendingEl){ pendingEl.textContent = String(pending); }
-      if(confirmedEl){ confirmedEl.textContent = String(confirmed); }
-
-      if(rows.length === 0){
-        listEl.innerHTML = '<p class="dash-courses-empty">Vous n\'êtes inscrit(e) à aucune formation pour le moment. Parcourez le catalogue ci-dessous pour commencer.</p>';
+      if(courseIds.length === 0){
+        resetToEmpty();
+        listEl.innerHTML = '<p class="dash-courses-empty">Vous n\'êtes inscrit(e) à aucune formation confirmée pour le moment. Parcourez le catalogue ci-dessous pour commencer.</p>';
         return;
       }
 
-      listEl.innerHTML = rows.map(dashCourseRowHtml).join('');
+      var coursesRes = await supabaseClient.from('courses').select('id, title').in('id', courseIds);
+      var titleById = {};
+      (coursesRes.data || []).forEach(function(c){ titleById[String(c.id)] = c.title; });
+
+      var lessonsRes = await supabaseClient
+        .from('lessons')
+        .select('id, course_id, position, chapter_title, duration_seconds')
+        .in('course_id', courseIds)
+        .order('position', { ascending: true });
+
+      var lessonsByCourse = {};
+      (lessonsRes.data || []).forEach(function(l){
+        var k = String(l.course_id);
+        if(!lessonsByCourse[k]){ lessonsByCourse[k] = []; }
+        lessonsByCourse[k].push(l);
+      });
+
+      var allLessonIds = (lessonsRes.data || []).map(function(l){ return l.id; });
+      var doneSet = {};
+      if(allLessonIds.length){
+        var compRes = await supabaseClient
+          .from('lesson_completions')
+          .select('lesson_id')
+          .eq('user_id', currentSession.user.id)
+          .in('lesson_id', allLessonIds);
+        (compRes.data || []).forEach(function(row){ doneSet[row.lesson_id] = true; });
+      }
+
+      var totalSeconds = 0;
+      var sumPct = 0;
+      var cardsHtml = '';
+      var resumeCandidate = null; // { courseId, title, idx }
+
+      courseIds.forEach(function(courseId){
+        var lessons = lessonsByCourse[courseId] || [];
+        var total = lessons.length;
+        var done = 0;
+        var firstUnfinishedIdx = -1;
+        lessons.forEach(function(lesson, idx){
+          if(doneSet[lesson.id]){
+            done++;
+            totalSeconds += (lesson.duration_seconds || 0);
+          } else if(firstUnfinishedIdx === -1){
+            firstUnfinishedIdx = idx;
+          }
+        });
+        var pct = total ? Math.round((done / total) * 100) : 0;
+        sumPct += pct;
+        var isDoneAll = total > 0 && done === total;
+        var title = titleById[courseId] || 'Formation';
+
+        if(done > 0 && !resumeCandidate){
+          resumeCandidate = { courseId: courseId, title: title, idx: isDoneAll ? 0 : firstUnfinishedIdx };
+        }
+
+        cardsHtml +=
+          '<div class="dash-course-card">' +
+            '<div class="dash-course-top">' +
+              '<span>' + escapeHtml(title) + '</span>' +
+              '<span class="dash-course-pct' + (pct === 100 ? ' done' : '') + '">' + pct + '%</span>' +
+            '</div>' +
+            '<div class="progress-track"><div class="progress-fill" style="width:' + pct + '%;"></div></div>' +
+            '<button type="button" class="dash-quick-btn dash-course-action' + (isDoneAll ? ' outline' : '') + '" data-course-id="' + escapeHtml(courseId) + '" data-course-title="' + escapeHtml(title) + '">' +
+              (isDoneAll
+                ? '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><polyline points="1 4 1 10 7 10"/><path d="M3.51 15a9 9 0 1 0 2.13-9.36L1 10"/></svg>Revoir le cours'
+                : '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><polygon points="5 3 19 12 5 21 5 3"/></svg>Poursuivre') +
+            '</button>' +
+          '</div>';
+      });
+
+      listEl.innerHTML = cardsHtml;
+      listEl.querySelectorAll('.dash-course-action').forEach(function(btn){
+        btn.addEventListener('click', function(){
+          var cId = btn.getAttribute('data-course-id');
+          var cTitle = btn.getAttribute('data-course-title');
+          closeAccountDrawer();
+          openCourseLessons(cId, cTitle);
+        });
+      });
+
+      if(totalTimeEl){ totalTimeEl.textContent = formatLearningDuration(totalSeconds); }
+      if(avgEl){ avgEl.textContent = (courseIds.length ? Math.round(sumPct / courseIds.length) : 0) + '%'; }
+
+      if(resumeCandidate){
+        if(resumeTitleEl){ resumeTitleEl.textContent = resumeCandidate.title; }
+        if(resumeBtnEl){
+          resumeBtnEl.style.display = '';
+          resumeBtnEl.onclick = function(){
+            closeAccountDrawer();
+            openCourseLessons(resumeCandidate.courseId, resumeCandidate.title);
+          };
+        }
+        if(resumeEmptyEl){ resumeEmptyEl.style.display = 'none'; }
+      } else {
+        if(resumeTitleEl){ resumeTitleEl.textContent = '—'; }
+        if(resumeBtnEl){ resumeBtnEl.style.display = 'none'; }
+        if(resumeEmptyEl){ resumeEmptyEl.style.display = 'block'; }
+      }
     } catch(err){
       console.error('Erreur chargement tableau de bord :', err);
       listEl.innerHTML = '<p class="dash-courses-empty">Impossible de charger vos formations pour le moment.</p>';
