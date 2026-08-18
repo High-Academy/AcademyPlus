@@ -107,6 +107,34 @@
   #confirmEnrollStatus.show{display:block;}
   #confirmEnrollStatus.success{background:#E4F5E9; color:var(--teal);}
   #confirmEnrollStatus.error{background:#FDEAEA; color:var(--red);}
+
+  /* Gestion des cours */
+  .badge.published{background:#E4F5E9; color:var(--teal);}
+  .badge.rejected{background:#FDEAEA; color:var(--red);}
+  .badge.archived{background:#F0F0F0; color:var(--ink-soft);}
+  .courses-table-wrap{overflow-x:auto;}
+  .courses-table-wrap table{min-width:760px;}
+  .course-title-cell{font-weight:600; color:var(--ink);}
+  .course-title-cell small{display:block; font-weight:400; color:var(--ink-soft); font-size:0.78rem; margin-top:2px;}
+  .course-actions{display:flex; gap:6px; flex-wrap:wrap;}
+  .course-actions button{
+    border:1.5px solid var(--line); background:#fff; color:var(--ink);
+    padding:6px 11px; border-radius:6px; font-size:0.78rem; font-weight:600;
+    cursor:pointer; transition:background .15s, border-color .15s, opacity .15s;
+    white-space:nowrap;
+  }
+  .course-actions button:hover{background:#F5F6F8;}
+  .course-actions button:disabled{opacity:0.5; cursor:not-allowed;}
+  .course-actions button.act-publish{border-color:var(--teal); color:var(--teal);}
+  .course-actions button.act-publish:hover{background:#E4F5E9;}
+  .course-actions button.act-reject{border-color:var(--red); color:var(--red);}
+  .course-actions button.act-reject:hover{background:#FDEAEA;}
+  .course-actions button.act-pending{border-color:var(--gold); color:var(--gold);}
+  .course-actions button.act-pending:hover{background:#FDEFDA;}
+  .course-actions button.act-archive{border-color:var(--ink-soft); color:var(--ink-soft);}
+  .course-actions button.act-archive:hover{background:#F0F0F0;}
+  .courses-empty-hint{font-size:0.85rem; color:var(--ink-soft); margin-top:10px; display:none;}
+  .courses-empty-hint.show{display:block;}
 </style>
 </head>
 <body>
@@ -143,6 +171,7 @@
     <div class="kpi"><div class="label">Actifs (7 jours)</div><div class="value mono" id="kpi7d">—</div></div>
     <div class="kpi"><div class="label">Actifs (30 jours)</div><div class="value mono" id="kpi30d">—</div></div>
     <div class="kpi"><div class="label">Inscriptions confirmées</div><div class="value mono" id="kpiConfirmed">—</div><div class="sub" id="kpiPendingSub">—</div></div>
+    <div class="kpi"><div class="label">Cours en attente</div><div class="value mono" id="kpiCoursesPending">—</div><div class="sub" id="kpiCoursesPublishedSub">—</div></div>
   </section>
 
   <section class="grid">
@@ -191,6 +220,22 @@
       <thead><tr><th>Date</th><th>Module</th><th>Mod</th><th>Email</th><th>Paiement</th><th>Statut</th></tr></thead>
       <tbody id="recentTableBody"><tr><td colspan="6">Chargement…</td></tr></tbody>
     </table>
+  </section>
+
+  <section class="card">
+    <h3>Gestion des cours</h3>
+    <div class="card-sub">Cours soumis par les enseignants — publier, mettre en attente, rejeter ou archiver.</div>
+    <div class="courses-table-wrap">
+      <table>
+        <thead>
+          <tr><th>Cours</th><th>Enseignant</th><th>Prix</th><th>Commission</th><th>Statut</th><th>Actions</th></tr>
+        </thead>
+        <tbody id="coursesTableBody"><tr><td colspan="6">Chargement…</td></tr></tbody>
+      </table>
+    </div>
+    <p class="courses-empty-hint" id="coursesEmptyHint">Aucun cours pour le moment.</p>
+  </section>
+
   <section class="card">
     <h3>Réinitialiser un certificat</h3>
     <div class="card-sub">Débloque à nouveau le téléchargement/envoi d'un certificat pour un étudiant précis.</div>
@@ -445,7 +490,115 @@
     }
   }
 
-  document.getElementById('refreshBtn').addEventListener('click', loadDashboardData);
+  // ---- Gestion des cours (soumis par les enseignants) ----
+  var COURSE_STATUS_LABEL = { pending:'En attente', published:'Publié', rejected:'Rejeté', archived:'Archivé' };
+  var COURSE_STATUS_BADGE = { pending:'pending', published:'published', rejected:'rejected', archived:'archived' };
+
+  function formatPrice(v){
+    var n = Number(v);
+    if(isNaN(n)) return v ?? '—';
+    return n.toLocaleString('fr-FR') + ' HTG';
+  }
+
+  function courseActionButtons(course){
+    // On ne propose que les transitions pertinentes par rapport au statut actuel,
+    // pour éviter les clics inutiles (ex: pas de bouton "Publier" sur un cours déjà publié).
+    var btns = [];
+    if(course.status !== 'published'){
+      btns.push('<button type="button" class="act-publish" data-action="published">Publier</button>');
+    }
+    if(course.status !== 'pending'){
+      btns.push('<button type="button" class="act-pending" data-action="pending">Mettre en attente</button>');
+    }
+    if(course.status !== 'rejected'){
+      btns.push('<button type="button" class="act-reject" data-action="rejected">Rejeter</button>');
+    }
+    if(course.status !== 'archived'){
+      btns.push('<button type="button" class="act-archive" data-action="archived">Archiver</button>');
+    }
+    return btns.join('');
+  }
+
+  function renderCourses(courses){
+    var tbody = document.getElementById('coursesTableBody');
+    var emptyHint = document.getElementById('coursesEmptyHint');
+
+    var pendingCount = courses.filter(function(c){ return c.status === 'pending'; }).length;
+    var publishedCount = courses.filter(function(c){ return c.status === 'published'; }).length;
+    document.getElementById('kpiCoursesPending').textContent = pendingCount;
+    document.getElementById('kpiCoursesPublishedSub').textContent = publishedCount + ' publié(s)';
+
+    if(courses.length === 0){
+      tbody.innerHTML = '';
+      emptyHint.classList.add('show');
+      return;
+    }
+    emptyHint.classList.remove('show');
+
+    tbody.innerHTML = courses.map(function(c){
+      var badgeClass = COURSE_STATUS_BADGE[c.status] || 'other';
+      var badgeLabel = COURSE_STATUS_LABEL[c.status] || c.status;
+      var teacherLabel = c.teacher_email || c.created_by || '—';
+      return '<tr data-course-id="' + c.id + '">' +
+        '<td class="course-title-cell">' + (c.title || '—') + '<small>' + (c.slug || '') + '</small></td>' +
+        '<td>' + teacherLabel + '</td>' +
+        '<td>' + formatPrice(c.price) + '</td>' +
+        '<td>' + (c.commission_rate != null ? Math.round(c.commission_rate * 100) + '%' : '—') + '</td>' +
+        '<td><span class="badge ' + badgeClass + '">' + badgeLabel + '</span></td>' +
+        '<td><div class="course-actions">' + courseActionButtons(c) + '</div></td>' +
+        '</tr>';
+    }).join('');
+  }
+
+  async function loadCourses(){
+    try {
+      // admin_list_courses() est une RPC "security definer" à créer côté Supabase (voir notes) :
+      // elle vérifie que l'appelant est admin puis renvoie tous les cours, quel que soit leur
+      // statut, avec l'email de l'enseignant — ce que la RLS de "courses" ne permettrait pas
+      // via un simple select (un enseignant n'y voit que ses propres cours, un visiteur que
+      // les cours publiés).
+      var res = await supabaseClient.rpc('admin_list_courses');
+      if(res.error) throw res.error;
+      renderCourses(res.data || []);
+    } catch(err){
+      console.error(err);
+      document.getElementById('coursesTableBody').innerHTML =
+        '<tr><td colspan="6">Erreur de chargement : ' + (err.message || err) + '</td></tr>';
+    }
+  }
+
+  document.getElementById('coursesTableBody').addEventListener('click', async function(ev){
+    var btn = ev.target.closest('button[data-action]');
+    if(!btn) return;
+    var row = ev.target.closest('tr[data-course-id]');
+    var courseId = row.getAttribute('data-course-id');
+    var newStatus = btn.getAttribute('data-action');
+    var actionsBox = btn.closest('.course-actions');
+    var buttons = actionsBox.querySelectorAll('button');
+    buttons.forEach(function(b){ b.disabled = true; });
+
+    try {
+      // admin_update_course_status(p_course_id, p_status) : autre RPC "security definer" à
+      // créer, sur le même modèle que admin_confirm_enrollment / admin_reset_certificate.
+      var res = await supabaseClient.rpc('admin_update_course_status', {
+        p_course_id: courseId,
+        p_status: newStatus
+      });
+      if(res.error) throw res.error;
+      await loadCourses();
+    } catch(err){
+      console.error(err);
+      alert('Erreur lors du changement de statut : ' + (err.message || err));
+      buttons.forEach(function(b){ b.disabled = false; });
+    }
+  });
+
+  function loadAll(){
+    loadDashboardData();
+    loadCourses();
+  }
+
+  document.getElementById('refreshBtn').addEventListener('click', loadAll);
 
   // Réinitialise le verrou "certificat déjà délivré" pour un étudiant (un module précis,
   // ou tous les modules si aucun n'est sélectionné). Passe par une fonction Postgres
@@ -550,7 +703,7 @@
     if(!ok) return;
     gate.classList.add('hidden');
     dash.classList.remove('hidden');
-    loadDashboardData();
+    loadAll();
   })();
 </script>
 </body>
