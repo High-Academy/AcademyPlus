@@ -1481,6 +1481,14 @@
   .dash-courses-empty{
     font-size:0.88rem; color:var(--ink-soft); font-style:italic; padding:10px 2px; grid-column:1/-1;
   }
+  .dash-course-meta{font-size:0.8rem; color:var(--ink-soft);}
+  .dash-status-badge{
+    font-family:'IBM Plex Mono', monospace; font-size:0.7rem; font-weight:700; padding:3px 10px;
+    border-radius:999px; text-transform:uppercase; letter-spacing:.04em; white-space:nowrap;
+  }
+  .dash-status-badge.status-pending{background:#FCEFDA; color:var(--gold-deep);}
+  .dash-status-badge.status-confirmed{background:#E4F3EC; color:#2F6F52;}
+  .dash-status-badge.status-cancelled{background:#FCEBEA; color:#B3261E;}
 
   /* ================= MODAL PROFIL ================= */
   .profile-form-grid{display:grid; grid-template-columns:1fr 1fr; gap:14px 16px;}
@@ -1720,14 +1728,183 @@ header .wrap{
       <a href="index.html#kontak">Contact</a>
     </nav>
     <div class="nav-right">
-      <a class="btn-login" href="index.html" onclick="return true;">Connexion</a>
-      <a class="btn-nav" href="index.html">S'inscrire</a>
+      <button type="button" class="btn-login" id="loginNavBtn" onclick="openLoginModal()">Connexion</button>
+      <div class="user-chip-wrap" id="userChipWrap" style="position:relative;">
+        <button type="button" class="user-chip" id="userChip" aria-haspopup="true" aria-expanded="false" onclick="openAccountDrawer('dashboard')">
+          <span class="user-chip-avatar" id="userChipAvatar">É</span>
+          <span class="user-chip-name" id="userChipName">Élève</span>
+          <svg class="user-chip-caret" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><polyline points="6 9 12 15 18 9"/></svg>
+        </button>
+        <div class="user-dropdown" id="userDropdown">
+          <div class="user-dropdown-head">
+            <strong id="userDropdownName">Élève</strong>
+            <span id="userDropdownEmail">email@exemple.com</span>
+          </div>
+          <button type="button" onclick="openProfileModal();">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="8" r="4"/><path d="M4 20c1.5-4 5-6 8-6s6.5 2 8 6"/></svg>
+            Mon profil
+          </button>
+        </div>
+      </div>
+      <button type="button" class="btn-nav" id="registerNavBtn" onclick="openRegisterModal()">S'inscrire</button>
       <button class="menu-toggle" id="menuToggle" type="button" aria-label="Ouvrir le menu" aria-expanded="false" aria-controls="navLinks">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
       </button>
     </div>
   </div>
 </header>
+
+<!-- ---------- FENÊTRE COMPTE (Tableau de bord + Mon profil), glisse depuis la droite ---------- -->
+<div class="account-drawer-overlay" id="accountDrawerOverlay" aria-hidden="true">
+  <aside class="account-drawer" id="accountDrawer" role="dialog" aria-modal="true" aria-labelledby="accountDrawerTitle">
+    <div class="account-drawer-head">
+      <div class="account-drawer-user">
+        <span class="account-drawer-avatar" id="drawerAvatar">É</span>
+        <div style="min-width:0;">
+          <strong id="drawerUserName">Élève</strong>
+          <span id="drawerUserEmail">email@exemple.com</span>
+        </div>
+      </div>
+      <button type="button" class="account-drawer-close" onclick="closeAccountDrawer()" aria-label="Fermer">
+        <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><line x1="4" y1="4" x2="20" y2="20"/><line x1="20" y1="4" x2="4" y2="20"/></svg>
+      </button>
+    </div>
+    <div class="account-tabs">
+      <button type="button" class="account-tab active" id="tabBtnDashboard" onclick="switchAccountTab('dashboard')">Tableau de bord</button>
+      <button type="button" class="account-tab" id="tabBtnProfile" onclick="switchAccountTab('profile')">Mon profil</button>
+    </div>
+    <div class="account-tab-panes">
+      <div class="account-tab-pane active" id="paneDashboard"></div>
+      <div class="account-tab-pane" id="paneProfile"></div>
+    </div>
+    <button type="button" class="account-drawer-logout" onclick="logoutUser(); closeAccountDrawer();">
+      <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>
+      Déconnexion
+    </button>
+  </aside>
+</div>
+
+<!-- ---------- TABLEAU DE BORD (déplacé dans #paneDashboard par script) ---------- -->
+<section class="dashboard" id="dashboard">
+  <div class="wrap">
+    <div class="dash-head">
+      <div>
+        <div class="eyebrow">Mon espace</div>
+        <h2>Tableau de bord</h2>
+      </div>
+    </div>
+
+    <div class="dash-stats">
+      <div class="dash-card dash-resume">
+        <div class="dash-card-icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><polygon points="6 3 20 12 6 21 6 3"/></svg>
+        </div>
+        <div>
+          <div class="dash-card-label">Cours suivis</div>
+          <div class="dash-card-value" id="dashTotalCourses">0</div>
+        </div>
+      </div>
+
+      <div class="dash-card dash-time">
+        <div class="dash-card-icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><polyline points="12 7 12 12 15 14"/></svg>
+        </div>
+        <div>
+          <div class="dash-card-label">En attente de confirmation</div>
+          <div class="dash-card-value" id="dashPendingCount">0</div>
+        </div>
+      </div>
+
+      <div class="dash-card dash-avg">
+        <div class="dash-card-icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 20V10"/><path d="M18 20V4"/><path d="M6 20v-6"/></svg>
+        </div>
+        <div>
+          <div class="dash-card-label">Cours confirmés</div>
+          <div class="dash-card-value" id="dashConfirmedCount">0</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="dash-courses" id="dashCourseList"></div>
+  </div>
+</section>
+
+<!-- ---------- MODALE : MON PROFIL (déplacée dans #paneProfile par script) ---------- -->
+<div class="modal-overlay" id="profileModal" aria-hidden="true">
+  <div class="modal-box" role="dialog" aria-modal="true" aria-labelledby="profileModalTitle">
+    <button type="button" class="modal-close" onclick="closeProfileModal()" aria-label="Fermer">
+      <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><line x1="4" y1="4" x2="20" y2="20"/><line x1="20" y1="4" x2="4" y2="20"/></svg>
+    </button>
+    <div class="modal-eyebrow">Espace étudiant</div>
+    <h3 id="profileModalTitle">Mon profil</h3>
+
+    <form class="signup-form" id="profileForm" style="max-width:none;">
+      <div class="profile-form-grid">
+
+        <div class="profile-avatar-row">
+          <div class="profile-avatar-preview" id="profileAvatarPreview">É</div>
+          <div>
+            <button type="button" class="profile-avatar-edit" onclick="document.getElementById('profileAvatarInput').click()">Changer la photo</button>
+            <input type="file" id="profileAvatarInput" accept="image/*" style="display:none;">
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label for="profilePrenom">Prénom</label>
+          <input type="text" id="profilePrenom" placeholder="Votre prénom" autocomplete="given-name">
+        </div>
+        <div class="form-group">
+          <label for="profileNom">Nom</label>
+          <input type="text" id="profileNom" placeholder="Votre nom" autocomplete="family-name">
+        </div>
+
+        <div class="form-group">
+          <label for="profileRole">Rôle</label>
+          <select id="profileRole" style="width:100%; padding:12px 14px; border:1.5px solid var(--line); border-radius:8px; font-family:inherit; font-size:0.95rem; color:var(--ink); background:#fff;">
+            <option value="etudiant">Étudiant(e)</option>
+            <option value="professionnel">Professionnel(le)</option>
+            <option value="autre">Autre</option>
+          </select>
+        </div>
+
+        <span class="profile-section-label">Coordonnées</span>
+
+        <div class="form-group">
+          <label for="profileEmail">Adresse e-mail</label>
+          <input type="email" id="profileEmail" placeholder="email@exemple.com" disabled>
+        </div>
+        <div class="form-group">
+          <label for="profileTelephone">Numéro de téléphone</label>
+          <input type="tel" id="profileTelephone" placeholder="+509 XXXX XXXX" autocomplete="tel">
+        </div>
+        <div class="form-group">
+          <label for="profilePays">Pays</label>
+          <input type="text" id="profilePays" placeholder="Haïti" autocomplete="country-name">
+        </div>
+        <div class="form-group">
+          <label for="profileLangue">Langue</label>
+          <select id="profileLangue" style="width:100%; padding:12px 14px; border:1.5px solid var(--line); border-radius:8px; font-family:inherit; font-size:0.95rem; color:var(--ink); background:#fff;">
+            <option value="fr">Français</option>
+            <option value="ht">Kreyòl</option>
+            <option value="en">English</option>
+          </select>
+        </div>
+
+        <span class="profile-section-label">À propos</span>
+        <div class="form-group" style="grid-column:1 / -1;">
+          <label for="profileBio">Courte description ou objectifs d'apprentissage</label>
+          <textarea id="profileBio" class="profile-bio" placeholder="Ex. Chargé de suivi-évaluation dans une ONG, je veux structurer mes indicateurs de projet."></textarea>
+        </div>
+      </div>
+
+      <p class="form-note" id="profileError" style="display:none; color:#B3261E; margin-top:10px;"></p>
+      <p class="form-note" id="profileSuccess" style="display:none; color:#2F6F52; margin-top:10px;"></p>
+
+      <button type="submit" class="btn-primary" id="profileSubmitBtn" style="width:100%; margin-top:14px;">Enregistrer mon profil</button>
+    </form>
+  </div>
+</div>
 
 <div class="theme-toggle" role="group" aria-label="Choisir le thème">
   <button type="button" id="themeBtnLight" onclick="applyTheme('light')" aria-label="Thème clair" title="Thème clair">
@@ -1843,6 +2020,153 @@ header .wrap{
     </div>
   </div>
 </footer>
+
+<div class="modal-overlay" id="loginModal" aria-hidden="true">
+  <div class="modal-box" role="dialog" aria-modal="true" aria-labelledby="loginModalTitle">
+    <button type="button" class="modal-close" onclick="closeLoginModal()" aria-label="Fermer">
+      <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><line x1="4" y1="4" x2="20" y2="20"/><line x1="20" y1="4" x2="4" y2="20"/></svg>
+    </button>
+    <div style="color:gold" class="modal-eyebrow">Espace étudiant</div>
+    <h3 id="loginModalTitle">Connexion</h3>
+
+    <form class="signup-form" id="loginForm">
+      <div class="form-group" style="margin-bottom:16px;">
+        <label for="loginEmail">Email</label>
+        <input type="email" id="loginEmail" placeholder="email@exemple.com" required autocomplete="email">
+      </div>
+      <div class="form-group" style="margin-bottom:6px;">
+        <label for="loginPassword">Mot de passe</label>
+        <div class="password-field-wrapper">
+          <input type="password" id="loginPassword" placeholder="6 caractères minimum" minlength="6" required autocomplete="current-password">
+          <button type="button" class="password-toggle-btn" data-toggle-for="loginPassword" aria-label="Afficher le mot de passe" aria-pressed="false">
+            <svg class="eye-on" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
+            <svg class="eye-off" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17.94 17.94A10.94 10.94 0 0 1 12 20c-7 0-11-8-11-8a20.6 20.6 0 0 1 5.06-6.06M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a20.6 20.6 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24"/><line x1="1" y1="1" x2="23" y2="23"/></svg>
+          </button>
+        </div>
+      </div>
+      <div style="display:flex; justify-content:space-between; align-items:center; margin-top:8px; flex-wrap:wrap; gap:8px;">
+        <label style="display:flex; align-items:center; gap:7px; font-size:0.82rem; color:white; cursor:pointer; margin:0;">
+          <input type="checkbox" id="loginRememberMe" style="width:15px; height:15px; accent-color:var(--teal); cursor:pointer; margin:0;">
+          Se souvenir de moi
+        </label>
+        <a href="#" id="forgotPasswordLink" style="font-size:0.82rem; color:gold; font-weight:600; text-decoration:none;">Mot de passe oublié ?</a>
+      </div>
+      <p class="form-note" id="loginError" style="display:none; color:#B3261E; margin-top:10px;"></p>
+      <p class="form-note" id="loginSuccess" style="display:none; color:#2F6F52; margin-top:10px;"></p>
+      <button type="submit" class="btn-primary" id="loginSubmitBtn" style="width:100%; margin-top:14px;">Se connecter</button>
+      <p class="form-note"><span style="color:white" id="loginToggleText">Pas encore de compte ?</span> <a href="#" id="loginToggleLink" style="color:gold; font-weight:600; text-decoration:none;">Créer un compte</a></p>
+    </form>
+  </div>
+</div>
+
+<div class="modal-overlay" id="forgotPasswordModal" aria-hidden="true">
+  <div class="modal-box" role="dialog" aria-modal="true" aria-labelledby="forgotPasswordModalTitle">
+    <button type="button" class="modal-close" onclick="closeForgotPasswordModal()" aria-label="Fermer">
+      <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><line x1="4" y1="4" x2="20" y2="20"/><line x1="20" y1="4" x2="4" y2="20"/></svg>
+    </button>
+    <div class="modal-eyebrow">Espace étudiant</div>
+    <h3 id="forgotPasswordModalTitle">Mot de passe oublié</h3>
+    <p class="form-note" style="margin-top:8px;">Entrez votre email : nous vous enverrons un lien pour choisir un nouveau mot de passe.</p>
+    <form class="signup-form" id="forgotPasswordForm">
+      <div class="form-group" style="margin-bottom:16px; margin-top:14px;">
+        <label for="forgotPasswordEmail">Email</label>
+        <input type="email" id="forgotPasswordEmail" placeholder="email@exemple.com" required autocomplete="email">
+      </div>
+      <p class="form-note" id="forgotPasswordError" style="display:none; color:#B3261E;"></p>
+      <p class="form-note" id="forgotPasswordSuccess" style="display:none; color:#2F6F52;"></p>
+      <button type="submit" class="btn-primary" id="forgotPasswordSubmitBtn" style="width:100%; margin-top:6px;">Envoyer le lien de réinitialisation</button>
+      <p class="form-note"><a href="#" id="forgotPasswordBackLink" style="color:var(--blue); font-weight:600; text-decoration:none;">Retour à la connexion</a></p>
+    </form>
+  </div>
+</div>
+
+<div class="modal-overlay" id="resetPasswordModal" aria-hidden="true">
+  <div class="modal-box" role="dialog" aria-modal="true" aria-labelledby="resetPasswordModalTitle">
+    <div class="modal-eyebrow">Espace étudiant</div>
+    <h3 id="resetPasswordModalTitle">Choisissez un nouveau mot de passe</h3>
+    <form class="signup-form" id="resetPasswordForm">
+      <div class="form-group" style="margin-bottom:16px; margin-top:14px;">
+        <label for="resetPasswordNew">Nouveau mot de passe</label>
+        <input type="password" id="resetPasswordNew" placeholder="6 caractères minimum" minlength="6" required autocomplete="new-password">
+      </div>
+      <div class="form-group" style="margin-bottom:16px;">
+        <label for="resetPasswordConfirm">Confirmer le nouveau mot de passe</label>
+        <input type="password" id="resetPasswordConfirm" placeholder="Répétez le mot de passe" minlength="6" required autocomplete="new-password">
+      </div>
+      <p class="form-note" id="resetPasswordError" style="display:none; color:#B3261E;"></p>
+      <p class="form-note" id="resetPasswordSuccess" style="display:none; color:#2F6F52;"></p>
+      <button type="submit" class="btn-primary" id="resetPasswordSubmitBtn" style="width:100%; margin-top:6px;">Réinitialiser le mot de passe</button>
+    </form>
+  </div>
+</div>
+
+<div class="modal-overlay" id="registerModal" aria-hidden="true">
+  <div class="modal-box" role="dialog" aria-modal="true" aria-labelledby="registerModalTitle">
+    <button type="button" class="modal-close" onclick="closeRegisterModal()" aria-label="Fermer">
+      <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><line x1="4" y1="4" x2="20" y2="20"/><line x1="20" y1="4" x2="4" y2="20"/></svg>
+    </button>
+    <div class="modal-eyebrow" style="color:gold">Espace étudiant</div>
+    <h3 id="registerModalTitle">Créer votre compte NOVACC</h3>
+
+    <form class="signup-form" id="registerForm">
+      <div class="form-row">
+        <div class="form-group">
+          <label for="regPrenom">Prénom</label>
+          <input type="text" id="regPrenom" placeholder="Votre prénom" required autocomplete="given-name">
+        </div>
+        <div class="form-group">
+          <label for="regNom">Nom</label>
+          <input type="text" id="regNom" placeholder="Votre nom" required autocomplete="family-name">
+        </div>
+      </div>
+
+      <div class="form-row">
+        <div class="form-group">
+          <label for="regTelephone">Téléphone</label>
+          <input type="tel" id="regTelephone" placeholder="+509 XXXX XXXX" required autocomplete="tel">
+        </div>
+        <div class="form-group">
+          <label for="regEmail">Email</label>
+          <input type="email" id="regEmail" placeholder="email@exemple.com" required autocomplete="email">
+        </div>
+      </div>
+
+      <div class="form-row">
+        <div class="form-group">
+          <label for="regPassword">Mot de passe</label>
+          <div class="password-field-wrapper">
+            <input type="password" id="regPassword" placeholder="6 caractères minimum" minlength="6" required autocomplete="new-password">
+            <button type="button" class="password-toggle-btn" data-toggle-for="regPassword" aria-label="Afficher le mot de passe" aria-pressed="false">
+              <svg class="eye-on" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
+              <svg class="eye-off" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17.94 17.94A10.94 10.94 0 0 1 12 20c-7 0-11-8-11-8a20.6 20.6 0 0 1 5.06-6.06M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a20.6 20.6 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24"/><line x1="1" y1="1" x2="23" y2="23"/></svg>
+            </button>
+          </div>
+        </div>
+        <div class="form-group">
+          <label for="regPasswordConfirm">Confirmation du mot de passe</label>
+          <div class="password-field-wrapper">
+            <input type="password" id="regPasswordConfirm" placeholder="Répétez le mot de passe" minlength="6" required autocomplete="new-password">
+            <button type="button" class="password-toggle-btn" data-toggle-for="regPasswordConfirm" aria-label="Afficher le mot de passe" aria-pressed="false">
+              <svg class="eye-on" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
+              <svg class="eye-off" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17.94 17.94A10.94 10.94 0 0 1 12 20c-7 0-11-8-11-8a20.6 20.6 0 0 1 5.06-6.06M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a20.6 20.6 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24"/><line x1="1" y1="1" x2="23" y2="23"/></svg>
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <label style="display:flex; align-items:flex-start; gap:10px; margin:14px 0 4px; font-size:0.85rem; color:var(--ink-soft); cursor:pointer;">
+        <input type="checkbox" id="regPrivacyCheck" required style="margin-top:3px; width:16px; height:16px; accent-color:var(--teal); flex-shrink:0; cursor:pointer;">
+        <span style="color:gold">J'accepte la politique de confidentialité de NOVACC.</span>
+      </label>
+
+      <p class="form-note" id="registerError" style="display:none; color:#B3261E; margin-top:10px;"></p>
+      <p class="form-note" id="registerSuccess" style="display:none; color:#2F6F52; margin-top:10px;"></p>
+
+      <button type="submit" class="btn-primary" id="registerSubmitBtn" style="width:100%; margin-top:14px;">S'inscrire</button>
+      <p class="form-note" style="color:gold">Déjà un compte ? <a href="#" id="registerToLoginLink" style="color:white; font-weight:600; text-decoration:none;">Se connecter</a></p>
+    </form>
+  </div>
+</div>
 
 <div class="modal-overlay" id="enskriModal" aria-hidden="true">
   <div class="modal-box" role="dialog" aria-modal="true" aria-labelledby="modalTitle">
@@ -1966,7 +2290,26 @@ header .wrap{
   var payMethodField = document.getElementById('payMethodField');
   var enskriLastFocused = null;
 
+  // ID (uuid) du cours Supabase actuellement choisi dans la modale d'inscription
+  var currentEnrollCourseId = null;
+  // Prix brut (nombre) du cours actuellement choisi, pour amount_paid
+  var currentEnrollAmount = null;
+
   function openEnskriModal(nomModil, pri, modId){
+    // Il faut être connecté (ou créer un compte) avant d'acheter un cours.
+    if(!isLoggedIn()){
+      pendingEnskri = { nomModil: nomModil, pri: pri, modId: modId };
+      openLoginModal();
+      return;
+    }
+    currentEnrollCourseId = modId || null;
+    // pri arrive sous forme "1500 HTG" -> on extrait juste le nombre pour amount_paid
+    if(pri){
+      var numMatch = String(pri).replace(/[^0-9.]/g, '');
+      currentEnrollAmount = numMatch ? parseFloat(numMatch) : null;
+    } else {
+      currentEnrollAmount = null;
+    }
     if(nomModil){
       modalTitle.textContent = nomModil;
       modilField.value = nomModil;
@@ -2009,6 +2352,55 @@ header .wrap{
     nextField.value = PAY_REDIRECTS[method] || PAY_REDIRECTS.moncash;
     // Le formulaire continue sa soumission normale vers le même email,
     // seule la redirection finale change selon le bouton choisi.
+  }
+
+  // ---- Liaison enskriForm -> table Supabase "enrollments" ----
+  // Avant l'envoi du formulaire (email + redirection paiement), on
+  // enregistre l'inscription en base avec le statut "pending".
+  var enskriFormEl = document.getElementById('enskriForm');
+  if(enskriFormEl){
+    enskriFormEl.addEventListener('submit', async function(e){
+      e.preventDefault();
+
+      var submitBtn = e.submitter;
+      if(submitBtn){ submitBtn.disabled = true; }
+
+      try{
+        if(!isLoggedIn()){
+          alert("Veuillez vous connecter à votre compte NOVACC avant de vous inscrire à une formation.");
+          if(submitBtn){ submitBtn.disabled = false; }
+          closeEnskriModal();
+          openLoginModal();
+          return;
+        }
+
+        var insertRes = await supabaseClient.from('enrollments').insert({
+          user_id: currentSession.user.id,
+          course_id: currentEnrollCourseId,
+          module_id: null,
+          module_name: modilField.value,
+          payment_method: payMethodField.value,
+          status: 'pending',
+          amount_paid: currentEnrollAmount
+        });
+
+        if(insertRes.error){
+          console.error('Erreur enregistrement enrollments :', insertRes.error);
+          alert("Une erreur est survenue lors de l'enregistrement de votre inscription. Veuillez réessayer.");
+          if(submitBtn){ submitBtn.disabled = false; }
+          return;
+        }
+      } catch(err){
+        console.error('Erreur inattendue enrollments :', err);
+        alert("Une erreur est survenue lors de l'enregistrement de votre inscription. Veuillez réessayer.");
+        if(submitBtn){ submitBtn.disabled = false; }
+        return;
+      }
+
+      // Inscription enregistrée en base : on poursuit l'envoi normal
+      // (email FormSubmit + redirection vers le moyen de paiement).
+      enskriFormEl.submit();
+    });
   }
 
   // ---- Copier un numéro (MonCash / Natcash / UNIBANK) dans le presse-papiers ----
@@ -2080,6 +2472,496 @@ header .wrap{
   var SUPABASE_ANON_KEY = 'sb_publishable_EmDRarwrfmft7DGnsWsgXA_LgeJV-sI';
   var supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
+  // ================= AUTHENTIFICATION (connexion / inscription) =================
+  var loginModal = document.getElementById('loginModal');
+  var loginForm = document.getElementById('loginForm');
+  var loginError = document.getElementById('loginError');
+  var loginSuccess = document.getElementById('loginSuccess');
+  var loginSubmitBtn = document.getElementById('loginSubmitBtn');
+  var loginToggleLink = document.getElementById('loginToggleLink');
+  var loginToggleText = document.getElementById('loginToggleText');
+  var loginModalTitleEl = document.getElementById('loginModalTitle');
+  var loginNavBtn = document.getElementById('loginNavBtn');
+  var registerNavBtn = document.getElementById('registerNavBtn');
+  var authLastFocused = null;
+
+  var loginMode = 'login'; // ou 'signup'
+  var currentSession = null;
+  var pendingEnskri = null; // cours que l'élève voulait acheter, en attente de connexion/inscription
+
+  function isLoggedIn(){ return !!currentSession; }
+
+  function lsGet(key){ try{ return localStorage.getItem(key); }catch(e){ return null; } }
+  function lsSet(key, val){ try{ localStorage.setItem(key, val); }catch(e){} }
+  function rememberMeActive(){ return lsGet('ha_remember_me') === '1'; }
+
+  // Reprend automatiquement l'achat en attente une fois l'élève connecté
+  function resumePendingEnskri(){
+    if(pendingEnskri){
+      var p = pendingEnskri;
+      pendingEnskri = null;
+      openEnskriModal(p.nomModil, p.pri, p.modId);
+    }
+  }
+
+  function setLoginMode(mode){
+    loginMode = mode;
+    if(loginError){ loginError.style.display = 'none'; }
+    if(loginSuccess){ loginSuccess.style.display = 'none'; }
+    if(mode === 'signup'){
+      loginModalTitleEl.textContent = 'Créer un compte';
+      loginSubmitBtn.textContent = 'Créer mon compte';
+      loginToggleText.textContent = 'Déjà un compte ?';
+      loginToggleLink.textContent = 'Se connecter';
+    } else {
+      loginModalTitleEl.textContent = 'Connexion';
+      loginSubmitBtn.textContent = 'Se connecter';
+      loginToggleText.textContent = 'Pas encore de compte ?';
+      loginToggleLink.textContent = 'Créer un compte';
+    }
+  }
+
+  function openLoginModal(){
+    if(isLoggedIn()){
+      logoutUser();
+      return;
+    }
+    authLastFocused = document.activeElement;
+    setLoginMode('login');
+    loginModal.classList.add('open');
+    loginModal.setAttribute('aria-hidden', 'false');
+    document.body.style.overflow = 'hidden';
+    var firstInput = loginModal.querySelector('input');
+    if(firstInput){ firstInput.focus(); }
+  }
+
+  function closeLoginModal(){
+    loginModal.classList.remove('open');
+    loginModal.setAttribute('aria-hidden', 'true');
+    document.body.style.overflow = '';
+    if(authLastFocused){ authLastFocused.focus(); }
+  }
+
+  function logoutUser(){
+    supabaseClient.auth.signOut().then(function(){
+      lsSet('ha_remember_me', '0');
+      updateLoginButton();
+    });
+  }
+
+  // Renvoie "Prénom Nom" tel que saisi à l'inscription (compte connecté).
+  function getAccountFullName(){
+    if(currentSession && currentSession.user && currentSession.user.user_metadata){
+      var meta = currentSession.user.user_metadata;
+      var full = ((meta.prenom || '') + ' ' + (meta.nom || '')).trim();
+      if(full){ return full; }
+    }
+    if(currentSession && currentSession.user && currentSession.user.email){
+      return currentSession.user.email;
+    }
+    return '';
+  }
+
+  // ---- Avatar (stocké localement, par utilisateur : pas de colonne dédiée côté Supabase) ----
+  function avatarStorageKey(){
+    var uid = (currentSession && currentSession.user && currentSession.user.id) || 'anon';
+    return 'ha_avatar_' + uid;
+  }
+  function getStoredAvatar(){ return lsGet(avatarStorageKey()); }
+  function setStoredAvatar(dataUrl){ lsSet(avatarStorageKey(), dataUrl); }
+
+  function updateLoginButton(){
+    var logged = isLoggedIn();
+
+    // Le bouton "Connexion" et "S'inscrire" laissent la place à l'espace profil
+    // (avatar + nom) une fois l'élève connecté.
+    if(loginNavBtn){ loginNavBtn.style.display = logged ? 'none' : ''; }
+    if(registerNavBtn){ registerNavBtn.style.display = logged ? 'none' : ''; }
+
+    var chip = document.getElementById('userChip');
+    if(chip){ chip.classList.toggle('active', logged); }
+    if(!logged){ closeUserDropdown(); }
+
+    if(logged){
+      var fullName = getAccountFullName() || 'Élève';
+      var email = (currentSession && currentSession.user && currentSession.user.email) || '';
+      var initial = fullName.trim().charAt(0).toUpperCase() || 'É';
+      var avatarUrl = getStoredAvatar();
+
+      var chipName = document.getElementById('userChipName');
+      if(chipName){ chipName.textContent = fullName; }
+      var dropdownName = document.getElementById('userDropdownName');
+      if(dropdownName){ dropdownName.textContent = fullName; }
+      var dropdownEmail = document.getElementById('userDropdownEmail');
+      if(dropdownEmail){ dropdownEmail.textContent = email; }
+
+      [document.getElementById('userChipAvatar'), document.getElementById('profileAvatarPreview'), document.getElementById('drawerAvatar')].forEach(function(el){
+        if(!el){ return; }
+        if(avatarUrl){
+          el.innerHTML = '<img src="' + avatarUrl + '" alt="Photo de profil">';
+        } else {
+          el.textContent = initial;
+        }
+      });
+      var drawerName = document.getElementById('drawerUserName');
+      if(drawerName){ drawerName.textContent = fullName; }
+      var drawerEmail = document.getElementById('drawerUserEmail');
+      if(drawerEmail){ drawerEmail.textContent = email; }
+    }
+
+    // La section .dashboard vit désormais dans l'onglet "Tableau de bord" de la
+    // fenêtre compte : sa visibilité est pilotée par cette classe, pas par le scroll.
+    var dashSection = document.getElementById('dashboard');
+    if(dashSection){ dashSection.classList.toggle('active', logged); }
+
+    updateDashboard();
+  }
+
+  function toggleUserDropdown(){
+    var dd = document.getElementById('userDropdown');
+    var chip = document.getElementById('userChip');
+    if(!dd || !chip){ return; }
+    var isOpen = dd.classList.toggle('open');
+    chip.setAttribute('aria-expanded', isOpen ? 'true' : 'false');
+  }
+
+  function closeUserDropdown(){
+    var dd = document.getElementById('userDropdown');
+    var chip = document.getElementById('userChip');
+    if(dd){ dd.classList.remove('open'); }
+    if(chip){ chip.setAttribute('aria-expanded', 'false'); }
+  }
+
+  document.addEventListener('click', function(e){
+    var wrap = document.getElementById('userChipWrap');
+    if(wrap && !wrap.contains(e.target)){ closeUserDropdown(); }
+  });
+
+  if(loginToggleLink){
+    loginToggleLink.addEventListener('click', function(e){
+      e.preventDefault();
+      if(loginMode === 'login'){
+        closeLoginModal();
+        openRegisterModal();
+      } else {
+        setLoginMode('login');
+      }
+    });
+  }
+
+  if(loginForm){
+    loginForm.addEventListener('submit', function(e){
+      e.preventDefault();
+      var email = document.getElementById('loginEmail').value.trim();
+      var password = document.getElementById('loginPassword').value;
+      var rememberMeChecked = !!(document.getElementById('loginRememberMe') && document.getElementById('loginRememberMe').checked);
+      if(loginError){ loginError.style.display = 'none'; }
+      if(loginSuccess){ loginSuccess.style.display = 'none'; }
+      loginSubmitBtn.disabled = true;
+
+      var authCall = loginMode === 'signup'
+        ? supabaseClient.auth.signUp({ email: email, password: password })
+        : supabaseClient.auth.signInWithPassword({ email: email, password: password });
+
+      authCall.then(function(result){
+        loginSubmitBtn.disabled = false;
+        if(result.error){
+          loginError.textContent = result.error.message;
+          loginError.style.display = 'block';
+          return;
+        }
+        if(loginMode === 'signup' && !result.data.session){
+          loginSuccess.textContent = 'Compte créé ! Vérifiez votre email pour confirmer votre inscription, puis connectez-vous.';
+          loginSuccess.style.display = 'block';
+          setLoginMode('login');
+          return;
+        }
+        lsSet('ha_remember_me', rememberMeChecked ? '1' : '0');
+        currentSession = result.data.session;
+        closeLoginModal();
+        updateLoginButton();
+        resumePendingEnskri();
+      });
+    });
+  }
+
+  loginModal.addEventListener('click', function(e){
+    if(e.target === loginModal){ closeLoginModal(); }
+  });
+
+  var forgotPasswordLink = document.getElementById('forgotPasswordLink');
+  if(forgotPasswordLink){
+    forgotPasswordLink.addEventListener('click', function(e){
+      e.preventDefault();
+      closeLoginModal();
+      openForgotPasswordModal();
+    });
+  }
+
+  document.addEventListener('keydown', function(e){
+    if(e.key === 'Escape' && loginModal.classList.contains('open')){ closeLoginModal(); }
+  });
+
+  // Récupère la session existante au chargement (élève déjà connecté précédemment)
+  supabaseClient.auth.getSession().then(function(result){
+    currentSession = result.data.session;
+    updateLoginButton();
+  });
+
+  // Garde l'état synchronisé (connexion/déconnexion/expiration de session)
+  supabaseClient.auth.onAuthStateChange(function(event, session){
+    currentSession = session;
+    updateLoginButton();
+    if(event === 'PASSWORD_RECOVERY'){
+      closeLoginModal();
+      closeForgotPasswordModal();
+      openResetPasswordModal();
+    }
+  });
+
+  // ---- Modale : création de compte (nom, téléphone, email, mot de passe) ----
+  var registerModal = document.getElementById('registerModal');
+  var registerForm = document.getElementById('registerForm');
+  var registerError = document.getElementById('registerError');
+  var registerSuccess = document.getElementById('registerSuccess');
+  var registerSubmitBtn = document.getElementById('registerSubmitBtn');
+  var registerToLoginLink = document.getElementById('registerToLoginLink');
+  var registerLastFocused = null;
+
+  function openRegisterModal(){
+    if(isLoggedIn()){ return; }
+    registerLastFocused = document.activeElement;
+    if(registerError){ registerError.style.display = 'none'; }
+    if(registerSuccess){ registerSuccess.style.display = 'none'; }
+    registerModal.classList.add('open');
+    registerModal.setAttribute('aria-hidden', 'false');
+    document.body.style.overflow = 'hidden';
+    var firstInput = registerModal.querySelector('input');
+    if(firstInput){ firstInput.focus(); }
+  }
+
+  function closeRegisterModal(){
+    registerModal.classList.remove('open');
+    registerModal.setAttribute('aria-hidden', 'true');
+    document.body.style.overflow = '';
+    if(registerLastFocused){ registerLastFocused.focus(); }
+  }
+
+  if(registerToLoginLink){
+    registerToLoginLink.addEventListener('click', function(e){
+      e.preventDefault();
+      closeRegisterModal();
+      setLoginMode('login');
+      openLoginModal();
+    });
+  }
+
+  if(registerForm){
+    registerForm.addEventListener('submit', function(e){
+      e.preventDefault();
+
+      var prenom = document.getElementById('regPrenom').value.trim();
+      var nom = document.getElementById('regNom').value.trim();
+      var telephone = document.getElementById('regTelephone').value.trim();
+      var email = document.getElementById('regEmail').value.trim();
+      var password = document.getElementById('regPassword').value;
+      var passwordConfirm = document.getElementById('regPasswordConfirm').value;
+      var privacyAccepted = document.getElementById('regPrivacyCheck').checked;
+
+      if(registerError){ registerError.style.display = 'none'; }
+      if(registerSuccess){ registerSuccess.style.display = 'none'; }
+
+      if(password !== passwordConfirm){
+        registerError.textContent = 'Les mots de passe ne correspondent pas.';
+        registerError.style.display = 'block';
+        return;
+      }
+      if(!privacyAccepted){
+        registerError.textContent = 'Vous devez accepter la politique de confidentialité pour continuer.';
+        registerError.style.display = 'block';
+        return;
+      }
+
+      registerSubmitBtn.disabled = true;
+      registerSubmitBtn.textContent = 'Création en cours...';
+
+      supabaseClient.auth.signUp({
+        email: email,
+        password: password,
+        options: {
+          data: { prenom: prenom, nom: nom, telephone: telephone }
+        }
+      }).then(function(result){
+        registerSubmitBtn.disabled = false;
+        registerSubmitBtn.textContent = "S'inscrire";
+
+        if(result.error){
+          registerError.textContent = result.error.message;
+          registerError.style.display = 'block';
+          return;
+        }
+
+        if(!result.data.session){
+          registerSuccess.textContent = 'Compte créé ! Vérifiez votre email pour confirmer votre inscription, puis connectez-vous.';
+          registerSuccess.style.display = 'block';
+          registerForm.reset();
+          return;
+        }
+
+        currentSession = result.data.session;
+        closeRegisterModal();
+        updateLoginButton();
+        resumePendingEnskri();
+      });
+    });
+  }
+
+  registerModal.addEventListener('click', function(e){
+    if(e.target === registerModal){ closeRegisterModal(); }
+  });
+
+  document.addEventListener('keydown', function(e){
+    if(e.key === 'Escape' && registerModal.classList.contains('open')){ closeRegisterModal(); }
+  });
+
+  // ---- Modale : mot de passe oublié ----
+  var forgotPasswordModal = document.getElementById('forgotPasswordModal');
+  var forgotPasswordForm = document.getElementById('forgotPasswordForm');
+  var forgotPasswordEmail = document.getElementById('forgotPasswordEmail');
+  var forgotPasswordError = document.getElementById('forgotPasswordError');
+  var forgotPasswordSuccess = document.getElementById('forgotPasswordSuccess');
+  var forgotPasswordSubmitBtn = document.getElementById('forgotPasswordSubmitBtn');
+  var forgotPasswordBackLink = document.getElementById('forgotPasswordBackLink');
+
+  function openForgotPasswordModal(){
+    if(forgotPasswordError){ forgotPasswordError.style.display = 'none'; }
+    if(forgotPasswordSuccess){ forgotPasswordSuccess.style.display = 'none'; }
+    if(forgotPasswordForm){ forgotPasswordForm.reset(); }
+    forgotPasswordModal.classList.add('open');
+    forgotPasswordModal.setAttribute('aria-hidden', 'false');
+    if(forgotPasswordEmail){ forgotPasswordEmail.focus(); }
+  }
+
+  function closeForgotPasswordModal(){
+    forgotPasswordModal.classList.remove('open');
+    forgotPasswordModal.setAttribute('aria-hidden', 'true');
+  }
+
+  if(forgotPasswordForm){
+    forgotPasswordForm.addEventListener('submit', function(e){
+      e.preventDefault();
+      var email = forgotPasswordEmail.value.trim();
+      if(forgotPasswordError){ forgotPasswordError.style.display = 'none'; }
+      if(forgotPasswordSuccess){ forgotPasswordSuccess.style.display = 'none'; }
+      forgotPasswordSubmitBtn.disabled = true;
+
+      var redirectTo = window.location.origin + window.location.pathname;
+      supabaseClient.auth.resetPasswordForEmail(email, { redirectTo: redirectTo }).then(function(result){
+        forgotPasswordSubmitBtn.disabled = false;
+        if(result.error){
+          forgotPasswordError.textContent = result.error.message;
+          forgotPasswordError.style.display = 'block';
+          return;
+        }
+        forgotPasswordSuccess.textContent = 'Si un compte existe avec cet email, un lien de réinitialisation vient de vous être envoyé. Vérifiez votre boîte mail (et vos spams).';
+        forgotPasswordSuccess.style.display = 'block';
+        forgotPasswordForm.reset();
+      });
+    });
+  }
+
+  if(forgotPasswordBackLink){
+    forgotPasswordBackLink.addEventListener('click', function(e){
+      e.preventDefault();
+      closeForgotPasswordModal();
+      openLoginModal();
+    });
+  }
+
+  forgotPasswordModal.addEventListener('click', function(e){
+    if(e.target === forgotPasswordModal){ closeForgotPasswordModal(); }
+  });
+
+  document.addEventListener('keydown', function(e){
+    if(e.key === 'Escape' && forgotPasswordModal.classList.contains('open')){ closeForgotPasswordModal(); }
+  });
+
+  // ---- Modale : choisir un nouveau mot de passe (lien reçu par email) ----
+  var resetPasswordModal = document.getElementById('resetPasswordModal');
+  var resetPasswordForm = document.getElementById('resetPasswordForm');
+  var resetPasswordNew = document.getElementById('resetPasswordNew');
+  var resetPasswordConfirm = document.getElementById('resetPasswordConfirm');
+  var resetPasswordError = document.getElementById('resetPasswordError');
+  var resetPasswordSuccess = document.getElementById('resetPasswordSuccess');
+  var resetPasswordSubmitBtn = document.getElementById('resetPasswordSubmitBtn');
+
+  function openResetPasswordModal(){
+    if(resetPasswordError){ resetPasswordError.style.display = 'none'; }
+    if(resetPasswordSuccess){ resetPasswordSuccess.style.display = 'none'; }
+    if(resetPasswordForm){ resetPasswordForm.reset(); }
+    resetPasswordModal.classList.add('open');
+    resetPasswordModal.setAttribute('aria-hidden', 'false');
+    if(resetPasswordNew){ resetPasswordNew.focus(); }
+  }
+
+  function closeResetPasswordModal(){
+    resetPasswordModal.classList.remove('open');
+    resetPasswordModal.setAttribute('aria-hidden', 'true');
+  }
+
+  if(resetPasswordForm){
+    resetPasswordForm.addEventListener('submit', function(e){
+      e.preventDefault();
+      var pw1 = resetPasswordNew.value;
+      var pw2 = resetPasswordConfirm.value;
+      if(resetPasswordError){ resetPasswordError.style.display = 'none'; }
+      if(resetPasswordSuccess){ resetPasswordSuccess.style.display = 'none'; }
+
+      if(pw1 !== pw2){
+        resetPasswordError.textContent = 'Les deux mots de passe ne correspondent pas.';
+        resetPasswordError.style.display = 'block';
+        return;
+      }
+      if(pw1.length < 6){
+        resetPasswordError.textContent = 'Le mot de passe doit contenir au moins 6 caractères.';
+        resetPasswordError.style.display = 'block';
+        return;
+      }
+
+      resetPasswordSubmitBtn.disabled = true;
+      supabaseClient.auth.updateUser({ password: pw1 }).then(function(result){
+        resetPasswordSubmitBtn.disabled = false;
+        if(result.error){
+          resetPasswordError.textContent = result.error.message;
+          resetPasswordError.style.display = 'block';
+          return;
+        }
+        resetPasswordSuccess.textContent = 'Votre mot de passe a bien été mis à jour !';
+        resetPasswordSuccess.style.display = 'block';
+        resetPasswordForm.reset();
+        setTimeout(function(){
+          closeResetPasswordModal();
+          updateLoginButton();
+        }, 1800);
+      });
+    });
+  }
+
+  // Bascule afficher/masquer pour tous les champs de mot de passe
+  document.querySelectorAll('.password-toggle-btn').forEach(function(btn){
+    btn.addEventListener('click', function(){
+      var targetId = btn.getAttribute('data-toggle-for');
+      var input = document.getElementById(targetId);
+      if(!input) return;
+      var isVisible = input.type === 'text';
+      input.type = isVisible ? 'password' : 'text';
+      btn.classList.toggle('is-visible', !isVisible);
+      btn.setAttribute('aria-pressed', String(!isVisible));
+      btn.setAttribute('aria-label', !isVisible ? 'Masquer le mot de passe' : 'Afficher le mot de passe');
+    });
+  });
+  // ================= FIN AUTHENTIFICATION =================
+
   function escapeHtml(str){
     var div = document.createElement('div');
     div.textContent = str || '';
@@ -2144,6 +3026,253 @@ header .wrap{
   }
 
   loadPublishedCourses();
+
+  // ================= FENÊTRE COMPTE (Tableau de bord + Mon profil) =================
+  (function(){
+    // On déplace le tableau de bord (section existante) et le formulaire de profil
+    // (déjà construit en modale) à l'intérieur des deux onglets de la fenêtre compte.
+    var dashSection = document.getElementById('dashboard');
+    var paneDashboard = document.getElementById('paneDashboard');
+    if(dashSection && paneDashboard){ paneDashboard.appendChild(dashSection); }
+
+    var profileModalEl = document.getElementById('profileModal');
+    var profileBox = profileModalEl ? profileModalEl.querySelector('.modal-box') : null;
+    var paneProfile = document.getElementById('paneProfile');
+    if(profileBox && paneProfile){ paneProfile.appendChild(profileBox); }
+  })();
+
+  var accountDrawerOverlay = document.getElementById('accountDrawerOverlay');
+  var accountDrawerLastFocused = null;
+
+  function switchAccountTab(tab){
+    var isDash = tab !== 'profile';
+    var tabBtnDashboard = document.getElementById('tabBtnDashboard');
+    var tabBtnProfile = document.getElementById('tabBtnProfile');
+    var paneDashboardEl = document.getElementById('paneDashboard');
+    var paneProfileEl = document.getElementById('paneProfile');
+    if(tabBtnDashboard){ tabBtnDashboard.classList.toggle('active', isDash); }
+    if(tabBtnProfile){ tabBtnProfile.classList.toggle('active', !isDash); }
+    if(paneDashboardEl){ paneDashboardEl.classList.toggle('active', isDash); }
+    if(paneProfileEl){ paneProfileEl.classList.toggle('active', !isDash); }
+    if(isDash){ updateDashboard(); } else { openProfileFormValues(); }
+  }
+
+  function openAccountDrawer(tab){
+    closeUserDropdown();
+    if(!isLoggedIn()){ openLoginModal(); return; }
+    switchAccountTab(tab || 'dashboard');
+    accountDrawerLastFocused = document.activeElement;
+    if(accountDrawerOverlay){
+      accountDrawerOverlay.classList.add('open');
+      accountDrawerOverlay.setAttribute('aria-hidden', 'false');
+    }
+    document.body.style.overflow = 'hidden';
+  }
+
+  function closeAccountDrawer(){
+    if(accountDrawerOverlay){
+      accountDrawerOverlay.classList.remove('open');
+      accountDrawerOverlay.setAttribute('aria-hidden', 'true');
+    }
+    document.body.style.overflow = '';
+    if(accountDrawerLastFocused){ accountDrawerLastFocused.focus(); }
+  }
+
+  if(accountDrawerOverlay){
+    accountDrawerOverlay.addEventListener('click', function(e){
+      if(e.target === accountDrawerOverlay){ closeAccountDrawer(); }
+    });
+  }
+  document.addEventListener('keydown', function(e){
+    if(e.key === 'Escape' && accountDrawerOverlay && accountDrawerOverlay.classList.contains('open')){
+      closeAccountDrawer();
+    }
+  });
+
+  // ---- Modale "Mon profil" (identité, contact, bio) ----
+  var profileModal = document.getElementById('profileModal');
+  var profileForm = document.getElementById('profileForm');
+  var profileError = document.getElementById('profileError');
+  var profileSuccess = document.getElementById('profileSuccess');
+
+  function profileStorageKey(){
+    var uid = (currentSession && currentSession.user && currentSession.user.id) || 'anon';
+    return 'ha_profile_' + uid;
+  }
+
+  // Remplit le formulaire de profil avec les valeurs actuelles (compte + infos locales)
+  function openProfileFormValues(){
+    if(!isLoggedIn()){ return; }
+    var meta = (currentSession.user && currentSession.user.user_metadata) || {};
+    var extra = {};
+    try{ extra = JSON.parse(lsGet(profileStorageKey()) || '{}'); }catch(e){ extra = {}; }
+
+    document.getElementById('profilePrenom').value = meta.prenom || '';
+    document.getElementById('profileNom').value = meta.nom || '';
+    document.getElementById('profileRole').value = extra.role || 'etudiant';
+    document.getElementById('profileEmail').value = (currentSession.user && currentSession.user.email) || '';
+    document.getElementById('profileTelephone').value = meta.telephone || '';
+    document.getElementById('profilePays').value = extra.pays || '';
+    document.getElementById('profileLangue').value = extra.langue || 'fr';
+    document.getElementById('profileBio').value = extra.bio || '';
+
+    var avatarUrl = getStoredAvatar();
+    var preview = document.getElementById('profileAvatarPreview');
+    if(preview){
+      if(avatarUrl){ preview.innerHTML = '<img src="' + avatarUrl + '" alt="Photo de profil">'; }
+      else { preview.textContent = (getAccountFullName() || 'É').charAt(0).toUpperCase(); }
+    }
+
+    if(profileError){ profileError.style.display = 'none'; }
+    if(profileSuccess){ profileSuccess.style.display = 'none'; }
+  }
+
+  function openProfileModal(){
+    closeUserDropdown();
+    if(!isLoggedIn()){ openLoginModal(); return; }
+    openAccountDrawer('profile');
+  }
+
+  function closeProfileModal(){
+    closeAccountDrawer();
+  }
+
+  var profileAvatarInput = document.getElementById('profileAvatarInput');
+  if(profileAvatarInput){
+    profileAvatarInput.addEventListener('change', function(){
+      var file = profileAvatarInput.files && profileAvatarInput.files[0];
+      if(!file){ return; }
+      var reader = new FileReader();
+      reader.onload = function(){
+        setStoredAvatar(reader.result);
+        var preview = document.getElementById('profileAvatarPreview');
+        if(preview){ preview.innerHTML = '<img src="' + reader.result + '" alt="Photo de profil">'; }
+        var chipAvatar = document.getElementById('userChipAvatar');
+        if(chipAvatar){ chipAvatar.innerHTML = '<img src="' + reader.result + '" alt="Photo de profil">'; }
+        var drawerAvatar = document.getElementById('drawerAvatar');
+        if(drawerAvatar){ drawerAvatar.innerHTML = '<img src="' + reader.result + '" alt="Photo de profil">'; }
+      };
+      reader.readAsDataURL(file);
+    });
+  }
+
+  if(profileForm){
+    profileForm.addEventListener('submit', function(e){
+      e.preventDefault();
+      if(!isLoggedIn()){ return; }
+
+      var prenom = document.getElementById('profilePrenom').value.trim();
+      var nom = document.getElementById('profileNom').value.trim();
+      var telephone = document.getElementById('profileTelephone').value.trim();
+      var role = document.getElementById('profileRole').value;
+      var pays = document.getElementById('profilePays').value.trim();
+      var langue = document.getElementById('profileLangue').value;
+      var bio = document.getElementById('profileBio').value.trim();
+
+      if(profileError){ profileError.style.display = 'none'; }
+      if(profileSuccess){ profileSuccess.style.display = 'none'; }
+
+      // Champs sans colonne Supabase dédiée (rôle, pays, langue, bio) : conservés
+      // localement, par élève. Prénom/nom/téléphone vont dans user_metadata (compte).
+      lsSet(profileStorageKey(), JSON.stringify({ role: role, pays: pays, langue: langue, bio: bio }));
+
+      var submitBtn = document.getElementById('profileSubmitBtn');
+      if(submitBtn){ submitBtn.disabled = true; }
+
+      supabaseClient.auth.updateUser({
+        data: { prenom: prenom, nom: nom, telephone: telephone }
+      }).then(function(result){
+        if(submitBtn){ submitBtn.disabled = false; }
+        if(result.error){
+          if(profileError){
+            profileError.textContent = result.error.message;
+            profileError.style.display = 'block';
+          }
+          return;
+        }
+        currentSession.user = result.data.user;
+        updateLoginButton();
+        if(profileSuccess){
+          profileSuccess.textContent = 'Profil mis à jour avec succès.';
+          profileSuccess.style.display = 'block';
+        }
+      }).catch(function(){
+        if(submitBtn){ submitBtn.disabled = false; }
+        if(profileError){
+          profileError.textContent = "Impossible d'enregistrer le profil pour le moment.";
+          profileError.style.display = 'block';
+        }
+      });
+    });
+  }
+
+  // ================= TABLEAU DE BORD (mes formations, via "enrollments") =================
+  var DASH_STATUS_LABELS = { pending: 'En attente', confirmed: 'Confirmé', cancelled: 'Annulé', refunded: 'Remboursé' };
+  var DASH_STATUS_CLASSES = { pending: 'status-pending', confirmed: 'status-confirmed', cancelled: 'status-cancelled', refunded: 'status-cancelled' };
+
+  function dashCourseRowHtml(row){
+    var label = DASH_STATUS_LABELS[row.status] || row.status || 'En cours';
+    var cls = DASH_STATUS_CLASSES[row.status] || 'status-pending';
+    var priceTxt = (row.amount_paid !== null && row.amount_paid !== undefined && row.amount_paid !== '')
+      ? (row.amount_paid + ' HTG') : '';
+    var dateTxt = row.created_at ? new Date(row.created_at).toLocaleDateString('fr-FR', { day:'numeric', month:'long', year:'numeric' }) : '';
+    var metaParts = [priceTxt, row.payment_method, dateTxt].filter(Boolean);
+    return (
+      '<div class="dash-course-card">' +
+        '<div class="dash-course-top">' +
+          '<span>' + escapeHtml(row.module_name || 'Formation') + '</span>' +
+          '<span class="dash-status-badge ' + cls + '">' + escapeHtml(label) + '</span>' +
+        '</div>' +
+        '<div class="dash-course-meta">' + escapeHtml(metaParts.join(' · ')) + '</div>' +
+      '</div>'
+    );
+  }
+
+  async function updateDashboard(){
+    var listEl = document.getElementById('dashCourseList');
+    var totalEl = document.getElementById('dashTotalCourses');
+    var pendingEl = document.getElementById('dashPendingCount');
+    var confirmedEl = document.getElementById('dashConfirmedCount');
+    if(!listEl){ return; }
+
+    if(!isLoggedIn()){
+      listEl.innerHTML = '';
+      if(totalEl){ totalEl.textContent = '0'; }
+      if(pendingEl){ pendingEl.textContent = '0'; }
+      if(confirmedEl){ confirmedEl.textContent = '0'; }
+      return;
+    }
+
+    listEl.innerHTML = '<p class="dash-courses-empty">Chargement de vos formations...</p>';
+
+    try{
+      var res = await supabaseClient
+        .from('enrollments')
+        .select('id, course_id, module_name, status, amount_paid, payment_method, created_at')
+        .eq('user_id', currentSession.user.id)
+        .order('created_at', { ascending: false });
+
+      if(res.error){ throw res.error; }
+
+      var rows = res.data || [];
+      var pending = rows.filter(function(r){ return r.status === 'pending'; }).length;
+      var confirmed = rows.filter(function(r){ return r.status === 'confirmed'; }).length;
+
+      if(totalEl){ totalEl.textContent = String(rows.length); }
+      if(pendingEl){ pendingEl.textContent = String(pending); }
+      if(confirmedEl){ confirmedEl.textContent = String(confirmed); }
+
+      if(rows.length === 0){
+        listEl.innerHTML = '<p class="dash-courses-empty">Vous n\'êtes inscrit(e) à aucune formation pour le moment. Parcourez le catalogue ci-dessous pour commencer.</p>';
+        return;
+      }
+
+      listEl.innerHTML = rows.map(dashCourseRowHtml).join('');
+    } catch(err){
+      console.error('Erreur chargement tableau de bord :', err);
+      listEl.innerHTML = '<p class="dash-courses-empty">Impossible de charger vos formations pour le moment.</p>';
+    }
+  }
 </script>
 
 </body>
