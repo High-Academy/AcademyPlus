@@ -1429,6 +1429,10 @@
     display:inline-flex; align-items:center; gap:9px; border:1.5px solid #BFE3CC;
   }
   .btn-enroll-owned:hover{transform:none;}
+  /* Le cours possédé reste cliquable pour accéder aux leçons : on redonne
+     un curseur pointeur + un léger effet au survol pour signaler l'action. */
+  .btn-enroll-owned.is-clickable{cursor:pointer !important;}
+  .btn-enroll-owned.is-clickable:hover{background:#DFF2E6 !important; border-color:#9FD4B4;}
   .owned-check{
     width:19px; height:19px; border-radius:4px; background:#2F6F52; display:flex; align-items:center;
     justify-content:center; flex-shrink:0;
@@ -2268,6 +2272,94 @@ header .wrap{
   </div>
 </div>
 
+<!-- ================= LEÇONS DES COURS ACHETÉS ================= -->
+
+<!-- Backdrop pour les panneaux radial des leçons -->
+<div class="radial-backdrop" id="radialBackdrop"></div>
+
+<!-- Portal panel : contenu d'un point de leçon, hors de toute modale -->
+<div id="radialPortalPanel" aria-hidden="true" role="dialog">
+  <div id="radialPortalBox">
+    <div id="radialPortalHeader">
+      <div id="radialPortalTitle"></div>
+      <button type="button" id="radialPortalClose" aria-label="Fermer">
+        <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M1 1L13 13M13 1L1 13" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>
+      </button>
+    </div>
+    <div id="radialPortalContent"></div>
+  </div>
+</div>
+
+<!-- Popup : cercle central (titre + résumé de la leçon) -->
+<div id="radialCenterPopup" aria-hidden="true" role="dialog" aria-modal="true" aria-labelledby="radialCenterPopupTitle">
+  <div id="radialCenterPopupBox">
+    <button type="button" id="radialCenterPopupClose" aria-label="Fermer" onclick="closeRadialCenterPopup()">
+      <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M1 1L13 13M13 1L1 13" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>
+    </button>
+    <div id="radialCenterPopupEyebrow">Leçon</div>
+    <h3 id="radialCenterPopupTitle"></h3>
+    <div id="radialCenterPopupBody"></div>
+    <div id="radialCenterPopupFooter">
+      <button type="button" class="btn-secondary" onclick="closeRadialCenterPopup()">← Fermer</button>
+      <button type="button" class="btn-primary" onclick="closeRadialCenterPopup()">Continuer →</button>
+    </div>
+  </div>
+</div>
+
+<!-- Modale : liste des leçons d'un cours acheté -->
+<div class="modal-overlay" id="courseLessonsModal" aria-hidden="true">
+  <div class="modal-box" role="dialog" aria-modal="true" aria-labelledby="courseLessonsTitle">
+    <button type="button" class="modal-close" onclick="closeCourseLessonsModal()" aria-label="Fermer">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><line x1="4" y1="4" x2="20" y2="20"/><line x1="20" y1="4" x2="4" y2="20"/></svg>
+    </button>
+    <div class="modal-eyebrow">Mon cours</div>
+    <h3 id="courseLessonsTitle">Titre du cours</h3>
+
+    <div class="progress-track" style="margin-top:14px;"><div class="progress-fill" id="courseLessonsProgressFill"></div></div>
+    <div class="progress-label">
+      <span id="courseLessonsProgressText">0/0 leçons terminées</span>
+      <span class="ppct" id="courseLessonsProgressPct">0%</span>
+    </div>
+
+    <ul class="lesson-list" id="courseLessonsList" style="margin-top:18px;">
+      <li><p class="hint" style="color:var(--ink-soft); font-size:0.85rem;">Chargement des leçons...</p></li>
+    </ul>
+  </div>
+</div>
+
+<!-- Modale : leçon (carrousel radial, cercle + boutons +, identique au module 1 de l'index) -->
+<div class="modal-overlay" id="lessonModal" aria-hidden="true">
+  <div class="modal-box lesson-modal" role="dialog" aria-modal="true" aria-labelledby="lessonModalTitle">
+    <button type="button" class="modal-close" onclick="closeLessonModal()" aria-label="Fermer">
+      <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M1 1L13 13M13 1L1 13" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>
+    </button>
+    <div class="modal-eyebrow" id="lessonModalEyebrow">Leçon</div>
+    <h3 id="lessonModalTitle">Titre de la leçon</h3>
+    <div class="lesson-modal-body" id="lessonModalBody"></div>
+    <div class="lesson-modal-footer">
+      <p class="lesson-modal-hint" id="lessonModalHint" style="display:none;">Cliquez sur chaque bouton + pour tout découvrir.</p>
+      <div class="lesson-modal-btnrow">
+        <button type="button" class="btn-secondary" id="lessonModalBack">← Retour</button>
+        <button type="button" class="btn-primary" id="lessonModalAction">Continuer</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Modale : vidéo de la leçon (bucket privé "course-videos", URL signée) -->
+<div class="modal-overlay" id="lessonVideoModal" aria-hidden="true">
+  <div class="modal-box" role="dialog" aria-modal="true" aria-labelledby="lessonVideoModalTitle" style="max-width:820px;">
+    <button type="button" class="modal-close" onclick="closeLessonVideoModal()" aria-label="Fermer">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><line x1="4" y1="4" x2="20" y2="20"/><line x1="20" y1="4" x2="4" y2="20"/></svg>
+    </button>
+    <div class="modal-eyebrow">Vidéo</div>
+    <h3 id="lessonVideoModalTitle">Vidéo de la leçon</h3>
+    <div id="lessonVideoModalFrame" style="margin-top:16px; border-radius:8px; overflow:hidden; background:#000;">
+      <video id="lessonVideoModalPlayer" controls style="width:100%; display:block;"></video>
+    </div>
+  </div>
+</div>
+
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script>
   // ---- Moyens de paiement (modale d'achat) ----
@@ -2979,7 +3071,7 @@ header .wrap{
     var isOwned = !!(ownershipMap && ownershipMap[courseId]);
 
     var actionHtml = isOwned
-      ? '<button type="button" class="btn-enroll btn-enroll-owned" disabled aria-disabled="true"><span class="owned-check"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></span>Cours Acheté</button>'
+      ? '<button type="button" class="btn-enroll btn-enroll-owned is-clickable" onclick="openCourseLessons(\'' + idAttr + '\', \'' + titleAttr + '\')"><span class="owned-check"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></span>Continuer le cours</button>'
       : '<button type="button" class="btn-enroll" onclick="openEnskriModal(\'' + titleAttr + '\', \'' + priceAttr + '\', \'' + idAttr + '\')">Acheter le cours</button>';
 
     return (
@@ -3052,6 +3144,454 @@ header .wrap{
   }
 
   loadPublishedCourses();
+
+  // ================= LEÇONS DES COURS (table "lessons") =================
+  // Affiche, pour un cours acheté, la liste de ses leçons puis, au clic sur
+  // une leçon, le même carrousel radial (cercle + boutons "+") que celui du
+  // module 1 de l'index — même design, mêmes classes CSS, mêmes interactions.
+  var CHECK_SVG_LESSON = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>';
+  var LESSON_VIDEO_BUCKET = 'course-videos'; // bucket Storage privé confirmé
+
+  var activeCourse = null;      // { id, title, lessons: [...] }
+  var lessonCompletions = {};   // { [lesson_id]: true }
+  var lessonModalState = null;  // { idx, item, lesson }
+
+  // Construit le HTML d'un point de leçon à partir du format stocké dans
+  // lessons.content (jsonb) : { body: texte brut, table: {headers, rows} | null }.
+  function buildLessonPointHtml(pt){
+    var html = '<p>' + escapeHtml(pt.body || '') + '</p>';
+    if(pt.table && pt.table.headers && pt.table.rows){
+      html += '<div class="content-table-wrap"><table class="content-table"><thead><tr>';
+      pt.table.headers.forEach(function(h){ html += '<th>' + escapeHtml(h) + '</th>'; });
+      html += '</tr></thead><tbody>';
+      pt.table.rows.forEach(function(row){
+        html += '<tr>';
+        row.forEach(function(cell){ html += '<td>' + escapeHtml(cell) + '</td>'; });
+        html += '</tr>';
+      });
+      html += '</tbody></table></div>';
+    }
+    return html;
+  }
+
+  // Adapte une ligne "lessons" de Supabase au format attendu par le rendu
+  // radial (même structure que LESSON_CONTENT.m1 dans index.html).
+  function lessonToRadialItem(lesson, courseTitle){
+    var points = (lesson.content && lesson.content.points) || [];
+    return {
+      title: lesson.chapter_title || 'Leçon',
+      chapterTag: courseTitle || 'Leçon',
+      body: points.length ? (points.length + ' points clés à découvrir dans cette leçon.') : '',
+      points: points.map(function(pt){
+        return { label: pt.label || '', html: buildLessonPointHtml(pt) };
+      })
+    };
+  }
+
+  // ---- Panneau "mes leçons" d'un cours acheté ----
+  function openCourseLessons(courseId, courseTitle){
+    if(!isLoggedIn()){ openLoginModal(); return; }
+
+    var modal = document.getElementById('courseLessonsModal');
+    var titleEl = document.getElementById('courseLessonsTitle');
+    var listEl = document.getElementById('courseLessonsList');
+    if(!modal || !listEl){ return; }
+
+    titleEl.textContent = courseTitle || 'Mon cours';
+    listEl.innerHTML = '<li><p class="hint" style="color:var(--ink-soft); font-size:0.85rem;">Chargement des leçons...</p></li>';
+    modal.classList.add('open');
+    modal.setAttribute('aria-hidden', 'false');
+
+    activeCourse = { id: courseId, title: courseTitle, lessons: [] };
+
+    supabaseClient
+      .from('lessons')
+      .select('id, course_id, position, chapter_title, content, video_path, duration_seconds')
+      .eq('course_id', courseId)
+      .order('position', { ascending: true })
+      .then(function(res){
+        if(res.error){ throw res.error; }
+        activeCourse.lessons = res.data || [];
+        var ids = activeCourse.lessons.map(function(l){ return l.id; });
+        if(ids.length === 0){
+          lessonCompletions = {};
+          renderCourseLessonsList();
+          return null;
+        }
+        return supabaseClient
+          .from('lesson_completions')
+          .select('lesson_id')
+          .eq('user_id', currentSession.user.id)
+          .in('lesson_id', ids)
+          .then(function(compRes){
+            lessonCompletions = {};
+            if(!compRes.error && compRes.data){
+              compRes.data.forEach(function(row){ lessonCompletions[row.lesson_id] = true; });
+            }
+            renderCourseLessonsList();
+          });
+      })
+      .catch(function(err){
+        console.error('Erreur chargement des leçons :', err);
+        listEl.innerHTML = '<li><p class="hint" style="color:var(--ink-soft); font-size:0.85rem;">Impossible de charger les leçons pour le moment. Merci de réessayer.</p></li>';
+      });
+  }
+
+  function closeCourseLessonsModal(){
+    var modal = document.getElementById('courseLessonsModal');
+    if(modal){ modal.classList.remove('open'); modal.setAttribute('aria-hidden', 'true'); }
+  }
+
+  function isCourseLessonDone(lessonId){ return !!lessonCompletions[lessonId]; }
+
+  // Déblocage séquentiel : la première leçon est toujours accessible, les
+  // suivantes se débloquent une fois la précédente terminée (comme m1-m4).
+  function isCourseLessonUnlocked(idx){
+    if(idx === 0){ return true; }
+    var prev = activeCourse.lessons[idx - 1];
+    return !!(prev && isCourseLessonDone(prev.id));
+  }
+
+  function renderCourseLessonsList(){
+    var listEl = document.getElementById('courseLessonsList');
+    var fill = document.getElementById('courseLessonsProgressFill');
+    var text = document.getElementById('courseLessonsProgressText');
+    var pctEl = document.getElementById('courseLessonsProgressPct');
+    if(!listEl || !activeCourse){ return; }
+
+    var lessons = activeCourse.lessons;
+    var total = lessons.length;
+    var done = lessons.filter(function(l){ return isCourseLessonDone(l.id); }).length;
+    var pct = total ? Math.round((done / total) * 100) : 0;
+    if(fill){ fill.style.width = pct + '%'; }
+    if(text){ text.textContent = done + '/' + total + ' leçons terminées'; }
+    if(pctEl){ pctEl.textContent = pct + '%'; }
+
+    if(total === 0){
+      listEl.innerHTML = '<li><p class="hint" style="color:var(--ink-soft); font-size:0.85rem;">Aucune leçon n\'est encore disponible pour ce cours. Revenez bientôt !</p></li>';
+      return;
+    }
+
+    listEl.innerHTML = '';
+    lessons.forEach(function(lesson, idx){
+      var doneL = isCourseLessonDone(lesson.id);
+      var unlocked = isCourseLessonUnlocked(idx);
+      var li = document.createElement('li');
+      var btn = document.createElement('button');
+      btn.type = 'button';
+      btn.className = 'lesson-row' + (doneL ? ' done' : '');
+      btn.disabled = !unlocked;
+      btn.innerHTML =
+        '<span class="lesson-status"><svg viewBox="0 0 12 12" fill="none"><path d="M2 6.2L4.7 9L10 3" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></span>' +
+        '<span class="lesson-title">' + escapeHtml(lesson.chapter_title || ('Leçon ' + (idx + 1))) + '</span>' +
+        (!unlocked ? '<svg class="lesson-lock" viewBox="0 0 24 24" fill="none"><rect x="5" y="11" width="14" height="9" rx="2" stroke="currentColor" stroke-width="1.6"/><path d="M8 11V8a4 4 0 0 1 8 0v3" stroke="currentColor" stroke-width="1.6"/></svg>' : '');
+      if(unlocked){
+        btn.addEventListener('click', function(){ openLessonModal(idx); });
+      }
+      li.appendChild(btn);
+      listEl.appendChild(li);
+    });
+  }
+
+  // ---- Marquer une leçon terminée (persisté dans lesson_completions) ----
+  function markCourseLessonDone(lessonId){
+    lessonCompletions[lessonId] = true;
+    if(!isLoggedIn()){ return; }
+    supabaseClient.from('lesson_completions').upsert({
+      user_id: currentSession.user.id,
+      lesson_id: lessonId,
+      done: true
+    }, { onConflict: 'user_id,lesson_id' }).then(function(res){
+      if(res.error){ console.error('Erreur enregistrement progression :', res.error); }
+    });
+  }
+
+  function goToNextCourseLesson(idx){
+    var nextIdx = idx + 1;
+    if(!activeCourse || nextIdx >= activeCourse.lessons.length){ return; }
+    if(!isCourseLessonUnlocked(nextIdx)){ return; }
+    setTimeout(function(){ openLessonModal(nextIdx); }, 200);
+  }
+
+  function goToPreviousCourseLesson(idx){
+    var prevIdx = idx - 1;
+    if(prevIdx < 0){ return; }
+    setTimeout(function(){ openLessonModal(prevIdx); }, 200);
+  }
+
+  // ---- Cercle central + boutons "+" autour (identique au module 1 de l'index) ----
+  function renderLessonRadialBody(body, item, hint, actionBtn){
+    var points = item.points;
+    var total = points.length;
+    var viewed = {};
+
+    body.innerHTML = '';
+
+    var wrap = document.createElement('div');
+    wrap.className = 'lesson-radial';
+
+    var counter = document.createElement('div');
+    counter.className = 'radial-counter';
+    counter.textContent = total + ' points clés — cliquez sur chaque bouton +';
+    wrap.appendChild(counter);
+
+    var stage = document.createElement('div');
+    stage.className = 'radial-stage';
+    wrap.appendChild(stage);
+    body.appendChild(wrap);
+
+    var circle = document.createElement('div');
+    circle.className = 'radial-circle';
+    circle.style.cursor = 'pointer';
+    circle.title = 'Cliquez pour en savoir plus';
+    circle.innerHTML = '<div class="rc-chapter">' + escapeHtml(item.chapterTag || 'Leçon') + '</div><div class="rc-title">' + escapeHtml(item.title) + '</div><div style="font-size:0.62rem;margin-top:8px;opacity:0.7;letter-spacing:.04em;">▶ APERÇU</div>';
+    circle.onclick = function(){ openLessonRadialCenterPopup(item); };
+    stage.appendChild(circle);
+
+    var backdrop2 = document.getElementById('radialBackdrop');
+    if(backdrop2){
+      backdrop2.addEventListener('click', function(){
+        stage.querySelectorAll('.radial-panel.is-shown').forEach(function(p){ p.classList.remove('is-shown'); });
+        stage.querySelectorAll('.radial-item.is-open').forEach(function(n){ n.classList.remove('is-open'); });
+        backdrop2.classList.remove('active');
+      });
+    }
+
+    var radius = 200;
+
+    function updateHint(){
+      var seen = Object.keys(viewed).length;
+      hint.style.display = 'block';
+      hint.textContent = (seen < total)
+        ? ('Cliquez sur le bouton + de chaque point autour du cercle pour tout découvrir (' + seen + '/' + total + ' vus)')
+        : 'Tous les points clés ont été consultés ✓ — vous pouvez continuer.';
+      actionBtn.disabled = seen < total;
+    }
+
+    points.forEach(function(pt, i){
+      var angle = (-90 + i * (360 / total)) * Math.PI / 180;
+      var x = radius * Math.cos(angle);
+      var y = radius * Math.sin(angle);
+
+      var item2 = document.createElement('div');
+      item2.className = 'radial-item';
+      item2.style.left = 'calc(50% + ' + x.toFixed(1) + 'px)';
+      item2.style.top = 'calc(50% + ' + y.toFixed(1) + 'px)';
+
+      var row = document.createElement('div');
+      row.className = 'radial-item-row';
+
+      var btn = document.createElement('button');
+      btn.type = 'button';
+      btn.className = 'radial-plus';
+      btn.innerHTML = '+';
+      btn.setAttribute('aria-label', 'Afficher : ' + pt.label);
+      row.appendChild(btn);
+
+      var label = document.createElement('div');
+      label.className = 'radial-plus-label';
+      label.textContent = pt.label;
+      row.appendChild(label);
+
+      item2.appendChild(row);
+
+      btn.onclick = function(){
+        var backdrop = document.getElementById('radialBackdrop');
+        var portalPanel = document.getElementById('radialPortalPanel');
+        var portalTitle = document.getElementById('radialPortalTitle');
+        var portalContent = document.getElementById('radialPortalContent');
+        var portalClose = document.getElementById('radialPortalClose');
+
+        if(item2.classList.contains('is-open')){
+          item2.classList.remove('is-open');
+          if(portalPanel) portalPanel.classList.remove('is-shown');
+          if(backdrop) backdrop.classList.remove('active');
+          return;
+        }
+
+        stage.querySelectorAll('.radial-item.is-open').forEach(function(n){ n.classList.remove('is-open'); });
+
+        if(portalTitle) portalTitle.textContent = pt.label;
+        if(portalContent) portalContent.innerHTML = pt.html;
+
+        item2.classList.add('is-open');
+        if(portalPanel) portalPanel.classList.add('is-shown');
+        if(backdrop) backdrop.classList.add('active');
+
+        if(!viewed[i]){
+          viewed[i] = true;
+          item2.classList.add('is-viewed');
+          btn.innerHTML = CHECK_SVG_LESSON;
+          btn.setAttribute('aria-label', pt.label + ' — déjà vu');
+          updateHint();
+        }
+
+        if(portalClose){
+          portalClose.onclick = function(){
+            item2.classList.remove('is-open');
+            portalPanel.classList.remove('is-shown');
+            if(backdrop) backdrop.classList.remove('active');
+          };
+        }
+      };
+
+      stage.appendChild(item2);
+    });
+
+    updateHint();
+  }
+
+  function openLessonRadialCenterPopup(item){
+    var popup = document.getElementById('radialCenterPopup');
+    var eyebrow = document.getElementById('radialCenterPopupEyebrow');
+    var titleEl = document.getElementById('radialCenterPopupTitle');
+    var bodyEl = document.getElementById('radialCenterPopupBody');
+    if(!popup || !item){ return; }
+    eyebrow.textContent = item.chapterTag || 'Leçon';
+    titleEl.textContent = item.title;
+    bodyEl.innerHTML = '<p>' + escapeHtml(item.body || '') + '</p>';
+    popup.classList.add('open');
+    popup.setAttribute('aria-hidden', 'false');
+  }
+
+  function closeRadialCenterPopup(){
+    var popup = document.getElementById('radialCenterPopup');
+    if(popup){ popup.classList.remove('open'); popup.setAttribute('aria-hidden', 'true'); }
+  }
+
+  document.addEventListener('DOMContentLoaded', function(){
+    var popup = document.getElementById('radialCenterPopup');
+    if(popup){
+      popup.addEventListener('click', function(e){
+        if(e.target === popup){ closeRadialCenterPopup(); }
+      });
+    }
+    var backdrop = document.getElementById('radialBackdrop');
+    if(backdrop){
+      backdrop.addEventListener('click', function(){
+        document.querySelectorAll('.radial-item.is-open').forEach(function(n){ n.classList.remove('is-open'); });
+        var portal = document.getElementById('radialPortalPanel');
+        if(portal) portal.classList.remove('is-shown');
+        backdrop.classList.remove('active');
+      });
+    }
+  });
+
+  // ---- Modale d'une leçon ----
+  function openLessonModal(idx){
+    if(!activeCourse){ return; }
+    var lesson = activeCourse.lessons[idx];
+    if(!lesson){ return; }
+    var item = lessonToRadialItem(lesson, activeCourse.title);
+    lessonModalState = { idx: idx, item: item, lesson: lesson };
+
+    var overlay = document.getElementById('lessonModal');
+    var eyebrow = document.getElementById('lessonModalEyebrow');
+    var titleEl = document.getElementById('lessonModalTitle');
+    var body = document.getElementById('lessonModalBody');
+    var hint = document.getElementById('lessonModalHint');
+    var actionBtn = document.getElementById('lessonModalAction');
+    var backBtn = document.getElementById('lessonModalBack');
+
+    if(backBtn){
+      backBtn.disabled = (idx === 0);
+      backBtn.onclick = function(){
+        closeLessonModal();
+        goToPreviousCourseLesson(idx);
+      };
+    }
+
+    eyebrow.textContent = 'Leçon';
+    titleEl.textContent = item.title;
+    body.innerHTML = '';
+    body.scrollTop = 0;
+
+    var wrap = document.createElement('div');
+    wrap.className = 'lesson-modal-content-wrap';
+    var mainCol = document.createElement('div');
+    mainCol.className = 'lesson-modal-main';
+    wrap.appendChild(mainCol);
+    body.appendChild(wrap);
+
+    // Bouton vidéo, seulement si cette leçon a une vidéo associée.
+    if(lesson.video_path){
+      var videoBtn = document.createElement('button');
+      videoBtn.type = 'button';
+      videoBtn.className = 'btn-secondary';
+      videoBtn.style.marginBottom = '16px';
+      videoBtn.innerHTML = '🎥 Voir la vidéo de cette leçon';
+      videoBtn.onclick = function(){ openLessonVideo(lesson); };
+      mainCol.appendChild(videoBtn);
+    }
+
+    if(item.points && item.points.length){
+      actionBtn.textContent = 'Passer à la leçon suivante →';
+      actionBtn.disabled = true;
+      actionBtn.onclick = function(){
+        markCourseLessonDone(lesson.id);
+        closeLessonModal();
+        renderCourseLessonsList();
+        goToNextCourseLesson(idx);
+      };
+      renderLessonRadialBody(mainCol, item, hint, actionBtn);
+    } else {
+      hint.style.display = 'none';
+      var pEl = document.createElement('p');
+      pEl.textContent = 'Cette leçon ne contient pas encore de contenu.';
+      mainCol.appendChild(pEl);
+      actionBtn.textContent = 'Passer à la leçon suivante →';
+      actionBtn.disabled = false;
+      actionBtn.onclick = function(){
+        markCourseLessonDone(lesson.id);
+        closeLessonModal();
+        renderCourseLessonsList();
+        goToNextCourseLesson(idx);
+      };
+    }
+
+    overlay.classList.add('open');
+    overlay.setAttribute('aria-hidden', 'false');
+  }
+
+  function closeLessonModal(){
+    var overlay = document.getElementById('lessonModal');
+    overlay.classList.remove('open');
+    overlay.setAttribute('aria-hidden', 'true');
+    lessonModalState = null;
+  }
+
+  // ---- Vidéo de leçon (bucket privé "course-videos" + URL signée) ----
+  function openLessonVideo(lesson){
+    var modal = document.getElementById('lessonVideoModal');
+    var titleEl = document.getElementById('lessonVideoModalTitle');
+    var player = document.getElementById('lessonVideoModalPlayer');
+    if(!modal || !player){ return; }
+
+    titleEl.textContent = lesson.chapter_title || 'Vidéo de la leçon';
+    player.removeAttribute('src');
+    modal.classList.add('open');
+    modal.setAttribute('aria-hidden', 'false');
+
+    supabaseClient.storage
+      .from(LESSON_VIDEO_BUCKET)
+      .createSignedUrl(lesson.video_path, 3600)
+      .then(function(res){
+        if(res.error || !res.data){ throw res.error || new Error('URL signée indisponible'); }
+        player.src = res.data.signedUrl;
+        player.play().catch(function(){});
+      })
+      .catch(function(err){
+        console.error('Erreur chargement vidéo :', err);
+        titleEl.textContent = 'Vidéo indisponible pour le moment';
+      });
+  }
+
+  function closeLessonVideoModal(){
+    var modal = document.getElementById('lessonVideoModal');
+    var player = document.getElementById('lessonVideoModalPlayer');
+    if(player){ player.pause(); player.removeAttribute('src'); player.load(); }
+    if(modal){ modal.classList.remove('open'); modal.setAttribute('aria-hidden', 'true'); }
+  }
 
   // ================= FENÊTRE COMPTE (Tableau de bord + Mon profil) =================
   (function(){
