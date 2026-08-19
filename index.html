@@ -7683,76 +7683,157 @@ document.addEventListener('keydown', function(e){
     return h + ' h' + (m ? ' ' + m + ' min' : '');
   }
 
+  // ---- Plateforme unique : le tableau de bord affiche aussi les "cours" (Cours.html),
+  // qui utilisent un système de suivi différent (table Supabase "courses"/"lessons"/
+  // "lesson_completions"), en plus des modules de cette page. Un élève ayant acheté un
+  // module ET un cours voit donc tout au même endroit, sur les deux pages. ----
+  function escapeHtml(str){
+    return String(str == null ? '' : str).replace(/[&<>"']/g, function(c){
+      return { '&':'&amp;', '<':'&lt;', '>':'&gt;', '"':'&quot;', "'":'&#39;' }[c];
+    });
+  }
+
+  function fetchCourseDashboardEntries(){
+    var empty = { cards: [], sumPct: 0, count: 0, totalSeconds: 0, resumeTitle: null };
+    if(!isLoggedIn()){ return Promise.resolve(empty); }
+    return supabaseClient.from('enrollments').select('course_id, status')
+      .eq('user_id', currentSession.user.id).eq('status', 'confirmed')
+      .then(function(enrollRes){
+        var courseIds = (enrollRes.data || [])
+          .map(function(r){ return r.course_id ? String(r.course_id) : ''; })
+          .filter(function(id, i, arr){ return id && arr.indexOf(id) === i; });
+        if(!courseIds.length){ return empty; }
+        return Promise.all([
+          supabaseClient.from('courses').select('id, title').in('id', courseIds),
+          supabaseClient.from('lessons').select('id, course_id, position, duration_seconds').in('course_id', courseIds).order('position', { ascending: true })
+        ]).then(function(results){
+          var titleById = {};
+          (results[0].data || []).forEach(function(c){ titleById[String(c.id)] = c.title; });
+          var lessonsByCourse = {};
+          (results[1].data || []).forEach(function(l){
+            var k = String(l.course_id);
+            if(!lessonsByCourse[k]){ lessonsByCourse[k] = []; }
+            lessonsByCourse[k].push(l);
+          });
+          var allLessonIds = (results[1].data || []).map(function(l){ return l.id; });
+          var completionsPromise = allLessonIds.length
+            ? supabaseClient.from('lesson_completions').select('lesson_id').eq('user_id', currentSession.user.id).in('lesson_id', allLessonIds)
+            : Promise.resolve({ data: [] });
+          return completionsPromise.then(function(compRes){
+            var doneSet = {};
+            (compRes.data || []).forEach(function(row){ doneSet[row.lesson_id] = true; });
+            var out = { cards: [], sumPct: 0, count: courseIds.length, totalSeconds: 0, resumeTitle: null };
+            courseIds.forEach(function(courseId){
+              var lessons = lessonsByCourse[courseId] || [];
+              var total = lessons.length, done = 0;
+              lessons.forEach(function(lesson){
+                if(doneSet[lesson.id]){ done++; out.totalSeconds += (lesson.duration_seconds || 0); }
+              });
+              var pct = total ? Math.round((done / total) * 100) : 0;
+              out.sumPct += pct;
+              var isDone = total > 0 && done === total;
+              var title = titleById[courseId] || 'Formation';
+              if(done > 0 && !out.resumeTitle){ out.resumeTitle = title; }
+              out.cards.push({ title: title, pct: pct, isDone: isDone });
+            });
+            return out;
+          });
+        });
+      })
+      .catch(function(){ return empty; });
+  }
+
+  function buildDashCard(title, pct, isDone, resumeLabel, onAction){
+    var card = document.createElement('div');
+    card.className = 'dash-course-card';
+    card.innerHTML =
+      '<div class="dash-course-top">' +
+        '<span>' + escapeHtml(title) + '</span>' +
+        '<span class="dash-course-pct' + (pct === 100 ? ' done' : '') + '">' + pct + '%</span>' +
+      '</div>' +
+      '<div class="progress-track"><div class="progress-fill" style="width:' + pct + '%;"></div></div>' +
+      '<button type="button" class="dash-quick-btn dash-course-action' + (isDone ? ' outline' : '') + '">' +
+        (isDone
+          ? '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><polyline points="1 4 1 10 7 10"/><path d="M3.51 15a9 9 0 1 0 2.13-9.36L1 10"/></svg>' + resumeLabel
+          : '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><polygon points="5 3 19 12 5 21 5 3"/></svg>Poursuivre') +
+      '</button>';
+    var actionBtn = card.querySelector('.dash-course-action');
+    if(actionBtn){ actionBtn.addEventListener('click', onAction); }
+    return card;
+  }
+
   function updateDashboard(){
     if(typeof MODULE_CERT_TITLES === 'undefined'){ return; }
     var totalTimeEl = document.getElementById('dashTotalTime');
-    if(totalTimeEl){ totalTimeEl.textContent = formatLearningDuration(getTotalLearningSeconds()); }
-
     var listEl = document.getElementById('dashCourseList');
     var avgEl = document.getElementById('dashAvgPct');
-    if(listEl){
-      listEl.innerHTML = '';
-      var sumPct = 0;
-      // Seuls les modules déjà débloqués (payés et confirmés) apparaissent dans le tableau de bord.
-      var unlockedModules = MODULES.filter(isModuleUnlocked);
-      unlockedModules.forEach(function(mod){
-        var items = getModuleItems(mod);
-        var total = items.length, done = 0;
-        for(var i = 0; i < total; i++){ if(isLessonDone(mod, i)) done++; }
-        var pct = total ? Math.round((done / total) * 100) : 0;
-        sumPct += pct;
-        var isDone = total > 0 && done === total;
-        var card = document.createElement('div');
-        card.className = 'dash-course-card';
-        card.innerHTML =
-          '<div class="dash-course-top">' +
-            '<span>' + (MODULE_CERT_TITLES[mod] || mod) + '</span>' +
-            '<span class="dash-course-pct' + (pct === 100 ? ' done' : '') + '">' + pct + '%</span>' +
-          '</div>' +
-          '<div class="progress-track"><div class="progress-fill" style="width:' + pct + '%;"></div></div>' +
-          '<button type="button" class="dash-quick-btn dash-course-action' + (isDone ? ' outline' : '') + '">' +
-            (isDone
-              ? '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><polyline points="1 4 1 10 7 10"/><path d="M3.51 15a9 9 0 1 0 2.13-9.36L1 10"/></svg>Reprendre au début'
-              : '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><polygon points="5 3 19 12 5 21 5 3"/></svg>Poursuivre') +
-          '</button>';
-        var actionBtn = card.querySelector('.dash-course-action');
-        if(actionBtn){
-          // Module terminé -> on repart de la leçon 1 ; sinon -> on reprend la première
-          // leçon non terminée (= là où l'élève s'était arrêté). Le tableau de bord (tiroir
-          // de compte) se ferme automatiquement pour laisser place à la leçon/vidéo/quiz.
-          actionBtn.addEventListener('click', function(){
+    var resumeTitle = document.getElementById('dashResumeTitle');
+    var resumeBtn = document.getElementById('dashResumeBtn');
+    var resumeEmpty = document.getElementById('dashResumeEmpty');
+
+    // Seuls les modules déjà débloqués (payés et confirmés) apparaissent dans le tableau de bord.
+    var unlockedModules = MODULES.filter(isModuleUnlocked);
+    var moduleSumPct = 0;
+
+    fetchCourseDashboardEntries().then(function(courseData){
+      if(totalTimeEl){ totalTimeEl.textContent = formatLearningDuration(getTotalLearningSeconds() + courseData.totalSeconds); }
+
+      if(listEl){
+        listEl.innerHTML = '';
+        unlockedModules.forEach(function(mod){
+          var items = getModuleItems(mod);
+          var total = items.length, done = 0;
+          for(var i = 0; i < total; i++){ if(isLessonDone(mod, i)) done++; }
+          var pct = total ? Math.round((done / total) * 100) : 0;
+          moduleSumPct += pct;
+          var isDone = total > 0 && done === total;
+          var card = buildDashCard(MODULE_CERT_TITLES[mod] || mod, pct, isDone, 'Reprendre au début', function(){
             var targetIdx = isDone ? 0 : firstUnfinishedLessonIndex(mod);
             closeAccountDrawer();
             openModuleItem(mod, targetIdx);
           });
+          listEl.appendChild(card);
+        });
+        // Les cours (Cours.html) achetés apparaissent aussi ici — clic = bascule vers
+        // Cours.html, où le tableau de bord s'ouvre directement sur ce cours.
+        courseData.cards.forEach(function(c){
+          var card = buildDashCard(c.title, c.pct, c.isDone, 'Revoir le cours', function(){
+            window.location.href = 'Cours.html?dash=1';
+          });
+          listEl.appendChild(card);
+        });
+        if(!unlockedModules.length && !courseData.cards.length){
+          listEl.innerHTML = '<div class="dash-courses-empty">Aucun module ni cours débloqué pour le moment — achetez une formation pour commencer votre parcours.</div>';
         }
-        listEl.appendChild(card);
-      });
-      if(!unlockedModules.length){
-        listEl.innerHTML = '<div class="dash-courses-empty">Aucun module débloqué pour le moment — achetez un module pour commencer votre parcours.</div>';
+        var totalCount = unlockedModules.length + courseData.count;
+        if(avgEl){ avgEl.textContent = (totalCount ? Math.round((moduleSumPct + courseData.sumPct) / totalCount) : 0) + '%'; }
       }
-      if(avgEl){ avgEl.textContent = (unlockedModules.length ? Math.round(sumPct / unlockedModules.length) : 0) + '%'; }
-    }
 
-    var resumeTitle = document.getElementById('dashResumeTitle');
-    var resumeBtn = document.getElementById('dashResumeBtn');
-    var resumeEmpty = document.getElementById('dashResumeEmpty');
-    var last = getLastLesson();
-    if(last && MODULE_CERT_TITLES[last.mod] && isModuleUnlocked(last.mod)){
-      if(resumeTitle){ resumeTitle.textContent = MODULE_CERT_TITLES[last.mod]; }
-      if(resumeBtn){
-        resumeBtn.style.display = '';
-        resumeBtn.onclick = function(){
-          closeAccountDrawer();
-          openModuleItem(last.mod, last.idx);
-        };
+      var last = getLastLesson();
+      if(last && MODULE_CERT_TITLES[last.mod] && isModuleUnlocked(last.mod)){
+        if(resumeTitle){ resumeTitle.textContent = MODULE_CERT_TITLES[last.mod]; }
+        if(resumeBtn){
+          resumeBtn.style.display = '';
+          resumeBtn.onclick = function(){
+            closeAccountDrawer();
+            openModuleItem(last.mod, last.idx);
+          };
+        }
+        if(resumeEmpty){ resumeEmpty.style.display = 'none'; }
+      } else if(courseData.resumeTitle){
+        // Rien à reprendre côté modules : on propose le dernier cours en cours, sur l'autre page.
+        if(resumeTitle){ resumeTitle.textContent = courseData.resumeTitle; }
+        if(resumeBtn){
+          resumeBtn.style.display = '';
+          resumeBtn.onclick = function(){ window.location.href = 'Cours.html?dash=1'; };
+        }
+        if(resumeEmpty){ resumeEmpty.style.display = 'none'; }
+      } else {
+        if(resumeTitle){ resumeTitle.textContent = '—'; }
+        if(resumeBtn){ resumeBtn.style.display = 'none'; }
+        if(resumeEmpty){ resumeEmpty.style.display = 'block'; }
       }
-      if(resumeEmpty){ resumeEmpty.style.display = 'none'; }
-    } else {
-      if(resumeTitle){ resumeTitle.textContent = '—'; }
-      if(resumeBtn){ resumeBtn.style.display = 'none'; }
-      if(resumeEmpty){ resumeEmpty.style.display = 'block'; }
-    }
+    });
   }
 
   // Interroge Supabase pour récupérer le statut de paiement (par module) de l'élève
@@ -7925,6 +8006,9 @@ document.addEventListener('keydown', function(e){
     loadPaymentStatus();
     loadLessonProgress();
     if(isLoggedIn() && !rememberMeActive()){ startInactivityTimer(); } else { clearInactivityTimers(); }
+    // Arrivée depuis Cours.html via "Revoir le cours" / "Poursuivre" (plateforme unique) :
+    // on ouvre directement le tableau de bord au lieu de laisser l'élève le rechercher.
+    if(/[?&]dash=1(&|$)/.test(window.location.search)){ openAccountDrawer('dashboard'); }
   });
 
   // Garde l'état synchronisé (connexion/déconnexion/expiration de session)
