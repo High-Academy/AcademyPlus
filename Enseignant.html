@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Espace Enseignant — NOVACC</title>
+<title>Espace professeur — NOVACC</title>
 <meta name="robots" content="noindex, nofollow">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600;9..144,700&family=Inter:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
@@ -268,7 +268,7 @@
   <a href="index.html" class="brand">
     <span>
       <span class="brand-name">NOVACC</span>
-      <span class="brand-tag">Espace Enseignant</span>
+      <span class="brand-tag">Espace professeur</span>
     </span>
   </a>
   <div class="header-right">
@@ -285,7 +285,7 @@
   </div>
 </div>
 
-<!-- ============ APPLICATION (visible seulement après validation du rôle enseignant) ============ -->
+<!-- ============ APPLICATION (visible seulement après validation du rôle professeur) ============ -->
 <div class="shell" id="appShell" style="display:none;">
   <aside class="sidebar">
     <a class="side-link active" data-view="viewCourses">
@@ -506,7 +506,7 @@ function showView(id){
 /* =====================================================================
    AUTHENTIFICATION + VÉRIFICATION DU RÔLE
    Même système d'auth que le reste de NOVACC (Supabase Auth unique) :
-   on vérifie profiles.role === 'enseignant' avant d'afficher le tableau de bord.
+   on vérifie profiles.role === 'professeur' avant d'afficher le tableau de bord.
    ===================================================================== */
 async function initGate(){
   try{
@@ -516,7 +516,7 @@ async function initGate(){
     if (!session){
       document.getElementById('gateTitle').textContent = 'Connexion requise';
       document.getElementById('gateMessage').innerHTML =
-        'Vous devez être connecté avec un compte enseignant pour accéder à cet espace. ' +
+        'Vous devez être connecté avec un compte professeur pour accéder à cet espace. ' +
         '<br><a href="index.html" style="color:var(--blue-deep); font-weight:600;">Retour à l\'accueil</a>';
       return;
     }
@@ -533,10 +533,10 @@ async function initGate(){
       throw profileRes.error;
     }
 
-    if (profileRes.data.role !== 'enseignant' && profileRes.data.role !== 'admin'){
-      document.getElementById('gateTitle').textContent = 'Accès réservé aux enseignants';
+    if (profileRes.data.role !== 'professeur' && profileRes.data.role !== 'admin'){
+      document.getElementById('gateTitle').textContent = 'Accès réservé aux professeurs';
       document.getElementById('gateMessage').textContent =
-        'Ce compte n\'a pas encore les droits enseignant. Contactez l\'administration de NOVACC pour activer votre accès.';
+        'Ce compte n\'a pas encore les droits professeur. Contactez l\'administration de NOVACC pour activer votre accès.';
       return;
     }
 
