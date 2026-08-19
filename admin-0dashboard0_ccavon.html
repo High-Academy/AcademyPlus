@@ -112,6 +112,14 @@
   .badge.published{background:#E4F5E9; color:var(--teal);}
   .badge.rejected{background:#FDEAEA; color:var(--red);}
   .badge.archived{background:#F0F0F0; color:var(--ink-soft);}
+  .badge.admin{background:var(--blue-tint); color:var(--blue-deep);}
+  .badge.professeur{background:#FDEFDA; color:var(--gold);}
+
+  /* Gestion des comptes (table profiles) */
+  .accounts-toolbar{margin:10px 0 14px;}
+  .accounts-toolbar input{width:100%; max-width:320px; padding:8px 12px; border:1px solid var(--line); border-radius:6px; font-size:0.88rem; font-family:'Inter',sans-serif;}
+  .accounts-toolbar input:focus{outline:none; border-color:var(--blue);}
+  .account-role-select{padding:5px 8px; border:1px solid var(--line); border-radius:6px; font-size:0.82rem; font-family:'Inter',sans-serif; background:#fff; margin-right:6px;}
   .courses-table-wrap{overflow-x:auto;}
   .courses-table-wrap table{min-width:760px;}
   .course-title-cell{font-weight:600; color:var(--ink);}
@@ -229,6 +237,21 @@
       <thead><tr><th>Date</th><th>Module</th><th>Mod</th><th>Email</th><th>Paiement</th><th>Statut</th></tr></thead>
       <tbody id="recentTableBody"><tr><td colspan="6">Chargement…</td></tr></tbody>
     </table>
+  </section>
+
+  <section class="card">
+    <h3>Gestion des comptes</h3>
+    <div class="card-sub">Tous les comptes de la table <code>profiles</code> — email, rôle et date de création.</div>
+    <div class="accounts-toolbar">
+      <input type="text" id="accountsSearch" placeholder="Filtrer par email…">
+    </div>
+    <div class="courses-table-wrap">
+      <table>
+        <thead><tr><th>Email</th><th>Rôle</th><th>Créé le</th><th>Actions</th></tr></thead>
+        <tbody id="accountsTableBody"><tr><td colspan="4">Chargement…</td></tr></tbody>
+      </table>
+    </div>
+    <p class="courses-empty-hint" id="accountsEmptyHint">Aucun compte trouvé.</p>
   </section>
 
   <section class="card">
@@ -616,6 +639,101 @@
     }
   });
 
+  // ---- Gestion des comptes (table "profiles") ----
+  var ROLE_LABEL = { etudiant: 'Étudiant', professeur: 'Professeur', admin: 'Admin' };
+  var ROLE_BADGE = { etudiant: 'other', professeur: 'professeur', admin: 'admin' };
+  var allAccounts = [];
+
+  function formatDateFr(iso){
+    if(!iso) return '—';
+    var d = new Date(iso);
+    if(isNaN(d.getTime())) return '—';
+    return d.toLocaleDateString('fr-FR', { day: '2-digit', month: 'short', year: 'numeric' });
+  }
+
+  function renderAccounts(rows){
+    var tbody = document.getElementById('accountsTableBody');
+    var emptyHint = document.getElementById('accountsEmptyHint');
+
+    if(!rows || rows.length === 0){
+      tbody.innerHTML = '';
+      emptyHint.classList.add('show');
+      return;
+    }
+    emptyHint.classList.remove('show');
+
+    tbody.innerHTML = rows.map(function(p){
+      var badgeClass = ROLE_BADGE[p.role] || 'other';
+      var badgeLabel = ROLE_LABEL[p.role] || p.role || '—';
+      var options = Object.keys(ROLE_LABEL).map(function(r){
+        return '<option value="' + r + '"' + (r === p.role ? ' selected' : '') + '>' + ROLE_LABEL[r] + '</option>';
+      }).join('');
+      return '<tr data-user-id="' + p.id + '">' +
+        '<td>' + (p.email || '—') + '</td>' +
+        '<td><span class="badge ' + badgeClass + '">' + badgeLabel + '</span></td>' +
+        '<td>' + formatDateFr(p.created_at) + '</td>' +
+        '<td><div class="course-actions">' +
+          '<select class="account-role-select" data-user-id="' + p.id + '">' + options + '</select>' +
+          '<button type="button" class="act-save-role" data-user-id="' + p.id + '">Enregistrer</button>' +
+        '</div></td>' +
+        '</tr>';
+    }).join('');
+  }
+
+  function applyAccountsFilter(){
+    var searchInput = document.getElementById('accountsSearch');
+    var q = (searchInput.value || '').trim().toLowerCase();
+    var filtered = !q ? allAccounts : allAccounts.filter(function(p){
+      return (p.email || '').toLowerCase().indexOf(q) !== -1;
+    });
+    renderAccounts(filtered);
+  }
+
+  async function loadAccounts(){
+    try {
+      // admin_list_profiles() est une RPC "security definer" à créer côté Supabase (même
+      // modèle que admin_list_courses) : la RLS de "profiles" ne laisse normalement chaque
+      // compte voir que sa propre ligne (auth.uid() = id) — cette fonction vérifie que
+      // l'appelant est admin puis renvoie tous les comptes (id, email, role, created_at).
+      var res = await supabaseClient.rpc('admin_list_profiles');
+      if(res.error) throw res.error;
+      allAccounts = res.data || [];
+      applyAccountsFilter();
+    } catch(err){
+      console.error(err);
+      document.getElementById('accountsTableBody').innerHTML =
+        '<tr><td colspan="4">Erreur de chargement : ' + (err.message || err) + '</td></tr>';
+    }
+  }
+
+  document.getElementById('accountsSearch').addEventListener('input', applyAccountsFilter);
+
+  document.getElementById('accountsTableBody').addEventListener('click', async function(ev){
+    var btn = ev.target.closest('.act-save-role');
+    if(!btn) return;
+    var userId = btn.getAttribute('data-user-id');
+    var select = document.querySelector('.account-role-select[data-user-id="' + userId + '"]');
+    var newRole = select.value;
+    btn.disabled = true;
+    select.disabled = true;
+    try {
+      // admin_update_profile_role(p_user_id, p_role) : autre RPC "security definer" à
+      // créer, sur le même modèle que admin_update_course_status — la RLS de "profiles"
+      // empêcherait sinon un admin de modifier le rôle d'un autre compte.
+      var res = await supabaseClient.rpc('admin_update_profile_role', {
+        p_user_id: userId,
+        p_role: newRole
+      });
+      if(res.error) throw res.error;
+      await loadAccounts();
+    } catch(err){
+      console.error(err);
+      alert('Erreur lors du changement de rôle : ' + (err.message || err));
+      btn.disabled = false;
+      select.disabled = false;
+    }
+  });
+
   function formatHTG(n){
     n = Number(n) || 0;
     return n.toLocaleString('fr-FR', { minimumFractionDigits: 0, maximumFractionDigits: 2 }) + ' HTG';
@@ -677,6 +795,7 @@
 
   function loadAll(){
     loadDashboardData();
+    loadAccounts();
     loadCourses();
     loadPayouts();
     loadPendingEnrollments();
