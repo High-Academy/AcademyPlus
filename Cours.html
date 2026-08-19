@@ -1739,7 +1739,17 @@ header .wrap{
     </a>
     <nav class="links" id="navLinks">
       <a href="index.html">Accueil</a>
-      <a href="Cours.html" class="nav-formations-link" style="color:var(--blue-deep); font-weight:700;">Nos formations</a>
+	  
+	  <div  class="nav-dropdown" id="navFormationsLink">
+      
+	   <a href="#kous" class="nav-formations-link" onclick="event.preventDefault(); event.stopPropagation(); this.closest('.nav-dropdown').classList.toggle('open');">
+          Nos Formations
+          <svg class="nav-dropdown-caret" onclick="event.preventDefault(); event.stopPropagation(); this.closest('.nav-dropdown').classList.toggle('open');" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><polyline points="6 9 12 15 18 9"/></svg>
+        </a>
+        <div class="nav-dropdown-menu">
+          <a href="index.html#formations" class="nav-dropdown-item">Suivi-évaluation</a>
+		 </div>
+      </div>
       <a href="certificat.html">Certificats</a>
       <a href="index.html#kontak">Contact</a>
     </nav>
@@ -1961,8 +1971,7 @@ header .wrap{
     <div class="sec-head catabg" style="padding:28px 20px; border-radius:14px; margin-bottom:24px;">
       <div><h2 class="cata" style="text-align:center; color:#F4C468">Catalogue de formations</h2></div>
       <h3 style="text-align:center; color:#fff">Toutes nos formations publiees</h3>
-      <p style="text-align:center; color:#fff">Cette page se met a jour automatiquement des qu'un enseignant publie un nouveau cours.</p>
-    </div>
+       </div>
 
     <div class="course-grid" id="coursesGrid">
       <p class="hint" id="coursesLoading" style="grid-column:1/-1; text-align:center; color:var(--ink-soft); padding:40px 0;">Chargement des formations...</p>
@@ -2834,6 +2843,9 @@ header .wrap{
   supabaseClient.auth.getSession().then(function(result){
     currentSession = result.data.session;
     updateLoginButton();
+    // Arrivée depuis index.html via "Revoir le cours" / "Poursuivre" (plateforme unique) :
+    // on ouvre directement le tableau de bord au lieu de laisser l'élève le rechercher.
+    if(/[?&]dash=1(&|$)/.test(window.location.search)){ openAccountDrawer('dashboard'); }
   });
 
   // Garde l'état synchronisé (connexion/déconnexion/expiration de session)
@@ -3937,6 +3949,67 @@ header .wrap{
     return h + 'h' + (m ? (' ' + m + 'min') : '');
   }
 
+  // ---- Plateforme unique : le tableau de bord affiche aussi les "modules" (index.html),
+  // qui utilisent un système de suivi différent (table Supabase "lesson_progress", contenu
+  // codé en dur dans index.html — pas en base de données). Registre léger nécessaire car
+  // cette page n'a pas accès au contenu des modules ; seuls titres + nombre de leçons sont
+  // dupliqués ici pour calculer une progression. ⚠️ À garder en phase avec MODULE_CERT_TITLES
+  // et LESSON_CONTENT dans index.html si le contenu des modules change. ----
+  var INDEX_MODULE_TITLES = {
+    m1: 'Introduction au Suivi & Évaluation de Projet',
+    m2: 'Cadre Logique & Indicateurs de Performance',
+    m3: 'Collecte & Analyse de Données sur le Terrain',
+    m4: 'Rapport des Résultats & Communication avec les Bailleurs'
+  };
+  var INDEX_MODULE_LESSON_COUNTS = { m1: 42, m2: 50, m3: 81, m4: 51 };
+
+  // Récupère la progression des modules (achetés sur index.html) de l'élève connecté.
+  async function fetchModuleDashboardEntries(){
+    var empty = { cards: [], sumPct: 0, count: 0, resumeTitle: null };
+    if(!isLoggedIn()){ return empty; }
+    try{
+      var enrollRes = await supabaseClient
+        .from('enrollments')
+        .select('module_id, status')
+        .eq('user_id', currentSession.user.id)
+        .eq('status', 'confirmed')
+        .not('module_id', 'is', null);
+      if(enrollRes.error){ throw enrollRes.error; }
+
+      var moduleIds = (enrollRes.data || [])
+        .map(function(r){ return r.module_id; })
+        .filter(function(id, i, arr){ return id && INDEX_MODULE_LESSON_COUNTS[id] && arr.indexOf(id) === i; });
+      if(!moduleIds.length){ return empty; }
+
+      var progRes = await supabaseClient
+        .from('lesson_progress')
+        .select('module_id, lesson_idx')
+        .eq('user_id', currentSession.user.id)
+        .in('module_id', moduleIds);
+
+      var doneCountByModule = {};
+      (progRes.data || []).forEach(function(row){
+        doneCountByModule[row.module_id] = (doneCountByModule[row.module_id] || 0) + 1;
+      });
+
+      var out = { cards: [], sumPct: 0, count: moduleIds.length, resumeTitle: null };
+      moduleIds.forEach(function(mod){
+        var total = INDEX_MODULE_LESSON_COUNTS[mod];
+        var done = Math.min(doneCountByModule[mod] || 0, total);
+        var pct = total ? Math.round((done / total) * 100) : 0;
+        out.sumPct += pct;
+        var isDone = total > 0 && done === total;
+        var title = INDEX_MODULE_TITLES[mod] || mod;
+        if(done > 0 && !out.resumeTitle){ out.resumeTitle = title; }
+        out.cards.push({ title: title, pct: pct, isDone: isDone });
+      });
+      return out;
+    } catch(err){
+      console.error('Erreur chargement progression des modules :', err);
+      return empty;
+    }
+  }
+
   async function updateDashboard(){
     var listEl = document.getElementById('dashCourseList');
     var totalTimeEl = document.getElementById('dashTotalTime');
@@ -3960,6 +4033,10 @@ header .wrap{
     listEl.innerHTML = '<p class="dash-courses-empty">Chargement de vos formations...</p>';
 
     try{
+      // Plateforme unique : on récupère en parallèle la progression des modules
+      // (achetés sur index.html) pendant qu'on traite les cours de cette page.
+      var moduleDataPromise = fetchModuleDashboardEntries();
+
       // Seules les formations déjà confirmées (payées) apparaissent au tableau de bord,
       // comme sur l'index où seuls les modules débloqués y figurent.
       var enrollRes = await supabaseClient
@@ -3973,44 +4050,40 @@ header .wrap{
         .map(function(r){ return String(r.course_id || ''); })
         .filter(function(id, i, arr){ return id && arr.indexOf(id) === i; });
 
-      if(courseIds.length === 0){
-        resetToEmpty();
-        listEl.innerHTML = '<p class="dash-courses-empty">Vous n\'êtes inscrit(e) à aucune formation confirmée pour le moment. Parcourez le catalogue ci-dessous pour commencer.</p>';
-        return;
+      var titleById = {}, lessonsByCourse = {}, doneSet = {};
+      if(courseIds.length){
+        var coursesRes = await supabaseClient.from('courses').select('id, title').in('id', courseIds);
+        (coursesRes.data || []).forEach(function(c){ titleById[String(c.id)] = c.title; });
+
+        var lessonsRes = await supabaseClient
+          .from('lessons')
+          .select('id, course_id, position, chapter_title, duration_seconds')
+          .in('course_id', courseIds)
+          .order('position', { ascending: true });
+
+        (lessonsRes.data || []).forEach(function(l){
+          var k = String(l.course_id);
+          if(!lessonsByCourse[k]){ lessonsByCourse[k] = []; }
+          lessonsByCourse[k].push(l);
+        });
+
+        var allLessonIds = (lessonsRes.data || []).map(function(l){ return l.id; });
+        if(allLessonIds.length){
+          var compRes = await supabaseClient
+            .from('lesson_completions')
+            .select('lesson_id')
+            .eq('user_id', currentSession.user.id)
+            .in('lesson_id', allLessonIds);
+          (compRes.data || []).forEach(function(row){ doneSet[row.lesson_id] = true; });
+        }
       }
 
-      var coursesRes = await supabaseClient.from('courses').select('id, title').in('id', courseIds);
-      var titleById = {};
-      (coursesRes.data || []).forEach(function(c){ titleById[String(c.id)] = c.title; });
-
-      var lessonsRes = await supabaseClient
-        .from('lessons')
-        .select('id, course_id, position, chapter_title, duration_seconds')
-        .in('course_id', courseIds)
-        .order('position', { ascending: true });
-
-      var lessonsByCourse = {};
-      (lessonsRes.data || []).forEach(function(l){
-        var k = String(l.course_id);
-        if(!lessonsByCourse[k]){ lessonsByCourse[k] = []; }
-        lessonsByCourse[k].push(l);
-      });
-
-      var allLessonIds = (lessonsRes.data || []).map(function(l){ return l.id; });
-      var doneSet = {};
-      if(allLessonIds.length){
-        var compRes = await supabaseClient
-          .from('lesson_completions')
-          .select('lesson_id')
-          .eq('user_id', currentSession.user.id)
-          .in('lesson_id', allLessonIds);
-        (compRes.data || []).forEach(function(row){ doneSet[row.lesson_id] = true; });
-      }
+      var moduleData = await moduleDataPromise; // { cards, sumPct, count, resumeTitle }
 
       var totalSeconds = 0;
       var sumPct = 0;
       var cardsHtml = '';
-      var resumeCandidate = null; // { courseId, title, idx }
+      var resumeCandidate = null; // { title, action: 'course'|'module', courseId, idx }
 
       courseIds.forEach(function(courseId){
         var lessons = lessonsByCourse[courseId] || [];
@@ -4031,7 +4104,7 @@ header .wrap{
         var title = titleById[courseId] || 'Formation';
 
         if(done > 0 && !resumeCandidate){
-          resumeCandidate = { courseId: courseId, title: title, idx: isDoneAll ? 0 : firstUnfinishedIdx };
+          resumeCandidate = { title: title, action: 'course', courseId: courseId, idx: isDoneAll ? 0 : firstUnfinishedIdx };
         }
 
         cardsHtml +=
@@ -4049,8 +4122,33 @@ header .wrap{
           '</div>';
       });
 
+      // Les modules (index.html) achetés apparaissent aussi ici — clic = bascule vers
+      // index.html, où le tableau de bord s'ouvre directement sur ce module.
+      moduleData.cards.forEach(function(m){
+        sumPct += m.pct;
+        cardsHtml +=
+          '<div class="dash-course-card">' +
+            '<div class="dash-course-top">' +
+              '<span>' + escapeHtml(m.title) + '</span>' +
+              '<span class="dash-course-pct' + (m.pct === 100 ? ' done' : '') + '">' + m.pct + '%</span>' +
+            '</div>' +
+            '<div class="progress-track"><div class="progress-fill" style="width:' + m.pct + '%;"></div></div>' +
+            '<button type="button" class="dash-quick-btn dash-course-action dash-module-action' + (m.isDone ? ' outline' : '') + '">' +
+              (m.isDone
+                ? '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><polyline points="1 4 1 10 7 10"/><path d="M3.51 15a9 9 0 1 0 2.13-9.36L1 10"/></svg>Reprendre au début'
+                : '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><polygon points="5 3 19 12 5 21 5 3"/></svg>Poursuivre') +
+            '</button>' +
+          '</div>';
+      });
+
+      if(!courseIds.length && !moduleData.cards.length){
+        resetToEmpty();
+        listEl.innerHTML = '<p class="dash-courses-empty">Vous n\'êtes inscrit(e) à aucune formation confirmée pour le moment. Parcourez le catalogue ci-dessous pour commencer.</p>';
+        return;
+      }
+
       listEl.innerHTML = cardsHtml;
-      listEl.querySelectorAll('.dash-course-action').forEach(function(btn){
+      listEl.querySelectorAll('.dash-course-action:not(.dash-module-action)').forEach(function(btn){
         btn.addEventListener('click', function(){
           var cId = btn.getAttribute('data-course-id');
           var cTitle = btn.getAttribute('data-course-title');
@@ -4058,18 +4156,33 @@ header .wrap{
           openCourseLessons(cId, cTitle);
         });
       });
+      listEl.querySelectorAll('.dash-module-action').forEach(function(btn){
+        btn.addEventListener('click', function(){
+          window.location.href = 'index.html?dash=1';
+        });
+      });
 
       if(totalTimeEl){ totalTimeEl.textContent = formatLearningDuration(totalSeconds); }
-      if(avgEl){ avgEl.textContent = (courseIds.length ? Math.round(sumPct / courseIds.length) : 0) + '%'; }
+      var totalCount = courseIds.length + moduleData.count;
+      if(avgEl){ avgEl.textContent = (totalCount ? Math.round(sumPct / totalCount) : 0) + '%'; }
+
+      if(!resumeCandidate && moduleData.resumeTitle){
+        // Rien à reprendre côté cours : on propose le dernier module en cours, sur l'autre page.
+        resumeCandidate = { title: moduleData.resumeTitle, action: 'module' };
+      }
 
       if(resumeCandidate){
         if(resumeTitleEl){ resumeTitleEl.textContent = resumeCandidate.title; }
         if(resumeBtnEl){
           resumeBtnEl.style.display = '';
-          resumeBtnEl.onclick = function(){
-            closeAccountDrawer();
-            openCourseLessons(resumeCandidate.courseId, resumeCandidate.title);
-          };
+          if(resumeCandidate.action === 'module'){
+            resumeBtnEl.onclick = function(){ window.location.href = 'index.html?dash=1'; };
+          } else {
+            resumeBtnEl.onclick = function(){
+              closeAccountDrawer();
+              openCourseLessons(resumeCandidate.courseId, resumeCandidate.title);
+            };
+          }
         }
         if(resumeEmptyEl){ resumeEmptyEl.style.display = 'none'; }
       } else {
