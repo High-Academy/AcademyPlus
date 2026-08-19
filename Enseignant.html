@@ -466,6 +466,7 @@ var COMMISSION_RATE = 0.30; // doit rester cohérent avec courses.commission_rat
 
 var state = {
   user: null,
+  userRole: null,
   courses: [],
   currentCourse: null,   // cours en cours d'édition
   lessons: [],           // leçons du cours en cours d'édition
@@ -540,6 +541,7 @@ async function initGate(){
       return;
     }
 
+    state.userRole = profileRes.data.role;
     document.getElementById('teacherEmail').textContent = profileRes.data.email || state.user.email || '';
     document.getElementById('gateView').style.display = 'none';
     document.getElementById('appShell').style.display = 'flex';
@@ -592,10 +594,19 @@ async function loadCourses(){
   var empty = document.getElementById('emptyState');
   grid.innerHTML = '<p class="hint">Chargement…</p>';
 
-  var res = await supabaseClient
+  var query = supabaseClient
     .from('courses')
     .select('id, title, status, price, commission_rate, created_at')
     .order('created_at', { ascending: false });
+
+  // Un professeur ne doit voir que ses propres cours. Sans ce filtre, la requête
+  // remonte aussi les cours "published" des autres enseignants (autorisés côté RLS
+  // pour la vitrine / l'espace étudiant), qui se retrouvaient mélangés à tort ici.
+  if (state.userRole !== 'admin'){
+    query = query.eq('created_by', state.user.id);
+  }
+
+  var res = await query;
 
   if (res.error){
     toast('Impossible de charger vos cours : ' + res.error.message, true);
@@ -744,7 +755,11 @@ function getSelectedStatus(){
 
 async function openCourse(courseId){
   var course = state.courses.find(function(c){ return c.id === courseId; });
-  var full = await supabaseClient.from('courses').select('*').eq('id', courseId).single();
+  var fullQuery = supabaseClient.from('courses').select('*').eq('id', courseId);
+  if (state.userRole !== 'admin'){
+    fullQuery = fullQuery.eq('created_by', state.user.id);
+  }
+  var full = await fullQuery.single();
   if (full.error){ toast('Impossible d\'ouvrir ce cours.', true); return; }
   course = full.data;
 
