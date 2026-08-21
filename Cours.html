@@ -1973,10 +1973,11 @@ header .wrap{
       <h3 style="text-align:center; color:#fff">Toutes nos formations publiees</h3>
        </div>
 
-    <p class="hint" id="coursesLoading" style="text-align:center; color:var(--ink-soft); padding:40px 0;">Chargement des formations...</p>
-    <p class="search-no-results" id="coursesEmpty" style="display:none;">Aucune formation publiee pour le moment. Revenez bientot !</p>
-    <p class="search-no-results" id="coursesError" style="display:none;">Impossible de charger les formations pour le moment. Merci de reessayer plus tard.</p>
-    <div class="course-grid" id="coursesGrid"></div>
+    <div class="course-grid" id="coursesGrid">
+      <p class="hint" id="coursesLoading" style="grid-column:1/-1; text-align:center; color:var(--ink-soft); padding:40px 0;">Chargement des formations...</p>
+      <p class="search-no-results" id="coursesEmpty" style="display:none;">Aucune formation publiee pour le moment. Revenez bientot !</p>
+      <p class="search-no-results" id="coursesError" style="display:none;">Impossible de charger les formations pour le moment. Merci de reessayer plus tard.</p>
+    </div>
   </div>
 </section>
 
@@ -2364,6 +2365,8 @@ header .wrap{
       <span class="ppct" id="courseLessonsProgressPct">0%</span>
     </div>
 
+    <div id="courseCertBanner" style="display:none;"></div>
+
     <ul class="lesson-list" id="courseLessonsList" style="margin-top:18px;">
       <li><p class="hint" style="color:var(--ink-soft); font-size:0.85rem;">Chargement des leçons...</p></li>
     </ul>
@@ -2403,6 +2406,25 @@ header .wrap{
   </div>
 </div>
 
+<!-- Modale : certificat de réussite du cours (généré une fois le cours terminé à 100%) -->
+<div class="modal-overlay" id="courseCertModal" aria-hidden="true">
+  <div class="modal-box" role="dialog" aria-modal="true" aria-labelledby="courseCertTitle" style="max-width:820px;">
+    <button type="button" class="modal-close" onclick="closeCourseCertModal()" aria-label="Fermer">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><line x1="4" y1="4" x2="20" y2="20"/><line x1="20" y1="4" x2="4" y2="20"/></svg>
+    </button>
+    <div class="modal-eyebrow">🎓 Félicitations</div>
+    <h3 id="courseCertTitle">Votre certificat de réussite</h3>
+    <p class="cert-note-small" style="margin:6px 0 0;">Ce certificat est généré automatiquement à partir de votre prénom et nom fournis lors de l'inscription.</p>
+    <div class="cert-preview-wrap">
+      <canvas id="courseCertCanvas" width="1200" height="850" aria-label="Aperçu du certificat de réussite"></canvas>
+    </div>
+    <div class="cert-actions">
+      <button type="button" class="btn-primary" id="courseCertDownloadBtn">⬇ Télécharger mon certificat (PDF)</button>
+    </div>
+  </div>
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script>
   // ---- Moyens de paiement (modale d'achat) ----
@@ -3417,6 +3439,33 @@ header .wrap{
     return !!(prev && isCourseLessonDone(prev.id));
   }
 
+  // Affiche/masque le bouton d'obtention du certificat, sous la barre de progression,
+  // dès que toutes les leçons du cours sont terminées (même principe que le bloc
+  // "Mes certificats" de la page d'accueil).
+  function renderCourseCertBanner(ready){
+    var banner = document.getElementById('courseCertBanner');
+    if(!banner){ return; }
+    if(!ready){
+      banner.style.display = 'none';
+      banner.innerHTML = '';
+      return;
+    }
+    banner.style.display = 'block';
+    banner.style.marginTop = '14px';
+    banner.innerHTML =
+      '<a href="#" class="curriculum-cert cert-ready" id="courseCertLink">' +
+        '<span class="cnum">🎓</span>' +
+        '<span class="clabel">Obtenir mon certificat<small>Cours réussi — cliquez pour le générer</small></span>' +
+      '</a>';
+    var link = document.getElementById('courseCertLink');
+    if(link){
+      link.addEventListener('click', function(e){
+        e.preventDefault();
+        openCourseCertModal();
+      });
+    }
+  }
+
   function renderCourseLessonsList(){
     var listEl = document.getElementById('courseLessonsList');
     var fill = document.getElementById('courseLessonsProgressFill');
@@ -3431,6 +3480,8 @@ header .wrap{
     if(fill){ fill.style.width = pct + '%'; }
     if(text){ text.textContent = done + '/' + total + ' leçons terminées'; }
     if(pctEl){ pctEl.textContent = pct + '%'; }
+
+    renderCourseCertBanner(total > 0 && done === total);
 
     if(total === 0){
       listEl.innerHTML = '<li><p class="hint" style="color:var(--ink-soft); font-size:0.85rem;">Aucune leçon n\'est encore disponible pour ce cours. Revenez bientôt !</p></li>';
@@ -3689,29 +3740,29 @@ header .wrap{
       mainCol.appendChild(videoBtn);
     }
 
+    // Sur la dernière leçon, le bouton propose l'obtention du certificat plutôt
+    // que le passage à une leçon suivante (comme dans l'index).
+    var isLastLesson = (idx === activeCourse.lessons.length - 1);
+    var completeAction = function(){
+      markCourseLessonDone(lesson.id);
+      closeLessonModal();
+      renderCourseLessonsList();
+      if(isLastLesson){ openCourseCertModal(); } else { goToNextCourseLesson(idx); }
+    };
+
     if(item.points && item.points.length){
-      actionBtn.textContent = 'Passer à la leçon suivante →';
+      actionBtn.textContent = isLastLesson ? '🎓 Télécharger votre certificat' : 'Passer à la leçon suivante →';
       actionBtn.disabled = true;
-      actionBtn.onclick = function(){
-        markCourseLessonDone(lesson.id);
-        closeLessonModal();
-        renderCourseLessonsList();
-        goToNextCourseLesson(idx);
-      };
+      actionBtn.onclick = completeAction;
       renderLessonRadialBody(mainCol, item, hint, actionBtn);
     } else {
       hint.style.display = 'none';
       var pEl = document.createElement('p');
       pEl.textContent = 'Cette leçon ne contient pas encore de contenu.';
       mainCol.appendChild(pEl);
-      actionBtn.textContent = 'Passer à la leçon suivante →';
+      actionBtn.textContent = isLastLesson ? '🎓 Télécharger votre certificat' : 'Passer à la leçon suivante →';
       actionBtn.disabled = false;
-      actionBtn.onclick = function(){
-        markCourseLessonDone(lesson.id);
-        closeLessonModal();
-        renderCourseLessonsList();
-        goToNextCourseLesson(idx);
-      };
+      actionBtn.onclick = completeAction;
     }
 
     overlay.classList.add('open');
@@ -3757,6 +3808,244 @@ header .wrap{
     if(player){ player.pause(); player.removeAttribute('src'); player.load(); }
     if(modal){ modal.classList.remove('open'); modal.setAttribute('aria-hidden', 'true'); }
   }
+
+  // ================= CERTIFICAT DE RÉUSSITE DU COURS =================
+  // Même principe visuel que le générateur de certificats de la page d'accueil
+  // (index.html) : un certificat vectoriel dessiné sur <canvas>, personnalisé avec
+  // le prénom/nom du compte connecté, exportable en PDF. Se débloque dès que
+  // toutes les leçons d'un cours sont marquées comme terminées.
+
+  function getOrCreateCourseCertId(courseId){
+    var storeKey = 'ha_cert_id_course_' + courseId;
+    var id = lsGet(storeKey);
+    if(!id){
+      var year = new Date().getFullYear();
+      var rand = Math.random().toString(36).slice(2, 8).toUpperCase();
+      id = 'HA-COURS-' + year + '-' + rand;
+      lsSet(storeKey, id);
+    }
+    return id;
+  }
+
+  function wrapCourseCertText(ctx, text, x, y, maxWidth, lineHeight){
+    var words = text.split(' ');
+    var line = '';
+    var lines = [];
+    for(var i = 0; i < words.length; i++){
+      var testLine = line + words[i] + ' ';
+      if(ctx.measureText(testLine).width > maxWidth && i > 0){
+        lines.push(line);
+        line = words[i] + ' ';
+      } else {
+        line = testLine;
+      }
+    }
+    lines.push(line);
+    var startY = y - ((lines.length - 1) * lineHeight) / 2;
+    for(var j = 0; j < lines.length; j++){
+      ctx.fillText(lines[j].trim(), x, startY + j * lineHeight);
+    }
+  }
+
+  function drawCourseCertificate(name, courseTitle, courseId){
+    var canvas = document.getElementById('courseCertCanvas');
+    if(!canvas) return;
+    var ctx = canvas.getContext('2d');
+    var W = canvas.width, H = canvas.height;
+    var navy = '#16223E', navyDeep = '#0E1729', gold = '#D9A441', goldDeep = '#B9852A',
+        ink = '#1C2333', inkSoft = '#4A5164', cream = '#FAF9F5';
+
+    ctx.clearRect(0, 0, W, H);
+    ctx.fillStyle = cream;
+    ctx.fillRect(0, 0, W, H);
+
+    // Bordures extérieure et intérieure
+    ctx.strokeStyle = navy;
+    ctx.lineWidth = 6;
+    ctx.strokeRect(28, 28, W - 56, H - 56);
+    ctx.strokeStyle = gold;
+    ctx.lineWidth = 2;
+    ctx.strokeRect(42, 42, W - 84, H - 84);
+
+    // Points décoratifs aux coins
+    [[42,42],[W-42,42],[42,H-42],[W-42,H-42]].forEach(function(p){
+      ctx.beginPath();
+      ctx.arc(p[0], p[1], 5, 0, Math.PI * 2);
+      ctx.fillStyle = gold;
+      ctx.fill();
+    });
+
+    // Sceau / monogramme NOVACC
+    var cx = W / 2, cy = 130;
+    ctx.beginPath();
+    ctx.arc(cx, cy, 46, 0, Math.PI * 2);
+    ctx.fillStyle = navy;
+    ctx.fill();
+    ctx.save();
+    ctx.beginPath();
+    ctx.arc(cx, cy, 40, 0, Math.PI * 2);
+    ctx.closePath();
+    ctx.clip();
+    ctx.fillStyle = gold;
+    ctx.textAlign = 'center';
+    ctx.textBaseline = 'middle';
+    ctx.font = '700 44px Fraunces, serif';
+    ctx.fillText('N', cx, cy + 2);
+    ctx.restore();
+    ctx.beginPath();
+    ctx.arc(cx, cy, 46, 0, Math.PI * 2);
+    ctx.strokeStyle = gold;
+    ctx.lineWidth = 3;
+    ctx.stroke();
+    ctx.beginPath();
+    ctx.arc(cx, cy, 37, 0, Math.PI * 2);
+    ctx.strokeStyle = gold;
+    ctx.lineWidth = 1;
+    ctx.stroke();
+    ctx.textAlign = 'center';
+    ctx.textBaseline = 'middle';
+
+    // Nom de l'organisme
+    ctx.fillStyle = navy;
+    ctx.textBaseline = 'alphabetic';
+    ctx.font = '700 40px Fraunces, serif';
+    ctx.fillText('NOVACC', cx, 225);
+
+    ctx.font = '500 15px "IBM Plex Mono", monospace';
+    ctx.fillStyle = goldDeep;
+    ctx.save();
+    ctx.letterSpacing = '4px';
+    ctx.fillText('CERTIFICAT DE RÉUSSITE', cx, 255);
+    ctx.restore();
+
+    // Séparateur avec losange central
+    ctx.strokeStyle = gold;
+    ctx.lineWidth = 1;
+    ctx.beginPath();
+    ctx.moveTo(cx - 130, 280);
+    ctx.lineTo(cx - 14, 280);
+    ctx.moveTo(cx + 14, 280);
+    ctx.lineTo(cx + 130, 280);
+    ctx.stroke();
+    ctx.beginPath();
+    ctx.moveTo(cx, 273);
+    ctx.lineTo(cx + 7, 280);
+    ctx.lineTo(cx, 287);
+    ctx.lineTo(cx - 7, 280);
+    ctx.closePath();
+    ctx.fillStyle = gold;
+    ctx.fill();
+
+    // "est décerné à"
+    ctx.fillStyle = inkSoft;
+    ctx.font = '500 18px Inter, sans-serif';
+    ctx.fillText('est décerné à', cx, 325);
+
+    // Nom de l'élève
+    var displayName = (name || 'Étudiant(e)').trim();
+    var nameSize = displayName.length > 26 ? 48 : 60;
+    ctx.fillStyle = navyDeep;
+    ctx.font = '600 ' + nameSize + 'px Fraunces, serif';
+    ctx.fillText(displayName, cx, 390);
+    ctx.strokeStyle = gold;
+    ctx.lineWidth = 1.5;
+    ctx.beginPath();
+    ctx.moveTo(cx - 210, 408);
+    ctx.lineTo(cx + 210, 408);
+    ctx.stroke();
+
+    // Texte principal
+    ctx.fillStyle = ink;
+    ctx.font = '400 19px Inter, sans-serif';
+    var bodyText = 'pour avoir complété avec succès l\'ensemble des leçons du cours « ' + (courseTitle || 'Formation NOVACC') + ' », dans le cadre des formations NOVACC — Nova Academy & Consulting Center.';
+    wrapCourseCertText(ctx, bodyText, cx, 460, 760, 28);
+
+    // Pied de page : date / signature / numéro de certificat
+    var footerY = H - 100;
+    ctx.textAlign = 'left';
+    ctx.font = '600 15px Inter, sans-serif';
+    ctx.fillStyle = navy;
+    var dateStr = new Date().toLocaleDateString('fr-FR', { day: 'numeric', month: 'long', year: 'numeric' });
+    ctx.fillText('Délivré le', 110, footerY);
+    ctx.font = '400 15px Inter, sans-serif';
+    ctx.fillStyle = inkSoft;
+    ctx.fillText(dateStr, 110, footerY + 22);
+
+    ctx.textAlign = 'center';
+    ctx.strokeStyle = inkSoft;
+    ctx.lineWidth = 1;
+    ctx.beginPath();
+    ctx.moveTo(cx - 120, footerY - 6);
+    ctx.lineTo(cx + 120, footerY - 6);
+    ctx.stroke();
+    ctx.font = 'italic 600 22px Fraunces, serif';
+    ctx.fillStyle = navy;
+    ctx.fillText('NOVACC', cx, footerY - 16);
+    ctx.font = '500 13px "IBM Plex Mono", monospace';
+    ctx.fillStyle = inkSoft;
+    ctx.fillText('Direction pédagogique', cx, footerY + 12);
+
+    ctx.textAlign = 'right';
+    ctx.font = '600 15px Inter, sans-serif';
+    ctx.fillStyle = navy;
+    ctx.fillText('N° de certificat', W - 110, footerY);
+    ctx.font = '400 15px "IBM Plex Mono", monospace';
+    ctx.fillStyle = inkSoft;
+    ctx.fillText(getOrCreateCourseCertId(courseId), W - 110, footerY + 22);
+
+    ctx.textAlign = 'left';
+    ctx.textBaseline = 'alphabetic';
+  }
+
+  var courseCertReadyFor = null; // évite de redessiner inutilement le même certificat
+
+  // Ouvre la modale et (re)dessine le certificat pour le cours actif, en n'utilisant
+  // que le prénom/nom fournis à l'inscription — aucune saisie manuelle possible.
+  function openCourseCertModal(){
+    if(!activeCourse){ return; }
+    var name = getAccountFullName();
+    if(!name){ openLoginModal(); return; }
+
+    var modal = document.getElementById('courseCertModal');
+    var titleEl = document.getElementById('courseCertTitle');
+    if(titleEl){ titleEl.textContent = 'Certificat — ' + (activeCourse.title || 'Cours'); }
+    if(modal){ modal.classList.add('open'); modal.setAttribute('aria-hidden', 'false'); }
+
+    var certKey = name + '|' + activeCourse.id;
+    if(courseCertReadyFor === certKey){ return; }
+    courseCertReadyFor = certKey;
+
+    var fonts = ['700 40px Fraunces', '600 60px Fraunces', 'italic 600 22px Fraunces', '500 15px "IBM Plex Mono"'];
+    var loaders = fonts.map(function(f){
+      try{ return document.fonts.load(f); }catch(e){ return Promise.resolve(); }
+    });
+    Promise.all(loaders).then(function(){
+      drawCourseCertificate(name, activeCourse.title, activeCourse.id);
+    });
+  }
+
+  function closeCourseCertModal(){
+    var modal = document.getElementById('courseCertModal');
+    if(modal){ modal.classList.remove('open'); modal.setAttribute('aria-hidden', 'true'); }
+  }
+
+  function downloadCourseCertPDF(){
+    var canvas = document.getElementById('courseCertCanvas');
+    if(!canvas || !window.jspdf || !activeCourse){ return; }
+    var name = getAccountFullName() || 'etudiant';
+    var fileSafe = name.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '').replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)/g, '');
+    var courseSafe = (activeCourse.title || 'cours').toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '').replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)/g, '');
+    var imgData = canvas.toDataURL('image/png', 1.0);
+    var doc = new window.jspdf.jsPDF({ orientation:'landscape', unit:'px', format:[canvas.width, canvas.height] });
+    doc.addImage(imgData, 'PNG', 0, 0, canvas.width, canvas.height);
+    var fileName = 'certificat-novacc-' + courseSafe + '-' + (fileSafe || 'etudiant') + '.pdf';
+    doc.save(fileName);
+  }
+
+  (function(){
+    var downloadBtn = document.getElementById('courseCertDownloadBtn');
+    if(downloadBtn){ downloadBtn.addEventListener('click', downloadCourseCertPDF); }
+  })();
 
   // ================= FENÊTRE COMPTE (Tableau de bord + Mon profil) =================
   (function(){
