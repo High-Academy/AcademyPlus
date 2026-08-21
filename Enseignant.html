@@ -1096,7 +1096,7 @@ function resetCourseForm(){
 
 /* =====================================================================
    INFOS DU COURS (marge gauche) — puisées depuis Supabase :
-   - étudiants inscrits / en attente : table "enrollments" (module_id = courses.id)
+   - étudiants inscrits / en attente : table "enrollments" (course_id = courses.id)
    - revenu net, statut, date de création : table "courses"
    ===================================================================== */
 function hideEnrollStat(){
@@ -1135,7 +1135,7 @@ async function loadEnrollmentCount(course){
     var res = await supabaseClient
       .from('enrollments')
       .select('status')
-      .eq('module_id', course.id);
+      .eq('course_id', course.id);
 
     enrollEl.classList.remove('loading');
 
