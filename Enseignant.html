@@ -441,6 +441,19 @@
   </div>
 </div>
 
+<!-- ---------- MODALE : AVERTISSEMENT D'INACTIVITÉ ---------- -->
+<div class="modal-overlay" id="inactivityModal" aria-hidden="true">
+  <div class="modal-box" role="dialog" aria-modal="true" aria-labelledby="inactivityModalTitle" style="text-align:center;">
+    <h3 id="inactivityModalTitle">Toujours là ?</h3>
+    <p class="form-note" style="margin-top:10px;">
+      Par mesure de sécurité, vous allez être déconnecté automatiquement pour inactivité dans
+      <strong><span id="inactivityCountdown">60</span> secondes</strong>.
+    </p>
+    <button type="button" class="btn-primary" id="stayLoggedInBtn" style="width:100%; margin-top:16px;">Rester connecté</button>
+    <button type="button" class="btn-ghost" id="logoutNowBtn" style="width:100%; margin-top:10px;">Se déconnecter maintenant</button>
+  </div>
+</div>
+
 <!-- ---------- MODALE : MON PROFIL (copiée et adaptée depuis index.html) ---------- -->
 <div class="modal-overlay" id="profileModal" aria-hidden="true">
   <div class="modal-box" role="dialog" aria-modal="true" aria-labelledby="profileModalTitle">
@@ -685,7 +698,14 @@
    ===================================================================== */
 var SUPABASE_URL = 'https://lgohbjmbhprvjibkforn.supabase.co';
 var SUPABASE_ANON_KEY = 'sb_publishable_EmDRarwrfmft7DGnsWsgXA_LgeJV-sI';
-var supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+// Stockage de la session dans sessionStorage : vidé à la fermeture de l'onglet/navigateur
+// => déconnexion automatique. Pas de "se souvenir de moi" sur cet espace professeur.
+var supabaseAuthStorage = (function(){
+  try{ return window.sessionStorage; }catch(e){ return undefined; }
+})();
+var supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY, {
+  auth: { storage: supabaseAuthStorage }
+});
 
 var STORAGE_BUCKET = 'course-videos';
 var COMMISSION_RATE = 0.30; // doit rester cohérent avec courses.commission_rate côté base
@@ -792,6 +812,7 @@ async function initGate(){
 
     if (!session){
       state.user = null;
+      clearInactivityTimers();
       setHeaderAuthUI(false);
       document.getElementById('appShell').style.display = 'none';
       document.getElementById('gateView').style.display = 'flex';
@@ -806,6 +827,7 @@ async function initGate(){
 
     state.user = session.user;
     setHeaderAuthUI(true);
+    startInactivityTimer();
 
     var profileRes = await supabaseClient
       .from('profiles')
@@ -981,9 +1003,92 @@ profileFormEl.addEventListener('submit', function(e){
 /* ---------- Déconnexion ---------- */
 document.getElementById('logoutMenuBtn').addEventListener('click', async function(){
   closeUserDropdown();
+  clearInactivityTimers();
   await supabaseClient.auth.signOut();
   state.user = null;
   initGate();
+});
+
+/* ---------- Déconnexion automatique après 10 minutes d'inactivité ---------- */
+// Un avertissement avec compte à rebours s'affiche à partir de la 9e minute
+// (soit 60 secondes avant la déconnexion effective). Logique identique à index.html.
+var INACTIVITY_LIMIT_MS = 10 * 60 * 1000;
+var WARNING_DURATION_MS = 60 * 1000;
+var inactivityTimeoutId = null;
+var countdownIntervalId = null;
+var secondsLeft = WARNING_DURATION_MS / 1000;
+
+var inactivityModal = document.getElementById('inactivityModal');
+var inactivityCountdownEl = document.getElementById('inactivityCountdown');
+var stayLoggedInBtn = document.getElementById('stayLoggedInBtn');
+var logoutNowBtn = document.getElementById('logoutNowBtn');
+
+function clearInactivityTimers(){
+  if(inactivityTimeoutId){ clearTimeout(inactivityTimeoutId); inactivityTimeoutId = null; }
+  if(countdownIntervalId){ clearInterval(countdownIntervalId); countdownIntervalId = null; }
+}
+
+function startInactivityTimer(){
+  clearInactivityTimers();
+  if(!state.user){ return; }
+  inactivityTimeoutId = setTimeout(showInactivityWarning, INACTIVITY_LIMIT_MS - WARNING_DURATION_MS);
+}
+
+function showInactivityWarning(){
+  if(!state.user){ return; }
+  secondsLeft = WARNING_DURATION_MS / 1000;
+  if(inactivityCountdownEl){ inactivityCountdownEl.textContent = secondsLeft; }
+  if(inactivityModal){
+    inactivityModal.classList.add('open');
+    inactivityModal.setAttribute('aria-hidden', 'false');
+  }
+  countdownIntervalId = setInterval(function(){
+    secondsLeft -= 1;
+    if(inactivityCountdownEl){ inactivityCountdownEl.textContent = Math.max(secondsLeft, 0); }
+    if(secondsLeft <= 0){
+      clearInterval(countdownIntervalId);
+      countdownIntervalId = null;
+      autoLogoutForInactivity();
+    }
+  }, 1000);
+}
+
+function closeInactivityModal(){
+  if(inactivityModal){
+    inactivityModal.classList.remove('open');
+    inactivityModal.setAttribute('aria-hidden', 'true');
+  }
+}
+
+function autoLogoutForInactivity(){
+  closeInactivityModal();
+  clearInactivityTimers();
+  supabaseClient.auth.signOut().then(function(){
+    state.user = null;
+    initGate();
+    alert("Vous avez été déconnecté automatiquement après 10 minutes d'inactivité.");
+  });
+}
+
+if(stayLoggedInBtn){
+  stayLoggedInBtn.addEventListener('click', function(){
+    closeInactivityModal();
+    startInactivityTimer();
+  });
+}
+
+if(logoutNowBtn){
+  logoutNowBtn.addEventListener('click', function(){
+    autoLogoutForInactivity();
+  });
+}
+
+['mousemove', 'keydown', 'mousedown', 'touchstart', 'scroll'].forEach(function(evtName){
+  document.addEventListener(evtName, function(){
+    if(state.user && (!inactivityModal || !inactivityModal.classList.contains('open'))){
+      startInactivityTimer();
+    }
+  }, { passive: true });
 });
 
 document.addEventListener('keydown', function(e){
@@ -1096,7 +1201,7 @@ function resetCourseForm(){
 
 /* =====================================================================
    INFOS DU COURS (marge gauche) — puisées depuis Supabase :
-   - étudiants inscrits / en attente : table "enrollments" (course_id = courses.id)
+   - étudiants inscrits / en attente : table "enrollments" (module_id = courses.id)
    - revenu net, statut, date de création : table "courses"
    ===================================================================== */
 function hideEnrollStat(){
@@ -1135,7 +1240,7 @@ async function loadEnrollmentCount(course){
     var res = await supabaseClient
       .from('enrollments')
       .select('status')
-      .eq('course_id', course.id);
+      .eq('module_id', course.id);
 
     enrollEl.classList.remove('loading');
 
