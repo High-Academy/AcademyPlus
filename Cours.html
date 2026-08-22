@@ -2107,6 +2107,19 @@ header .wrap{
   </div>
 </div>
 
+<!-- ---------- MODALE : AVERTISSEMENT D'INACTIVITÉ ---------- -->
+<div class="modal-overlay" id="inactivityModal" aria-hidden="true">
+  <div class="modal-box" role="dialog" aria-modal="true" aria-labelledby="inactivityModalTitle" style="text-align:center;">
+    <h3 id="inactivityModalTitle">Toujours là ?</h3>
+    <p class="form-note" style="margin-top:10px;">
+      Par mesure de sécurité, vous allez être déconnecté automatiquement pour inactivité dans
+      <strong><span id="inactivityCountdown">60</span> secondes</strong>.
+    </p>
+    <button type="button" class="btn-primary" id="stayLoggedInBtn" style="width:100%; margin-top:16px;">Rester connecté</button>
+    <button type="button" class="btn-ghost" id="logoutNowBtn" style="width:100%; margin-top:10px;">Se déconnecter maintenant</button>
+  </div>
+</div>
+
 <div class="modal-overlay" id="forgotPasswordModal" aria-hidden="true">
   <div class="modal-box" role="dialog" aria-modal="true" aria-labelledby="forgotPasswordModalTitle">
     <button type="button" class="modal-close" onclick="closeForgotPasswordModal()" aria-label="Fermer">
@@ -2627,7 +2640,17 @@ header .wrap{
   // ================= COURS PUBLIES (Supabase) =================
   var SUPABASE_URL = 'https://lgohbjmbhprvjibkforn.supabase.co';
   var SUPABASE_ANON_KEY = 'sb_publishable_EmDRarwrfmft7DGnsWsgXA_LgeJV-sI';
-  var supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+  // Stockage de la session : sessionStorage par défaut (vidé à la fermeture de l'onglet/
+  // navigateur => déconnexion automatique), sauf si "Se souvenir de moi" a été coché
+  // lors de la dernière connexion, auquel cas on garde localStorage (persiste). Même
+  // logique que index.html afin que la session reste cohérente entre les deux pages.
+  var supabaseAuthStorage = (function(){
+    try{ return (localStorage.getItem('ha_remember_me') === '1') ? window.localStorage : window.sessionStorage; }
+    catch(e){ return window.sessionStorage; }
+  })();
+  var supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY, {
+    auth: { storage: supabaseAuthStorage }
+  });
 
   // ================= AUTHENTIFICATION (connexion / inscription) =================
   var loginModal = document.getElementById('loginModal');
@@ -2864,6 +2887,7 @@ header .wrap{
   supabaseClient.auth.getSession().then(function(result){
     currentSession = result.data.session;
     updateLoginButton();
+    if(isLoggedIn() && !rememberMeActive()){ startInactivityTimer(); } else { clearInactivityTimers(); }
     // Arrivée depuis index.html via "Revoir le cours" / "Poursuivre" (plateforme unique) :
     // on ouvre directement le tableau de bord au lieu de laisser l'élève le rechercher.
     if(/[?&]dash=1(&|$)/.test(window.location.search)){ openAccountDrawer('dashboard'); }
@@ -2873,11 +2897,93 @@ header .wrap{
   supabaseClient.auth.onAuthStateChange(function(event, session){
     currentSession = session;
     updateLoginButton();
+    if(isLoggedIn() && !rememberMeActive()){ startInactivityTimer(); } else { clearInactivityTimers(); closeInactivityModal(); }
     if(event === 'PASSWORD_RECOVERY'){
       closeLoginModal();
       closeForgotPasswordModal();
       openResetPasswordModal();
     }
+  });
+
+  // ---- Déconnexion automatique après 10 minutes d'inactivité ----
+  // Un avertissement avec compte à rebours s'affiche à partir de la 9e minute
+  // (soit 60 secondes avant la déconnexion effective). Logique identique à index.html.
+  var INACTIVITY_LIMIT_MS = 10 * 60 * 1000; // 10 minutes avant déconnexion
+  var WARNING_DURATION_MS = 60 * 1000;      // avertissement affiché durant la dernière minute
+  var inactivityTimeoutId = null;
+  var countdownIntervalId = null;
+  var secondsLeft = WARNING_DURATION_MS / 1000;
+
+  var inactivityModal = document.getElementById('inactivityModal');
+  var inactivityCountdownEl = document.getElementById('inactivityCountdown');
+  var stayLoggedInBtn = document.getElementById('stayLoggedInBtn');
+  var logoutNowBtn = document.getElementById('logoutNowBtn');
+
+  function clearInactivityTimers(){
+    if(inactivityTimeoutId){ clearTimeout(inactivityTimeoutId); inactivityTimeoutId = null; }
+    if(countdownIntervalId){ clearInterval(countdownIntervalId); countdownIntervalId = null; }
+  }
+
+  function startInactivityTimer(){
+    clearInactivityTimers();
+    if(!isLoggedIn()){ return; }
+    inactivityTimeoutId = setTimeout(showInactivityWarning, INACTIVITY_LIMIT_MS - WARNING_DURATION_MS);
+  }
+
+  function showInactivityWarning(){
+    if(!isLoggedIn()){ return; }
+    secondsLeft = WARNING_DURATION_MS / 1000;
+    if(inactivityCountdownEl){ inactivityCountdownEl.textContent = secondsLeft; }
+    if(inactivityModal){
+      inactivityModal.classList.add('open');
+      inactivityModal.setAttribute('aria-hidden', 'false');
+    }
+    countdownIntervalId = setInterval(function(){
+      secondsLeft -= 1;
+      if(inactivityCountdownEl){ inactivityCountdownEl.textContent = Math.max(secondsLeft, 0); }
+      if(secondsLeft <= 0){
+        clearInterval(countdownIntervalId);
+        countdownIntervalId = null;
+        autoLogoutForInactivity();
+      }
+    }, 1000);
+  }
+
+  function closeInactivityModal(){
+    if(inactivityModal){
+      inactivityModal.classList.remove('open');
+      inactivityModal.setAttribute('aria-hidden', 'true');
+    }
+  }
+
+  function autoLogoutForInactivity(){
+    closeInactivityModal();
+    clearInactivityTimers();
+    supabaseClient.auth.signOut().then(function(){
+      updateLoginButton();
+      alert("Vous avez été déconnecté automatiquement après 10 minutes d'inactivité.");
+    });
+  }
+
+  if(stayLoggedInBtn){
+    stayLoggedInBtn.addEventListener('click', function(){
+      closeInactivityModal();
+      startInactivityTimer();
+    });
+  }
+
+  if(logoutNowBtn){
+    logoutNowBtn.addEventListener('click', function(){
+      autoLogoutForInactivity();
+    });
+  }
+
+  ['mousemove', 'keydown', 'mousedown', 'touchstart', 'scroll'].forEach(function(evtName){
+    document.addEventListener(evtName, function(){
+      if(isLoggedIn() && (!inactivityModal || !inactivityModal.classList.contains('open'))){
+        startInactivityTimer();
+      }
+    }, { passive: true });
   });
 
   // ---- Modale : création de compte (nom, téléphone, email, mot de passe) ----
