@@ -2,6 +2,11 @@
 <html lang="fr">
 <head>
 <meta charset="UTF-8">
+<!-- Garantit qu'un en-tête d'origine valide est transmis aux vidéos YouTube embarquées
+     (évite l'erreur 153 "Video player configuration error" derrière certains proxys/CDN
+     qui suppriment le Referer par défaut). Sans effet sur file:// — l'ouverture locale du
+     fichier reste sans en-tête d'origine, ce qui est une restriction du navigateur. -->
+<meta name="referrer" content="strict-origin-when-cross-origin">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>NOVACC — Nova Academy &amp; Consulting Center | Formation en Suivi &amp; Évaluation de Projets</title>
 <meta name="description" content="NOVACC — Nova Academy &amp; Consulting Center. Formations certifiantes en Suivi &amp; Évaluation de Projets, pensées pour la réalité haïtienne.">
@@ -738,6 +743,15 @@
 
   .course-grid{display:grid; grid-template-columns:repeat(2,1fr); gap:18px;}
   @media(max-width:760px){ .course-grid{grid-template-columns:1fr;} }
+  @media(max-width:760px){
+    /* Sur mobile : réordonner pour afficher "Pack complet" juste après "Plan du cours" */
+    .courses > .wrap{ display:flex; flex-direction:column; }
+    .courses > .wrap > .sec-head{ order:1; }
+    .course-body{ display:contents; }
+    .curriculum{ order:2; }
+    #bundleSectionWrap{ order:3; margin-top:12px; }
+    .course-grid{ order:4; }
+  }
 
   #card-m3 .module3-layout{
     display: grid;
@@ -1223,6 +1237,13 @@
   .module-video-label{font-family:'IBM Plex Mono', monospace; font-size:0.6rem; letter-spacing:.06em; text-transform:uppercase; color:var(--ink-soft); text-align:center;}
   .module-video-frame{position:relative; width:100%; aspect-ratio:16/9; border-radius:4px; overflow:hidden; background:var(--navy-deep); box-shadow:var(--shadow);}
   .module-video-frame video{width:100%; height:100%; object-fit:cover; display:block; background:#000;}
+  .module-video-frame iframe{width:100%; height:100%; display:block; background:#000; border:0;}
+  /* Caches anti-évasion : empêchent d'atteindre le titre/avatar (haut) et le logo YouTube
+     cliquable (bas-droite, juste au-dessus de la barre de contrôle) sans bloquer play/pause,
+     volume, sous-titres ou plein écran natif du lecteur. */
+  .module-video-frame .yt-shield{position:absolute; z-index:3; pointer-events:auto; background:transparent;}
+  .module-video-frame .yt-shield-top{top:0; left:0; right:0; height:26%;}
+  .module-video-frame .yt-shield-corner{right:0; bottom:13%; width:34%; height:12%;}
   .module-video-fs-btn{
     display:flex; align-items:center; justify-content:center; gap:5px;
     width:100%; background:var(--bg-alt); border:1px solid var(--line); color:var(--navy);
@@ -1787,8 +1808,8 @@ header .wrap{
           <svg class="nav-dropdown-caret" onclick="event.preventDefault(); event.stopPropagation(); this.closest('.nav-dropdown').classList.toggle('open');" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><polyline points="6 9 12 15 18 9"/></svg>
         </a>
         <div class="nav-dropdown-menu">
-          <a href="#formations" class="nav-dropdown-item">Suivi-évaluation</a>
-		  <a href="Cours.html" class="nav-dropdown-item">Excel</a>
+          <a href="#formations" class="nav-dropdown-item">📊Suivi-évaluation</a>
+		  <a href="Cours.html" class="nav-dropdown-item">📉Excel</a>
         </div>
       </div>
       
@@ -2214,7 +2235,7 @@ header .wrap{
       <h3 style="text-align:center; color:#fff"> Choisissez la formation qui correspond à vos besoins </h3>
       <p style="text-align:center; color:#fff">Chaque module s'appuie sur le précédent — en commençant par les fondamentaux, jusqu'au rapport des résultats de projet.</p>
     </div>
-	<div class="wrap" style="margin-bottom: 12px; margin-top:0px">
+	<div class="wrap" id="bundleSectionWrap" style="margin-bottom: 12px; margin-top:0px">
   <div class="bundle-cta">
     <div class="bundle-cta-text">
       <h3 style="color:red">Pack complet : les 4 modules</h3>
@@ -2279,11 +2300,16 @@ header .wrap{
 			
 			<div class="module-video">
                 <span class="module-video-label">Vidéo d'intro</span>
-                <div class="module-video-frame">
-                  <video id="introVideo-m1" controls controlsList="nodownload noremoteplayback" disablePictureInPicture playsinline preload="metadata" oncontextmenu="return false;">
-                    <source src="https://interactive-examples.mdn.mozilla.net/media/cc0-videos/flower.mp4" type="video/mp4">
-                    Votre navigateur ne supporte pas la lecture vidéo.
-                  </video>
+                <div class="module-video-frame" oncontextmenu="return false;">
+                  <iframe id="introVideo-m1"
+                    src="https://www.youtube-nocookie.com/embed/ydCgWnIKE7Y?rel=0&amp;modestbranding=1&amp;iv_load_policy=3&amp;fs=1&amp;playsinline=1&amp;color=white&amp;disablekb=1&amp;controls=1&amp;loop=1&amp;playlist=ydCgWnIKE7Y"
+                    title="Introduction au Suivi &amp; Évaluation de Projet"
+                    loading="lazy"
+                    allow="accelerometer; autoplay; encrypted-media; gyroscope"
+                    referrerpolicy="strict-origin-when-cross-origin"
+                    allowfullscreen></iframe>
+                  <div class="yt-shield yt-shield-top" aria-hidden="true"></div>
+                  <div class="yt-shield yt-shield-corner" aria-hidden="true"></div>
                 </div>
                 <button type="button" class="module-video-fs-btn" onclick="openVideoFullscreen('introVideo-m1')">
                   <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M8 3H5a2 2 0 0 0-2 2v3"/><path d="M21 8V5a2 2 0 0 0-2-2h-3"/><path d="M3 16v3a2 2 0 0 0 2 2h3"/><path d="M16 21h3a2 2 0 0 0 2-2v-3"/></svg>
@@ -2347,11 +2373,16 @@ header .wrap{
             <div class="lesson-panel">
 			<div class="module-video">
                 <span class="module-video-label">Vidéo d'intro</span>
-                <div class="module-video-frame">
-                  <video id="introVideo-m2" controls controlsList="nodownload noremoteplayback" disablePictureInPicture playsinline preload="metadata" oncontextmenu="return false;">
-                    <source src="https://interactive-examples.mdn.mozilla.net/media/cc0-videos/flower.mp4" type="video/mp4">
-                    Votre navigateur ne supporte pas la lecture vidéo.
-                  </video>
+                <div class="module-video-frame" oncontextmenu="return false;">
+                  <iframe id="introVideo-m2"
+                    src="https://www.youtube-nocookie.com/embed/vZE2ty-wGIc?rel=0&amp;modestbranding=1&amp;iv_load_policy=3&amp;fs=1&amp;playsinline=1&amp;color=white&amp;disablekb=1&amp;controls=1&amp;loop=1&amp;playlist=vZE2ty-wGIc"
+                    title="Cadre Logique &amp; Indicateurs de Performance"
+                    loading="lazy"
+                    allow="accelerometer; autoplay; encrypted-media; gyroscope"
+                    referrerpolicy="strict-origin-when-cross-origin"
+                    allowfullscreen></iframe>
+                  <div class="yt-shield yt-shield-top" aria-hidden="true"></div>
+                  <div class="yt-shield yt-shield-corner" aria-hidden="true"></div>
                 </div>
                 <button type="button" class="module-video-fs-btn" onclick="openVideoFullscreen('introVideo-m2')">
                   <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M8 3H5a2 2 0 0 0-2 2v3"/><path d="M21 8V5a2 2 0 0 0-2-2h-3"/><path d="M3 16v3a2 2 0 0 0 2 2h3"/><path d="M16 21h3a2 2 0 0 0 2-2v-3"/></svg>
@@ -2414,11 +2445,16 @@ header .wrap{
             <div class="lesson-panel">
 			<div class="module-video">
                 <span class="module-video-label">Vidéo d'intro</span>
-                <div class="module-video-frame">
-                  <video id="introVideo-m3" controls controlsList="nodownload noremoteplayback" disablePictureInPicture playsinline preload="metadata" oncontextmenu="return false;">
-                    <source src="https://interactive-examples.mdn.mozilla.net/media/cc0-videos/flower.mp4" type="video/mp4">
-                    Votre navigateur ne supporte pas la lecture vidéo.
-                  </video>
+                <div class="module-video-frame" oncontextmenu="return false;">
+                  <iframe id="introVideo-m3"
+                    src="https://www.youtube-nocookie.com/embed/xEjAm9V9v1o?rel=0&amp;modestbranding=1&amp;iv_load_policy=3&amp;fs=1&amp;playsinline=1&amp;color=white&amp;disablekb=1&amp;controls=1&amp;loop=1&amp;playlist=xEjAm9V9v1o"
+                    title="Collecte &amp; Analyse de Données sur le Terrain"
+                    loading="lazy"
+                    allow="accelerometer; autoplay; encrypted-media; gyroscope"
+                    referrerpolicy="strict-origin-when-cross-origin"
+                    allowfullscreen></iframe>
+                  <div class="yt-shield yt-shield-top" aria-hidden="true"></div>
+                  <div class="yt-shield yt-shield-corner" aria-hidden="true"></div>
                 </div>
                 <button type="button" class="module-video-fs-btn" onclick="openVideoFullscreen('introVideo-m3')">
                   <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M8 3H5a2 2 0 0 0-2 2v3"/><path d="M21 8V5a2 2 0 0 0-2-2h-3"/><path d="M3 16v3a2 2 0 0 0 2 2h3"/><path d="M16 21h3a2 2 0 0 0 2-2v-3"/></svg>
@@ -2482,11 +2518,16 @@ header .wrap{
             <div class="lesson-panel" >
 			<div class="module-video">
                 <span class="module-video-label">Vidéo d'intro</span>
-                <div class="module-video-frame">
-                  <video id="introVideo-m4" controls controlsList="nodownload noremoteplayback" disablePictureInPicture playsinline preload="metadata" oncontextmenu="return false;">
-                    <source src="https://interactive-examples.mdn.mozilla.net/media/cc0-videos/flower.mp4" type="video/mp4">
-                    Votre navigateur ne supporte pas la lecture vidéo.
-                  </video>
+                <div class="module-video-frame" oncontextmenu="return false;">
+                  <iframe id="introVideo-m4"
+                    src="https://www.youtube-nocookie.com/embed/nApleJwcRGc?rel=0&amp;modestbranding=1&amp;iv_load_policy=3&amp;fs=1&amp;playsinline=1&amp;color=white&amp;disablekb=1&amp;controls=1&amp;loop=1&amp;playlist=nApleJwcRGc"
+                    title="Rapport des Résultats &amp; Communication avec les Bailleurs"
+                    loading="lazy"
+                    allow="accelerometer; autoplay; encrypted-media; gyroscope"
+                    referrerpolicy="strict-origin-when-cross-origin"
+                    allowfullscreen></iframe>
+                  <div class="yt-shield yt-shield-top" aria-hidden="true"></div>
+                  <div class="yt-shield yt-shield-corner" aria-hidden="true"></div>
                  </div>
                  <button type="button" class="module-video-fs-btn" onclick="openVideoFullscreen('introVideo-m4')">
                   <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M8 3H5a2 2 0 0 0-2 2v3"/><path d="M21 8V5a2 2 0 0 0-2-2h-3"/><path d="M3 16v3a2 2 0 0 0 2 2h3"/><path d="M16 21h3a2 2 0 0 0 2-2v-3"/></svg>
@@ -3534,7 +3575,7 @@ header .wrap{
     },
     {
       "type": "quiz",
-      "title": "Quiz final du module 1",
+      "title": "Quiz final",
       "questions": [
         {
           "type": "single",
@@ -3787,7 +3828,7 @@ header .wrap{
     },
     {
       "type": "quiz",
-      "title": "Quiz — Partie 1 : Construire un Cadre Logique (Logframe)",
+      "title": "Quiz 1",
       "questions": [
         {
           "type": "single",
@@ -3906,7 +3947,7 @@ header .wrap{
     },
     {
       "type": "quiz",
-      "title": "Quiz — Partie 2 : Définir des Indicateurs SMART",
+      "title": "Quiz 2",
       "questions": [
         {
           "type": "single",
@@ -4021,7 +4062,7 @@ header .wrap{
     },
     {
       "type": "quiz",
-      "title": "Quiz — Partie 3 : Relier Indicateurs et Objectifs",
+      "title": "Quiz 3",
       "questions": [
         {
           "type": "single",
@@ -4140,7 +4181,7 @@ header .wrap{
     },
     {
       "type": "quiz",
-      "title": "Quiz — Partie 4 : Étude de Cas Pratique, Fond Sable",
+      "title": "Quiz 4",
       "questions": [
         {
           "type": "single",
@@ -4211,7 +4252,7 @@ header .wrap{
     },
     {
       "type": "quiz",
-      "title": "Quiz final du module 2",
+      "title": "Quiz final",
       "questions": [
         {
           "type": "single",
@@ -4558,7 +4599,7 @@ header .wrap{
     },
     {
       "type": "quiz",
-      "title": "Quiz — Section 1 : Méthodes de collecte de données sur le terrain",
+      "title": "Quiz 1",
       "questions": [
         {
           "type": "single",
@@ -4710,7 +4751,7 @@ header .wrap{
     },
     {
       "type": "quiz",
-      "title": "Quiz — Section 2 : Outils numériques gratuits pour la collecte de données",
+      "title": "Quiz 2",
       "questions": [
         {
           "type": "single",
@@ -4936,7 +4977,7 @@ header .wrap{
     },
     {
       "type": "quiz",
-      "title": "Quiz — Section 3 : Excel — Le tableau croisé dynamique",
+      "title": "Quiz 3",
       "questions": [
         {
           "type": "single",
@@ -5087,7 +5128,7 @@ header .wrap{
     },
     {
       "type": "quiz",
-      "title": "Quiz — Section 4 : Échantillonnage et fiabilité des données",
+      "title": "Quiz 4",
       "questions": [
         {
           "type": "single",
@@ -5183,7 +5224,7 @@ header .wrap{
     },
     {
       "type": "quiz",
-      "title": "Quiz — Section 5 : Éthique et consentement dans la collecte de données",
+      "title": "Quiz 5",
       "questions": [
         {
           "type": "single",
@@ -5279,7 +5320,7 @@ header .wrap{
     },
     {
       "type": "quiz",
-      "title": "Quiz — Section 6 : Analyse quantitative de base",
+      "title": "Quiz 6",
       "questions": [
         {
           "type": "single",
@@ -5370,7 +5411,7 @@ header .wrap{
     },
     {
       "type": "quiz",
-      "title": "Quiz — Section 7 : Analyse qualitative de base",
+      "title": "Quiz 7",
       "questions": [
         {
           "type": "single",
@@ -5462,7 +5503,7 @@ header .wrap{
     },
     {
       "type": "quiz",
-      "title": "Quiz — Section 8 : Restitution et utilisation des résultats",
+      "title": "Quiz 8",
       "questions": [
         {
           "type": "single",
@@ -5554,7 +5595,7 @@ header .wrap{
     },
     {
       "type": "quiz",
-      "title": "Quiz final du module 3",
+      "title": "Quiz final",
       "questions": [
         {
           "type": "single",
@@ -5855,7 +5896,7 @@ header .wrap{
     },
     {
       "type": "quiz",
-      "title": "Quiz — Chapitre 1 : Structurer un rapport S&E",
+      "title": "Quiz 1",
       "questions": [
         {
           "type": "single",
@@ -5982,7 +6023,7 @@ header .wrap{
     },
     {
       "type": "quiz",
-      "title": "Quiz — Chapitre 2 : Présenter les données clés",
+      "title": "Quiz 2",
       "questions": [
         {
           "type": "single",
@@ -6105,7 +6146,7 @@ header .wrap{
     },
     {
       "type": "quiz",
-      "title": "Quiz — Chapitre 3 : Communiquer l'impact",
+      "title": "Quiz 3",
       "questions": [
         {
           "type": "single",
@@ -6228,7 +6269,7 @@ header .wrap{
     },
     {
       "type": "quiz",
-      "title": "Quiz — Chapitre 4 : Synthèse, étude de cas & glossaire",
+      "title": "Quiz",
       "questions": [
         {
           "type": "single",
@@ -6312,7 +6353,7 @@ header .wrap{
     },
     {
       "type": "quiz",
-      "title": "Quiz — Chapitre 5 : Visite de terrain et conclusion",
+      "title": "Quiz 5",
       "questions": [
         {
           "type": "single",
@@ -6348,7 +6389,7 @@ header .wrap{
     },
     {
       "type": "quiz",
-      "title": "Quiz final du module 4",
+      "title": "Quiz final",
       "questions": [
         {
           "q": "Que doit contenir en priorité le résumé exécutif d'un rapport de S&E ?",
@@ -8053,10 +8094,20 @@ document.addEventListener('keydown', function(e){
   // Les identifiants sont stockés de façon sécurisée par Supabase, pas dans ce fichier.
   var SUPABASE_URL = 'https://lgohbjmbhprvjibkforn.supabase.co';
   var SUPABASE_ANON_KEY = 'sb_publishable_EmDRarwrfmft7DGnsWsgXA_LgeJV-sI';
+  // Stockage de la session : sessionStorage par défaut (vidé à la fermeture de l'onglet/
+  // navigateur => déconnexion automatique), sauf si "Se souvenir de moi" a été coché
+  // lors de la dernière connexion, auquel cas on garde localStorage (persiste).
+  var supabaseAuthStorage = (function(){
+    try{ return (localStorage.getItem('ha_remember_me') === '1') ? window.localStorage : window.sessionStorage; }
+    catch(e){ return window.sessionStorage; }
+  })();
   // keepalive:true garantit que les requêtes Supabase (ex: l'insert dans "enrollments"
   // juste avant la redirection MonCash/UNIBANK) ne sont PAS annulées quand le navigateur
   // navigue vers une nouvelle page pendant qu'elles sont encore en cours.
   var supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY, {
+    auth: {
+      storage: supabaseAuthStorage
+    },
     global: {
       fetch: function(url, options){
         options = options || {};
