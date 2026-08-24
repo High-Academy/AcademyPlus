@@ -3471,14 +3471,140 @@ header .wrap{
   // radial (même structure que LESSON_CONTENT.m1 dans index.html).
   function lessonToRadialItem(lesson, courseTitle){
     var points = (lesson.content && lesson.content.points) || [];
+    var quiz = (lesson.content && lesson.content.quiz && lesson.content.quiz.questions) || [];
     return {
       title: lesson.chapter_title || 'Leçon',
       chapterTag: courseTitle || 'Leçon',
       body: points.length ? (points.length + ' points clés à découvrir dans cette leçon.') : '',
       points: points.map(function(pt){
         return { label: pt.label || '', html: buildLessonPointHtml(pt) };
-      })
+      }),
+      quiz: quiz
     };
+  }
+
+  function shuffleArray(arr){
+    for(var i = arr.length - 1; i > 0; i--){
+      var j = Math.floor(Math.random() * (i + 1));
+      var tmp = arr[i]; arr[i] = arr[j]; arr[j] = tmp;
+    }
+    return arr;
+  }
+
+  // Construit et corrige le quiz d'une leçon (QCM, Association, Texte à trous).
+  // onStatusChange(true) est appelé dès que toutes les réponses sont correctes.
+  function buildQuizSection(container, questions, onStatusChange){
+    var wrap = document.createElement('div');
+    wrap.className = 'quiz-section';
+    wrap.style.marginTop = '28px';
+
+    var heading = document.createElement('h3');
+    heading.style.margin = '0 0 4px';
+    heading.textContent = 'Quiz de la leçon';
+    wrap.appendChild(heading);
+
+    var sub = document.createElement('p');
+    sub.className = 'hint';
+    sub.style.margin = '0 0 14px';
+    sub.textContent = 'Répondez à toutes les questions puis vérifiez vos réponses.';
+    wrap.appendChild(sub);
+
+    var answers = questions.map(function(q){
+      if(q.type === 'match'){ return { mapping: {} }; }
+      if(q.type === 'fill'){ return { value: null }; }
+      return { selected: null };
+    });
+
+    questions.forEach(function(q, qi){
+      var qBox = document.createElement('div');
+      qBox.className = 'quiz-question';
+      var p = document.createElement('p');
+      p.textContent = (qi + 1) + '. ' + (q.q || '');
+      qBox.appendChild(p);
+
+      if(q.type === 'match'){
+        var rightsShuffled = shuffleArray((q.pairs || []).map(function(pr){ return pr.right; }));
+        var matchWrap = document.createElement('div');
+        matchWrap.className = 'quiz-match';
+        (q.pairs || []).forEach(function(pair, pi){
+          var zone = document.createElement('div');
+          zone.className = 'quiz-match-zone';
+          var lbl = document.createElement('span');
+          lbl.className = 'zone-label';
+          lbl.textContent = pair.left;
+          zone.appendChild(lbl);
+          var sel = document.createElement('select');
+          sel.innerHTML = '<option value="">— choisissez —</option>' +
+            rightsShuffled.map(function(r, ri){ return '<option value="' + ri + '">' + escapeHtml(r) + '</option>'; }).join('');
+          sel.addEventListener('change', function(){
+            answers[qi].mapping[pi] = sel.value === '' ? null : rightsShuffled[parseInt(sel.value, 10)];
+          });
+          zone.appendChild(sel);
+          matchWrap.appendChild(zone);
+        });
+        qBox.appendChild(matchWrap);
+      } else if(q.type === 'fill'){
+        var pair0 = (q.pairs && q.pairs[0]) || { right: '' };
+        var choices = shuffleArray([pair0.right].concat(q.decoys || []).filter(function(c){ return c; }));
+        choices.forEach(function(choice){
+          var label = document.createElement('label');
+          label.className = 'quiz-option';
+          var input = document.createElement('input');
+          input.type = 'radio';
+          input.name = 'quiz_fill_' + qi;
+          input.addEventListener('change', function(){ answers[qi].value = choice; });
+          label.appendChild(input);
+          label.appendChild(document.createTextNode(choice));
+          qBox.appendChild(label);
+        });
+      } else {
+        (q.options || []).forEach(function(opt, oi){
+          var label = document.createElement('label');
+          label.className = 'quiz-option';
+          var input = document.createElement('input');
+          input.type = 'radio';
+          input.name = 'quiz_single_' + qi;
+          input.addEventListener('change', function(){ answers[qi].selected = oi; });
+          label.appendChild(input);
+          label.appendChild(document.createTextNode(opt));
+          qBox.appendChild(label);
+        });
+      }
+
+      wrap.appendChild(qBox);
+    });
+
+    var resultEl = document.createElement('div');
+
+    var checkBtn = document.createElement('button');
+    checkBtn.type = 'button';
+    checkBtn.className = 'btn-secondary';
+    checkBtn.textContent = 'Vérifier mes réponses';
+    checkBtn.addEventListener('click', function(){
+      var correctCount = 0;
+      questions.forEach(function(q, qi){
+        var ok = false;
+        if(q.type === 'match'){
+          ok = (q.pairs || []).every(function(pair, pi){ return answers[qi].mapping[pi] === pair.right; });
+        } else if(q.type === 'fill'){
+          var pair0 = (q.pairs && q.pairs[0]) || { right: '' };
+          ok = answers[qi].value === pair0.right;
+        } else {
+          ok = answers[qi].selected === q.correct;
+        }
+        if(ok){ correctCount++; }
+      });
+      var allCorrect = correctCount === questions.length;
+      resultEl.className = 'quiz-result ' + (allCorrect ? 'pass' : 'fail');
+      resultEl.textContent = allCorrect
+        ? 'Toutes les réponses sont correctes ✓'
+        : (correctCount + '/' + questions.length + ' bonnes réponses — corrigez et réessayez.');
+      onStatusChange(allCorrect);
+    });
+    wrap.appendChild(checkBtn);
+    wrap.appendChild(resultEl);
+
+    container.appendChild(wrap);
   }
 
   // ---- Panneau "mes leçons" d'un cours acheté ----
@@ -3642,7 +3768,7 @@ header .wrap{
   }
 
   // ---- Cercle central + boutons "+" autour (identique au module 1 de l'index) ----
-  function renderLessonRadialBody(body, item, hint, actionBtn){
+  function renderLessonRadialBody(body, item, hint, actionBtn, onPointsStatusChange){
     var points = item.points;
     var total = points.length;
     var viewed = {};
@@ -3687,7 +3813,8 @@ header .wrap{
       hint.textContent = (seen < total)
         ? ('Cliquez sur le bouton + de chaque point autour du cercle pour tout découvrir (' + seen + '/' + total + ' vus)')
         : 'Tous les points clés ont été consultés ✓ — vous pouvez continuer.';
-      actionBtn.disabled = seen < total;
+      if(typeof onPointsStatusChange === 'function'){ onPointsStatusChange(seen >= total); }
+      else { actionBtn.disabled = seen < total; }
     }
 
     points.forEach(function(pt, i){
@@ -3856,19 +3983,33 @@ header .wrap{
       if(isLastLesson){ openCourseCertModal(); } else { goToNextCourseLesson(idx); }
     };
 
-    if(item.points && item.points.length){
-      actionBtn.textContent = isLastLesson ? '🎓 Télécharger votre certificat' : 'Passer à la leçon suivante →';
+    var hasPoints = !!(item.points && item.points.length);
+    var hasQuiz = !!(item.quiz && item.quiz.length);
+
+    actionBtn.textContent = isLastLesson ? '🎓 Télécharger votre certificat' : 'Passer à la leçon suivante →';
+    actionBtn.onclick = completeAction;
+
+    if(hasPoints || hasQuiz){
+      var pointsDone = !hasPoints;
+      var quizDone = !hasQuiz;
       actionBtn.disabled = true;
-      actionBtn.onclick = completeAction;
-      renderLessonRadialBody(mainCol, item, hint, actionBtn);
+
+      function refreshLessonAction(){ actionBtn.disabled = !(pointsDone && quizDone); }
+
+      if(hasPoints){
+        renderLessonRadialBody(mainCol, item, hint, actionBtn, function(done){ pointsDone = done; refreshLessonAction(); });
+      } else {
+        hint.style.display = 'none';
+      }
+      if(hasQuiz){
+        buildQuizSection(mainCol, item.quiz, function(done){ quizDone = done; refreshLessonAction(); });
+      }
     } else {
       hint.style.display = 'none';
       var pEl = document.createElement('p');
       pEl.textContent = 'Cette leçon ne contient pas encore de contenu.';
       mainCol.appendChild(pEl);
-      actionBtn.textContent = isLastLesson ? '🎓 Télécharger votre certificat' : 'Passer à la leçon suivante →';
       actionBtn.disabled = false;
-      actionBtn.onclick = completeAction;
     }
 
     overlay.classList.add('open');
