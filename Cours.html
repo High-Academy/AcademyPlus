@@ -3444,6 +3444,7 @@ header .wrap{
   // module 1 de l'index — même design, mêmes classes CSS, mêmes interactions.
   var CHECK_SVG_LESSON = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>';
   var LESSON_VIDEO_BUCKET = 'course-videos'; // bucket Storage privé confirmé
+  var LESSON_DOCS_BUCKET = 'course-documents'; // bucket Storage privé confirmé
 
   var activeCourse = null;      // { id, title, lessons: [...] }
   var lessonCompletions = {};   // { [lesson_id]: true }
@@ -3472,6 +3473,7 @@ header .wrap{
   function lessonToRadialItem(lesson, courseTitle){
     var points = (lesson.content && lesson.content.points) || [];
     var quiz = (lesson.content && lesson.content.quiz && lesson.content.quiz.questions) || [];
+    var documents = (lesson.content && lesson.content.documents) || [];
     return {
       title: lesson.chapter_title || 'Leçon',
       chapterTag: courseTitle || 'Leçon',
@@ -3479,7 +3481,8 @@ header .wrap{
       points: points.map(function(pt){
         return { label: pt.label || '', html: buildLessonPointHtml(pt) };
       }),
-      quiz: quiz
+      quiz: quiz,
+      documents: documents
     };
   }
 
@@ -3927,6 +3930,60 @@ header .wrap{
   });
 
   // ---- Modale d'une leçon ----
+  // ---- Documents de formation (bucket privé "course-documents" + URL signée) ----
+  function buildDocumentsSection(container, documents){
+    if(!documents || !documents.length){ return; }
+
+    var wrap = document.createElement('div');
+    wrap.className = 'lesson-documents';
+    wrap.style.marginBottom = '20px';
+
+    var heading = document.createElement('h3');
+    heading.style.margin = '0 0 10px';
+    heading.textContent = 'Documents de la leçon';
+    wrap.appendChild(heading);
+
+    documents.forEach(function(doc){
+      var btn = document.createElement('button');
+      btn.type = 'button';
+      btn.className = 'btn-secondary';
+      btn.style.display = 'flex';
+      btn.style.alignItems = 'center';
+      btn.style.gap = '8px';
+      btn.style.marginBottom = '8px';
+      btn.textContent = '📄 ' + (doc.name || 'Document');
+      btn.addEventListener('click', function(){
+        var originalText = btn.textContent;
+        btn.disabled = true;
+        btn.textContent = 'Préparation du téléchargement…';
+        supabaseClient.storage
+          .from(LESSON_DOCS_BUCKET)
+          .createSignedUrl(doc.path, 3600, { download: doc.name || true })
+          .then(function(res){
+            if(res.error || !res.data){ throw res.error || new Error('URL signée indisponible'); }
+            var a = document.createElement('a');
+            a.href = res.data.signedUrl;
+            a.download = doc.name || '';
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+            btn.disabled = false;
+            btn.textContent = originalText;
+          })
+          .catch(function(err){
+            console.error('Erreur téléchargement document :', err);
+            btn.textContent = 'Document indisponible — réessayez';
+          })
+          .finally(function(){
+            btn.disabled = false;
+          });
+      });
+      wrap.appendChild(btn);
+    });
+
+    container.appendChild(wrap);
+  }
+
   function openLessonModal(idx){
     if(!activeCourse){ return; }
     var lesson = activeCourse.lessons[idx];
@@ -3982,6 +4039,9 @@ header .wrap{
       renderCourseLessonsList();
       if(isLastLesson){ openCourseCertModal(); } else { goToNextCourseLesson(idx); }
     };
+
+    // Documents de la leçon, affichés en premier (pas de condition de complétion).
+    buildDocumentsSection(mainCol, item.documents);
 
     var hasPoints = !!(item.points && item.points.length);
     var hasQuiz = !!(item.quiz && item.quiz.length);
