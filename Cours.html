@@ -4057,7 +4057,9 @@ header .wrap{
       function refreshLessonAction(){ actionBtn.disabled = !(pointsDone && quizDone); }
 
       if(hasPoints){
-        renderLessonRadialBody(mainCol, item, hint, actionBtn, function(done){ pointsDone = done; refreshLessonAction(); });
+        var radialContainer = document.createElement('div');
+        mainCol.appendChild(radialContainer);
+        renderLessonRadialBody(radialContainer, item, hint, actionBtn, function(done){ pointsDone = done; refreshLessonAction(); });
       } else {
         hint.style.display = 'none';
       }
