@@ -8,7 +8,7 @@
      fichier reste sans en-tête d'origine, ce qui est une restriction du navigateur. -->
 <meta name="referrer" content="strict-origin-when-cross-origin">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline' https://cdnjs.cloudflare.com https://cdn.jsdelivr.net https://fast.wistia.com; style-src 'self' 'unsafe-inline'; img-src 'self' data: https://play-lh.googleusercontent.com https:; connect-src 'self' https://lgohbjmbhprvjibkforn.supabase.co https://fast.wistia.com; frame-src https://fast.wistia.com https://www.youtube-nocookie.com https://www.youtube.com; font-src 'self' data:;">
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline' https://cdnjs.cloudflare.com https://cdn.jsdelivr.net https://fast.wistia.com; style-src 'self' 'unsafe-inline' https://cdn-uicons.flaticon.com; img-src 'self' data: https://play-lh.googleusercontent.com https:; connect-src 'self' https://lgohbjmbhprvjibkforn.supabase.co https://fast.wistia.com; frame-src https://fast.wistia.com https://www.youtube-nocookie.com https://www.youtube.com; font-src 'self' data: https://cdn-uicons.flaticon.com;">
 <title>NOVACC — Nova Academy &amp; Consulting Center | Formation en Suivi &amp; Évaluation de Projets</title>
 <meta name="description" content="NOVACC — Nova Academy &amp; Consulting Center. Formations certifiantes en Suivi &amp; Évaluation de Projets, pensées pour la réalité haïtienne.">
 <meta property="og:title" content="NOVACC — Nova Academy &amp; Consulting Center">
@@ -2294,6 +2294,8 @@ header .wrap{
     var isOpen = list.classList.contains('is-open');
     list.classList.toggle('is-open', !isOpen);
     btn.setAttribute('aria-expanded', String(!isOpen));
+    var label = btn.querySelector('.lesson-more-label');
+    if(label){ label.textContent = !isOpen ? 'Voir moins de leçon...' : 'Voir plus de leçon...'; }
   });
 </script>
 
@@ -2401,15 +2403,15 @@ header .wrap{
             <div class="lesson-locked" id="lessonLocked-m1">
               <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="5" y="11" width="14" height="9" rx="1.5"/><path d="M8 11V8a4 4 0 0 1 8 0v3"/></svg>
               <p id="lessonLockedMsg-m1">Le contenu détaillé de ce module est réservé aux personnes inscrites. Inscrivez-vous, puis connectez-vous avec le code d'accès reçu après vérification du paiement.</p>
-              <button type="button" class="btn-ghost lesson-locked-btn" id="lessonLockedBtn-m1" onclick="openEnskriModal('Introduction au Suivi &amp; Évaluation de Projet', '2 500 HTG', 'm1')">Acheter pour débloquer</button>
+              <button type="button" class="btn-ghost lesson-locked-btn" id="lessonLockedBtn-m1" onclick="openEnskriModal('Introduction au Suivi &amp; Évaluation de Projet', '2 000 HTG', 'm1')">Acheter pour débloquer</button>
             </div>
               </div>
               
             </div>
           
           <div class="card-foot">
-            <div class="price">2 500<span> HTG</span></div>
-            <button type="button" class="btn-enroll" id="enrollBtn-m1" onclick="openEnskriModal('Introduction au Suivi &amp; Évaluation de Projet', '2 500 HTG', 'm1')">Acheter le cours</button>
+            <div class="price">2 000<span> HTG</span></div>
+            <button type="button" class="btn-enroll" id="enrollBtn-m1" onclick="openEnskriModal('Introduction au Suivi &amp; Évaluation de Projet', '2 000 HTG', 'm1')">Acheter le cours</button>
           </div>
         </div>
 
@@ -2961,7 +2963,7 @@ header .wrap{
       <div class="form-group" style="margin-bottom:6px;">
         <label for="loginPassword">Mot de passe</label>
         <div class="password-field-wrapper">
-          <input type="password" id="loginPassword" placeholder="6 caractères minimum" minlength="6" required autocomplete="current-password">
+          <input type="password" id="loginPassword" placeholder="10 caractères minimum, avec majuscule, minuscule, chiffre et symbole" minlength="10" required autocomplete="current-password">
           <button type="button" class="password-toggle-btn" data-toggle-for="loginPassword" aria-label="Afficher le mot de passe" aria-pressed="false">
             <svg class="eye-on" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
             <svg class="eye-off" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17.94 17.94A10.94 10.94 0 0 1 12 20c-7 0-11-8-11-8a20.6 20.6 0 0 1 5.06-6.06M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a20.6 20.6 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24"/><line x1="1" y1="1" x2="23" y2="23"/></svg>
@@ -3013,11 +3015,11 @@ header .wrap{
     <form class="signup-form" id="resetPasswordForm">
       <div class="form-group" style="margin-bottom:16px; margin-top:14px;">
         <label for="resetPasswordNew">Nouveau mot de passe</label>
-        <input type="password" id="resetPasswordNew" placeholder="6 caractères minimum" minlength="6" required autocomplete="new-password">
+        <input type="password" id="resetPasswordNew" placeholder="10 caractères minimum, avec majuscule, minuscule, chiffre et symbole" minlength="10" required autocomplete="new-password">
       </div>
       <div class="form-group" style="margin-bottom:16px;">
         <label for="resetPasswordConfirm">Confirmer le nouveau mot de passe</label>
-        <input type="password" id="resetPasswordConfirm" placeholder="Répétez le mot de passe" minlength="6" required autocomplete="new-password">
+        <input type="password" id="resetPasswordConfirm" placeholder="Répétez le mot de passe" minlength="10" required autocomplete="new-password">
       </div>
       <p class="form-note" id="resetPasswordError" style="display:none; color:#B3261E;"></p>
       <p class="form-note" id="resetPasswordSuccess" style="display:none; color:#2F6F52;"></p>
@@ -3061,7 +3063,7 @@ header .wrap{
         <div class="form-group">
           <label for="regPassword">Mot de passe</label>
           <div class="password-field-wrapper">
-            <input type="password" id="regPassword" placeholder="6 caractères minimum" minlength="6" required autocomplete="new-password">
+            <input type="password" id="regPassword" placeholder="10 caractères minimum, avec majuscule, minuscule, chiffre et symbole" minlength="10" required autocomplete="new-password">
             <button type="button" class="password-toggle-btn" data-toggle-for="regPassword" aria-label="Afficher le mot de passe" aria-pressed="false">
               <svg class="eye-on" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
               <svg class="eye-off" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17.94 17.94A10.94 10.94 0 0 1 12 20c-7 0-11-8-11-8a20.6 20.6 0 0 1 5.06-6.06M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a20.6 20.6 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24"/><line x1="1" y1="1" x2="23" y2="23"/></svg>
@@ -3071,7 +3073,7 @@ header .wrap{
         <div class="form-group">
           <label for="regPasswordConfirm">Confirmation du mot de passe</label>
           <div class="password-field-wrapper">
-            <input type="password" id="regPasswordConfirm" placeholder="Répétez le mot de passe" minlength="6" required autocomplete="new-password">
+            <input type="password" id="regPasswordConfirm" placeholder="Répétez le mot de passe" minlength="10" required autocomplete="new-password">
             <button type="button" class="password-toggle-btn" data-toggle-for="regPasswordConfirm" aria-label="Afficher le mot de passe" aria-pressed="false">
               <svg class="eye-on" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
               <svg class="eye-off" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17.94 17.94A10.94 10.94 0 0 1 12 20c-7 0-11-8-11-8a20.6 20.6 0 0 1 5.06-6.06M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a20.6 20.6 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24"/><line x1="1" y1="1" x2="23" y2="23"/></svg>
@@ -3442,7 +3444,7 @@ header .wrap{
   "m1": [
     {
       "type": "video",
-      "title": "Voir le module 1 en vidéo",
+      "title": "Voir la vidéo sur l'introduction au Suivi & Évaluation de Projet ",
       "chapterTag": "Module 1",
       "videoKey": "vm1",
       "icon": "<i class=\"fi fi-brands-youtube\"></i> "
@@ -5037,44 +5039,6 @@ header .wrap{
       ]
     },
     {
-      "type": "lesson",
-      "title": "Excel — Tableau croisé dynamique",
-      "chapterTag": "Module 3",
-      "body": "Le tableau croisé dynamique (TCD) est l'un des outils les plus puissants d'Excel pour résumer, organiser et analyser rapidement de grands volumes de données, sans écrire de formule.",
-      "points": [
-        {
-          "label": "1. Qu'est-ce qu'un tableau croisé dynamique ?",
-          "html": "<p>Un <strong>tableau croisé dynamique (TCD)</strong> est un outil d'Excel qui permet de résumer, organiser et analyser rapidement de grands volumes de données, sans écrire de formule. Il transforme une liste de données brutes (par exemple des lignes de ventes ou d'enquêtes ménages) en un tableau de synthèse interactif : sommes, moyennes, comptages, pourcentages, etc.</p><p>Un TCD permet de croiser plusieurs dimensions (produit, région, période…) en quelques clics, de repérer des tendances et de réorganiser l'analyse instantanément par glisser-déposer, sans toucher aux données source.</p>"
-        },
-        {
-          "label": "2. Préparer les données source",
-          "html": "<p>La qualité du TCD dépend directement de la qualité des données de départ. Avant de créer un tableau croisé dynamique, il faut vérifier que : chaque colonne possède un <strong>en-tête unique et explicite</strong> (pas de cellule vide en en-tête) ; il n'y a <strong>aucune ligne ni colonne totalement vide</strong> dans la plage ; chaque colonne contient un <strong>seul type de donnée</strong> (texte, nombre ou date, sans mélange) ; et les données sont idéalement converties en <strong>tableau structuré (Ctrl+T)</strong> pour s'étendre automatiquement.</p>"
-        },
-        {
-          "label": "3. Créer un tableau croisé dynamique",
-          "html": "<p>Pour créer un TCD : sélectionner une cellule à l'intérieur de la plage de données ; aller dans l'onglet <strong>Insertion</strong>, puis cliquer sur <strong>Tableau croisé dynamique</strong> ; vérifier la plage de données proposée et choisir l'emplacement du TCD (nouvelle feuille recommandé) ; cliquer sur <strong>OK</strong> pour afficher le volet des champs ; puis glisser les champs souhaités dans les zones <strong>Lignes, Colonnes, Valeurs et Filtres</strong>. Le type de calcul (somme, moyenne, nombre…) s'ajuste par un clic droit sur le champ dans la zone Valeurs.</p>"
-        },
-        {
-          "label": "4. Les quatre zones du TCD",
-          "html": "<p><strong>Filtres</strong> : restreint l'analyse à une ou plusieurs catégories (ex. afficher uniquement une année). <strong>Colonnes</strong> : définit les en-têtes de colonnes du tableau de synthèse (ex. les mois de l'année). <strong>Lignes</strong> : définit les catégories affichées en lignes (ex. les noms de produits ou de régions). <strong>Valeurs</strong> : contient les données chiffrées à agréger (ex. chiffre d'affaires, quantités vendues).</p>"
-        },
-        {
-          "label": "5. Fonctionnalités utiles pour l'analyse",
-          "html": "<p><strong>Segments (slicers)</strong> : boutons visuels pour filtrer rapidement les données d'un ou plusieurs TCD liés. <strong>Chronologie</strong> : filtre visuel dédié aux champs de type date. <strong>Regroupement</strong> : regrouper des dates par mois/trimestre/année, ou des nombres par tranches. <strong>Champs calculés</strong> : créer une formule personnalisée à partir des champs existants. <strong>Actualisation</strong> : le bouton « Actualiser » met à jour le TCD après modification des données source. <strong>Graphique croisé dynamique</strong> : une visualisation graphique directement connectée au TCD.</p>"
-        },
-        {
-          "label": "6. Bonnes pratiques et erreurs courantes",
-          "html": "<p>À faire : toujours partir d'un tableau structuré (Ctrl+T) ; nommer clairement les en-têtes de colonnes ; actualiser le TCD après toute modification des données source. À éviter : laisser des cellules fusionnées dans les données source ; mélanger du texte et des nombres dans une même colonne ; oublier d'actualiser le TCD avant de présenter une analyse.</p>"
-        }
-      ]
-    },
-    {
-      "type": "video",
-      "title": "Excel — Tableau croisé dynamique",
-      "chapterTag": "Module 3",
-      "videoKey": "excel-tcd"
-    },
-    {
       "type": "quiz",
       "title": "Quiz 3",
       "questions": [
@@ -5578,6 +5542,44 @@ header .wrap{
     },
     {
       "type": "lesson",
+      "title": "Excel — Tableau croisé dynamique",
+      "chapterTag": "Module 3",
+      "body": "Le tableau croisé dynamique (TCD) est l'un des outils les plus puissants d'Excel pour résumer, organiser et analyser rapidement de grands volumes de données, sans écrire de formule.",
+      "points": [
+        {
+          "label": "1. Qu'est-ce qu'un tableau croisé dynamique ?",
+          "html": "<p>Un <strong>tableau croisé dynamique (TCD)</strong> est un outil d'Excel qui permet de résumer, organiser et analyser rapidement de grands volumes de données, sans écrire de formule. Il transforme une liste de données brutes (par exemple des lignes de ventes ou d'enquêtes ménages) en un tableau de synthèse interactif : sommes, moyennes, comptages, pourcentages, etc.</p><p>Un TCD permet de croiser plusieurs dimensions (produit, région, période…) en quelques clics, de repérer des tendances et de réorganiser l'analyse instantanément par glisser-déposer, sans toucher aux données source.</p>"
+        },
+        {
+          "label": "2. Préparer les données source",
+          "html": "<p>La qualité du TCD dépend directement de la qualité des données de départ. Avant de créer un tableau croisé dynamique, il faut vérifier que : chaque colonne possède un <strong>en-tête unique et explicite</strong> (pas de cellule vide en en-tête) ; il n'y a <strong>aucune ligne ni colonne totalement vide</strong> dans la plage ; chaque colonne contient un <strong>seul type de donnée</strong> (texte, nombre ou date, sans mélange) ; et les données sont idéalement converties en <strong>tableau structuré (Ctrl+T)</strong> pour s'étendre automatiquement.</p>"
+        },
+        {
+          "label": "3. Créer un tableau croisé dynamique",
+          "html": "<p>Pour créer un TCD : sélectionner une cellule à l'intérieur de la plage de données ; aller dans l'onglet <strong>Insertion</strong>, puis cliquer sur <strong>Tableau croisé dynamique</strong> ; vérifier la plage de données proposée et choisir l'emplacement du TCD (nouvelle feuille recommandé) ; cliquer sur <strong>OK</strong> pour afficher le volet des champs ; puis glisser les champs souhaités dans les zones <strong>Lignes, Colonnes, Valeurs et Filtres</strong>. Le type de calcul (somme, moyenne, nombre…) s'ajuste par un clic droit sur le champ dans la zone Valeurs.</p>"
+        },
+        {
+          "label": "4. Les quatre zones du TCD",
+          "html": "<p><strong>Filtres</strong> : restreint l'analyse à une ou plusieurs catégories (ex. afficher uniquement une année). <strong>Colonnes</strong> : définit les en-têtes de colonnes du tableau de synthèse (ex. les mois de l'année). <strong>Lignes</strong> : définit les catégories affichées en lignes (ex. les noms de produits ou de régions). <strong>Valeurs</strong> : contient les données chiffrées à agréger (ex. chiffre d'affaires, quantités vendues).</p>"
+        },
+        {
+          "label": "5. Fonctionnalités utiles pour l'analyse",
+          "html": "<p><strong>Segments (slicers)</strong> : boutons visuels pour filtrer rapidement les données d'un ou plusieurs TCD liés. <strong>Chronologie</strong> : filtre visuel dédié aux champs de type date. <strong>Regroupement</strong> : regrouper des dates par mois/trimestre/année, ou des nombres par tranches. <strong>Champs calculés</strong> : créer une formule personnalisée à partir des champs existants. <strong>Actualisation</strong> : le bouton « Actualiser » met à jour le TCD après modification des données source. <strong>Graphique croisé dynamique</strong> : une visualisation graphique directement connectée au TCD.</p>"
+        },
+        {
+          "label": "6. Bonnes pratiques et erreurs courantes",
+          "html": "<p>À faire : toujours partir d'un tableau structuré (Ctrl+T) ; nommer clairement les en-têtes de colonnes ; actualiser le TCD après toute modification des données source. À éviter : laisser des cellules fusionnées dans les données source ; mélanger du texte et des nombres dans une même colonne ; oublier d'actualiser le TCD avant de présenter une analyse.</p>"
+        }
+      ]
+    },
+    {
+      "type": "video",
+      "title": "Excel — Tableau croisé dynamique",
+      "chapterTag": "Module 3",
+      "videoKey": "excel-tcd"
+    },
+    {
+      "type": "lesson",
       "title": "Restitution et utilisation des résultats",
       "chapterTag": "Module 3",
       "body": "Collecter et analyser des données n'a de valeur que si les résultats sont ensuite communiqués et utilisés pour orienter des décisions.",
@@ -5925,6 +5927,13 @@ header .wrap{
     }
   ],
   "m4": [
+  {
+      "type": "video",
+      "title": "Vidéo sur le rapport des résultats  ",
+      "chapterTag": "Module 4",
+      "videoKey": "vm4",
+      "icon": "<i class=\"fi fi-brands-youtube\"></i> "
+    },
     {
       "type": "lesson",
       "title": "Le module et le projet Fond Sable",
@@ -6865,7 +6874,7 @@ header .wrap{
       btn.type = 'button';
       btn.className = 'lesson-row' + (done ? ' done' : '') + (isVideo ? ' lesson-video' : '');
       btn.disabled = !unlocked;
-      var titlePrefix = isVideo ? (item.icon || '🎥 ') : '<i class="fi fi-tr-document"></i> ';
+      var titlePrefix = (isVideo || pairedVideoIdx !== null) ? (item.icon || '<i class="fi fi-brands-youtube"></i> ') : '<i class="fi fi-tr-document"></i> ';
       btn.innerHTML =
         '<span class="lesson-status"><svg viewBox="0 0 12 12" fill="none"><path d="M2 6.2L4.7 9L10 3" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></span>' +
         '<span class="lesson-title">' + titlePrefix + item.title + '</span>' +
@@ -8848,6 +8857,51 @@ document.addEventListener('keydown', function(e){
     });
   }
 
+  // Traduit les messages d'erreur Supabase Auth (souvent en anglais) en français clair,
+  // notamment les règles de mot de passe (longueur, majuscule, minuscule, chiffre, symbole).
+  function traduireErreurAuth(message){
+    if(!message){ return "Une erreur est survenue. Veuillez réessayer."; }
+    var msg = message.toLowerCase();
+
+    if(msg.indexOf('at least') !== -1 && msg.indexOf('character') !== -1){
+      var match = message.match(/(\d+)\s*character/);
+      var nb = match ? match[1] : '10';
+      return 'Le mot de passe doit contenir au moins ' + nb + ' caractères.';
+    }
+    if(msg.indexOf('lowercase') !== -1){
+      return 'Le mot de passe doit contenir au moins une lettre minuscule.';
+    }
+    if(msg.indexOf('uppercase') !== -1){
+      return 'Le mot de passe doit contenir au moins une lettre majuscule.';
+    }
+    if(msg.indexOf('digit') !== -1 || msg.indexOf('number') !== -1){
+      return 'Le mot de passe doit contenir au moins un chiffre.';
+    }
+    if(msg.indexOf('symbol') !== -1 || msg.indexOf('special character') !== -1){
+      return 'Le mot de passe doit contenir au moins un symbole (ex: ! @ # $ %).';
+    }
+    if(msg.indexOf('password') !== -1 && msg.indexOf('weak') !== -1){
+      return 'Ce mot de passe est trop simple. Utilisez au moins 10 caractères avec majuscules, minuscules, chiffres et symboles.';
+    }
+    if(msg.indexOf('already registered') !== -1 || msg.indexOf('already exists') !== -1 || msg.indexOf('user already') !== -1){
+      return 'Un compte existe déjà avec cet email. Essayez de vous connecter.';
+    }
+    if(msg.indexOf('invalid login') !== -1 || msg.indexOf('invalid_credentials') !== -1 || msg.indexOf('invalid credentials') !== -1){
+      return 'Email ou mot de passe incorrect.';
+    }
+    if(msg.indexOf('email not confirmed') !== -1){
+      return 'Veuillez confirmer votre email avant de vous connecter (vérifiez votre boîte de réception).';
+    }
+    if(msg.indexOf('rate limit') !== -1 || msg.indexOf('too many') !== -1){
+      return 'Trop de tentatives. Veuillez patienter quelques minutes avant de réessayer.';
+    }
+    if(msg.indexOf('valid email') !== -1 || msg.indexOf('invalid email') !== -1){
+      return 'Veuillez saisir une adresse email valide.';
+    }
+    // Repli : on affiche le message original si aucune correspondance connue.
+    return message;
+  }
+
   if(loginForm){
     loginForm.addEventListener('submit', function(e){
       e.preventDefault();
@@ -8869,7 +8923,7 @@ document.addEventListener('keydown', function(e){
       authCall.then(function(result){
         loginSubmitBtn.disabled = false;
         if(result.error){
-          loginError.textContent = result.error.message;
+          loginError.textContent = traduireErreurAuth(result.error.message);
           loginError.style.display = 'block';
           return;
         }
@@ -9243,7 +9297,7 @@ document.addEventListener('keydown', function(e){
         registerSubmitBtn.textContent = "S'inscrire";
 
         if(result.error){
-          registerError.textContent = result.error.message;
+          registerError.textContent = traduireErreurAuth(result.error.message);
           registerError.style.display = 'block';
           return;
         }
