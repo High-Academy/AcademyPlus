@@ -8,7 +8,7 @@
      fichier reste sans en-tête d'origine, ce qui est une restriction du navigateur. -->
 <meta name="referrer" content="strict-origin-when-cross-origin">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline' https://cdnjs.cloudflare.com https://cdn.jsdelivr.net https://fast.wistia.com https://fast.wistia.net https://*.wistia.com https://*.wistia.net; style-src 'self' 'unsafe-inline' https://cdn-uicons.flaticon.com https://fast.wistia.com https://*.wistia.com; img-src 'self' data: https://play-lh.googleusercontent.com https:; media-src 'self' https://fast.wistia.com https://fast.wistia.net https://*.wistia.com https://*.wistia.net blob:; connect-src 'self' https://lgohbjmbhprvjibkforn.supabase.co https://fast.wistia.com https://fast.wistia.net https://*.wistia.com https://*.wistia.net; frame-src https://fast.wistia.com https://fast.wistia.net https://*.wistia.com https://www.youtube-nocookie.com https://www.youtube.com; font-src 'self' data: https://cdn-uicons.flaticon.com https://fast.wistia.com;">
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline' https://cdnjs.cloudflare.com https://cdn.jsdelivr.net https://fast.wistia.com https://fast.wistia.net https://*.wistia.com https://*.wistia.net https://browser.sentry-cdn.com https://js.sentry-cdn.com; style-src 'self' 'unsafe-inline' https://cdn-uicons.flaticon.com https://fast.wistia.com https://*.wistia.com https://fonts.googleapis.com; img-src 'self' data: https://play-lh.googleusercontent.com https:; media-src 'self' https://fast.wistia.com https://fast.wistia.net https://*.wistia.com https://*.wistia.net blob:; connect-src 'self' https://lgohbjmbhprvjibkforn.supabase.co https://fast.wistia.com https://fast.wistia.net https://*.wistia.com https://*.wistia.net https://cdn.jsdelivr.net https://cdnjs.cloudflare.com https://*.sentry.io https://*.ingest.sentry.io; frame-src https://fast.wistia.com https://fast.wistia.net https://*.wistia.com https://www.youtube-nocookie.com https://www.youtube.com; font-src 'self' data: https://cdn-uicons.flaticon.com https://fast.wistia.com https://fonts.gstatic.com;">
 <title>NOVACC — Nova Academy &amp; Consulting Center | Formation en Suivi &amp; Évaluation de Projets</title>
 <meta name="description" content="NOVACC — Nova Academy &amp; Consulting Center. Formations certifiantes en Suivi &amp; Évaluation de Projets, pensées pour la réalité haïtienne.">
 <meta property="og:title" content="NOVACC — Nova Academy &amp; Consulting Center">
@@ -8202,13 +8202,10 @@ document.addEventListener('keydown', function(e){
   // Les identifiants sont stockés de façon sécurisée par Supabase, pas dans ce fichier.
   var SUPABASE_URL = 'https://lgohbjmbhprvjibkforn.supabase.co';
   // SUPABASE_ANON_KEY déjà déclarée en <head> — réutilisée ici, pas de redéclaration.
-  // Stockage de la session : sessionStorage par défaut (vidé à la fermeture de l'onglet/
-  // navigateur => déconnexion automatique), sauf si "Se souvenir de moi" a été coché
-  // lors de la dernière connexion, auquel cas on garde localStorage (persiste).
-  var supabaseAuthStorage = (function(){
-    try{ return (localStorage.getItem('ha_remember_me') === '1') ? window.localStorage : window.sessionStorage; }
-    catch(e){ return window.sessionStorage; }
-  })();
+  // Stockage de la session : toujours localStorage, pour que la session soit visible
+  // dans tous les onglets/pages du site (y compris la page admin séparée), sans
+  // dépendre d'un choix "Se souvenir de moi" fait après coup.
+  var supabaseAuthStorage = window.localStorage;
   // keepalive:true garantit que les requêtes Supabase (ex: l'insert dans "enrollments"
   // juste avant la redirection MonCash/UNIBANK) ne sont PAS annulées quand le navigateur
   // navigue vers une nouvelle page pendant qu'elles sont encore en cours.
