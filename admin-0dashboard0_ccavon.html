@@ -332,6 +332,8 @@
 <script>
   var SUPABASE_URL = 'https://lgohbjmbhprvjibkforn.supabase.co';
   var SUPABASE_ANON_KEY = 'sb_publishable_EmDRarwrfmft7DGnsWsgXA_LgeJV-sI';
+  // localStorage (comportement par défaut de Supabase) — cohérent avec index.html,
+  // qui utilise désormais toujours localStorage pour la session.
   var supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
   var MODULE_PRICES = { m1: 2500, m2: 3000, m3: 3500, m4: 4000 };
