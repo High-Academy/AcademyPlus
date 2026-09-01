@@ -332,7 +332,7 @@
   .eyebrow {
     font-family:'IBM Plex Mono', monospace; font-size:rem; letter-spacing:.normal;
     text-transform:uppercase; color:#DAA243; margin-bottom:12px; display:flex; gap:10px; align-items:center;
-	margin-top:-10px;
+	margin-top:-10px; margin-left:20px;
   }
   
   .cata::before {
@@ -343,7 +343,7 @@
   background: var(--blue-deep);
 }
   
-  .eyebrow::before{content:""; width:26px; height:1px; background:var(--teal);}
+  .eyebrow::before{width:26px; height:1px; background:var(--teal);}
   .hero h1{font-size:clamp(2rem, 3.4vw, 2.85rem); line-height:1.14; max-width:20ch;}
   .hero h1 em{font-style:normal; color:var(--blue);}
   .hero p.lead{
@@ -1783,34 +1783,63 @@ header .wrap{
 .Temoignages {
   display: flex;
   flex-wrap: wrap;       /* passe à la ligne si ça ne rentre plus */
+  justify-content: center;
   gap: 1.5rem;
-  margin-left:15px;
-  
+  margin-top: 24px;
 }
 
-/* Chaque carte : image + texte alignés horizontalement */
+/* Chaque carte : photo en haut, nom, puis témoignage */
 .testimonial-card {
   display: flex;
+  flex-direction: column;
   align-items: center;
-  gap: 0.75rem;
-  flex: 1 1 300px;       /* grandit/rétrécit, largeur idéale 300px */
-  max-width: 350px;
-  padding: 1rem;
-  background: #fff;
-  border-radius: 12px;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
+  text-align: center;
+  gap: 0.6rem;
+  flex: 1 1 250px;       /* grandit/rétrécit, largeur idéale 250px */
+  max-width: 280px;
+  padding: 1.5rem 1.25rem;
+  background: var(--panel);
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  box-shadow: var(--shadow);
+  transition: transform .15s ease, box-shadow .15s ease;
+}
+
+.testimonial-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 8px 20px rgba(0,0,0,0.10);
 }
 
 .testimonial-card img {
   flex-shrink: 0;
   border-radius: 50%;    /* effet avatar rond */
   object-fit: cover;
+  border: 3px solid var(--blue-tint);
+}
+
+.testimonial-name {
+  margin: 0;
+  font-size: 1rem;
+  font-weight: 700;
+  color: var(--navy);
+}
+
+.testimonial-name::after {
+  content: "";
+  display: block;
+  width: 32px;
+  height: 3px;
+  margin: 6px auto 0;
+  background: var(--gold);
+  border-radius: 2px;
 }
 
 .testimonial-card p {
   margin: 0;
-  font-size: 0.95rem;
-  line-height: 1.4;
+  font-size: 0.92rem;
+  line-height: 1.5;
+  color: var(--ink-soft);
+  font-style: italic;
 }
 
 /* Responsive : une carte par ligne sur mobile */
@@ -2653,7 +2682,7 @@ header .wrap{
         <div class="step-num-tag" style="color:#fff">Étape</div>
         <div class="step-num" style="color:#fff">01</div>
         <h3 style="color:#fff">Cliquez sur «Acheter le cours»</h3>
-        <p style="color:#fff">D'abord vous devez créer un compte sur NOVACC. Ensuite hoisissez le module que vous voulez suivre et cliquez sur le bouton «Acheter le cours» pour ouvrir le formulaire d'inscription au module.</p>
+        <p style="color:#fff">D'abord vous devez créer un compte sur NOVACC. Ensuite choisissez le module que vous voulez suivre et cliquez sur le bouton «Acheter le cours» pour ouvrir le formulaire d'inscription au module.</p>
       </div>
       <div class="step bg2">
         <div class="step-num-tag" style="color:#fff">Étape</div>
@@ -2676,26 +2705,42 @@ header .wrap{
   </div>
 </section>
 
-<!--=============================================================================================
-<section style="background-color:#8B5CF629; margin-top:-30px;" id="temoignages">
-<h3 style="background-color:gold; text-align:center;">Temoignages</h3>
-<div class="Temoignages">
-<div class="image-comment">
-<img src="fille.png" width="80" height="80" alt="Photo d'une participante" loading="lazy">
-<p><b>Vanessa Magloire</b></p>
-<p>Certains temoignages des participant(e)s</p>
-</div>
 
+<section style="background-color:#8B5CF629; margin-top:-30px; padding:48px 0 56px;" id="temoignages">
+  <div class="wrap">
+    <div class="sec-head">
+      <div class="eyebrow">Avis des apprenants</div>
+      <h2 style="text-align:center;">Témoignages</h2>
+    </div>
 
-<div class="image-comment">......</div>
+    <div class="Temoignages">
+      <div class="testimonial-card">
+        <img src="img/charestan-junior.png" width="88" height="88" alt="Photo de Charestan Junior" loading="lazy">
+        <h4 class="testimonial-name">Charestan Junior</h4>
+        <p>« Je me souviens avoir remarqué sur LinkedIn que vous réalisez ces genres de formations et immédiatement je vous ai contacté pour savoir quand aura lieu la nouvelle session de formations. Parce que l'un des outils que j'ai souhaité apprendre c'était SPSS. »</p>
+      </div>
 
-<div class="image-comment">......</div>
-<div class="image-comment">......</div>
-<div class="image-comment">......</div>
-</div>
+      <div class="testimonial-card">
+        <img src="img/madsen-julmiste.png" width="88" height="88" alt="Photo de Madsen Julmiste" loading="lazy">
+        <h4 class="testimonial-name">Madsen Julmiste</h4>
+        <p>« Pour moi, je suis très satisfait de la méthodologie participative utilisée pour dispenser le cours. L'enseignant va jusqu'aux éléments fondamentaux afin de permettre aux apprenants de mieux comprendre les notions. »</p>
+      </div>
+
+      <div class="testimonial-card">
+        <img src="img/eurol-abdon.png" width="88" height="88" alt="Photo d'Eurol Abdon" loading="lazy">
+        <h4 class="testimonial-name">Eurol Abdon</h4>
+        <p>« Cette formation me permet d'acquérir des connaissances complémentaires sur des logiciels utilisés dans la gestion de projet. »</p>
+      </div>
+
+      <div class="testimonial-card">
+        <img src="img/vanessa-magloire.png" width="88" height="88" alt="Photo de Vanessa Magloire" loading="lazy">
+        <h4 class="testimonial-name">Vanessa Magloire</h4>
+        <p>« J'ai appris beaucoup sur l'utilisation de ces outils, la méthodologie appliquée pour la formation était très bien. »</p>
+      </div>
+    </div>
+  </div>
 </section>
-==================================================================================================
--->
+
 
 
 
@@ -3451,409 +3496,65 @@ header .wrap{
     },
     {
       "type": "lesson",
+      "position": 1,
       "title": "Qu'est-ce que le Suivi & Évaluation ?",
       "chapterTag": "Chapitre 1",
-      "body": "Tout projet de développement mobilise des ressources humaines, financières et matérielles pour produire un changement attendu dans la vie d'une population cible. Entre l'intention de départ et le résultat final, il existe un long chemin semé d'incertitudes : retards, imprévus, résistances locales, erreurs de conception, changements de contexte. Le Suivi & Évaluation (S&E) est la fonction managériale qui permet de parcourir ce chemin les yeux ouverts, en fournissant aux gestionnaires, bailleurs et communautés les informations nécessaires pour prendre des décisions éclairées.",
-      "points": [
-        { "label": "1.1.A. Définitions fondamentales", "html": "<p>Le « <strong>Suivi & Évaluation</strong> » (en anglais Monitoring & Evaluation, ou M&E) désigne l'ensemble des processus, outils et pratiques qui permettent de collecter, d'analyser et d'utiliser systématiquement des informations sur la mise en œuvre et les résultats d'un projet, d'un programme ou d'une politique. Bien que l'expression soit souvent utilisée comme un tout indissociable, elle recouvre en réalité deux fonctions distinctes et complémentaires.</p><p>Cette distinction est fondamentale : confondre les deux fonctions conduit souvent à des systèmes mal conçus — soit un suivi trop léger qui ne permet pas de détecter les problèmes à temps, soit des évaluations réduites à un simple comptage d'activités qui ne renseignent en rien sur les effets réels du projet.</p>" },
-        { "label": "1.1.B. Le suivi (monitoring)", "html": "<p>Le suivi est un processus <strong>continu</strong> de collecte et d'analyse d'informations sur l'avancement d'un projet, réalisé pendant toute la durée de sa mise en œuvre. Il compare systématiquement ce qui est réellement en train de se passer avec ce qui avait été planifié, afin de détecter rapidement les écarts, les retards ou les problèmes, et de permettre des corrections en temps réel.</p><p>Selon l'<strong>OCDE</strong>, le suivi est « une fonction continue qui utilise la collecte systématique de données sur des indicateurs spécifiés afin de fournir aux gestionnaires et aux principales parties prenantes d'une intervention en cours de développement des indications sur l'étendue des progrès et sur la réalisation des objectifs, ainsi que sur les progrès dans l'utilisation des fonds alloués ».</p><p>Concrètement, le suivi s'appuie sur des outils simples et répétés dans le temps : fiches de pointage de chantier, rapports d'activité mensuels, registres de présence aux formations, listes de bénéficiaires, visites de terrain régulières, tableaux de bord actualisés. Ces données sont généralement agrégées dans un système d'information de gestion (MIS) qui permet de visualiser, en un coup d'œil, l'état d'avancement du projet par rapport aux cibles fixées dans le plan de travail.</p>" },
-        { "label": "1.1.C. L'évaluation (evaluation)", "html": "<p>L'évaluation est une appréciation <strong>systématique et objective</strong> d'un projet, d'un programme ou d'une politique, en cours ou achevé — de sa conception, de sa mise en œuvre et de ses résultats. Elle vise à déterminer la pertinence, l'efficacité, l'efficience, l'impact et la durabilité des interventions.</p><p>Contrairement au suivi, l'évaluation se déroule à des moments précis et ponctuels (au démarrage, à mi-parcours, à la fin, ou même après la clôture du projet) et cherche à répondre à des questions plus larges et plus profondes : pourquoi ce résultat a-t-il (ou n'a-t-il pas) été atteint ? Le projet a-t-il changé durablement la vie des bénéficiaires ? Les ressources investies étaient-elles justifiées au regard des résultats obtenus ?</p><p>L'évaluation mobilise des méthodes plus rigoureuses et souvent plus coûteuses que le suivi : enquêtes par sondage auprès d'un échantillon représentatif de la population, entretiens approfondis, groupes de discussion (focus groups), parfois comparaison avec un groupe témoin n'ayant pas bénéficié du projet. Elle est fréquemment confiée à des évaluateurs externes indépendants afin de garantir l'objectivité de l'exercice.</p>" },
-        { "label": "1.1.D Un système intégré", "html": "<p>Un système de S&E performant n'oppose pas ces deux fonctions : il les articule. Les données collectées grâce au suivi (rapports d'activité, statistiques de terrain, indicateurs de progrès) alimentent directement les évaluations, qui à leur tour orientent les ajustements du système de suivi.</p><p>On peut résumer cette relation par une formule souvent utilisée dans la littérature du secteur : le suivi permet de savoir <em>« ce qui se passe »</em>, tandis que l'évaluation permet de comprendre <em>« pourquoi cela se passe ainsi, et si cela vaut la peine de continuer »</em>.</p><blockquote><em>« On ne gère bien que ce que l'on mesure. Le Suivi & Évaluation n'est pas un exercice administratif accessoire : c'est le système nerveux d'un projet, celui qui permet de savoir, à tout moment, où l'on en est et si l'on avance dans la bonne direction. »</em></blockquote>" },
-        { "label": "1.2. Bref historique et évolution du S&E", "html": "<p>La pratique du suivi et de l'évaluation n'est pas nouvelle : dès les années <strong>1950-1960</strong>, les grands programmes de développement économique financés par la Banque mondiale et les agences des Nations Unies intégraient déjà des mécanismes de rapportage et de contrôle budgétaire.</p><p>C'est surtout à partir des années <strong>1970-1980</strong> que le S&E se structure comme discipline à part entière, avec l'apparition du Cadre Logique (Logical Framework Approach), développé initialement par l'agence américaine USAID, puis largement diffusé par la coopération allemande, la Banque mondiale et l'Union européenne.</p><p>Dans les années <strong>1990-2000</strong>, sous l'influence du mouvement de la « gestion axée sur les résultats » (Results-Based Management), le S&E évolue : on ne se contente plus de vérifier que les activités ont été réalisées, on cherche désormais à démontrer que ces activités produisent effectivement des changements durables dans la vie des populations. Cette évolution est renforcée par l'adoption des <strong>Objectifs du Millénaire pour le Développement (2000)</strong>, puis des <strong>Objectifs de Développement Durable (2015)</strong>.</p><p>Aujourd'hui, le S&E constitue une exigence quasi systématique des bailleurs de fonds internationaux (USAID, Union Européenne, Banque Mondiale, agences des Nations Unies, fondations privées) et une compétence professionnelle à part entière, avec ses propres métiers (responsable S&E, spécialiste en évaluation d'impact, gestionnaire de données) et ses propres associations professionnelles.</p>" },
-        { "label": "1.2 bis. Le cadre logique en un coup d'œil", "html": "<p>Le terme <strong>cadre logique</strong> (ou <em>logframe</em>, de l'anglais Logical Framework) revient très souvent en S&E : c'est l'outil de planification le plus utilisé pour structurer un projet. Concrètement, il s'agit d'une <strong>matrice</strong> qui présente, sur une seule page, la logique d'intervention du projet (objectif global, objectif spécifique, résultats attendus, activités), les <strong>indicateurs</strong> qui permettront de mesurer chaque niveau, les <strong>sources de vérification</strong> (d'où viendront les données) et les <strong>hypothèses</strong> (les conditions externes qui doivent se réaliser pour que le projet fonctionne comme prévu).</p><p>Retenez dès à présent cette définition simple — nous y reviendrons en détail avec un exemple complet au chapitre 4 : le cadre logique est le pont entre la stratégie du projet et son système de S&E, puisque c'est lui qui fixe, dès la conception, ce qui devra être suivi et évalué tout au long du projet.</p>" },
-        { "label": "1.3. Pourquoi le S&E est-il indispensable ?", "html": "<p>On pourrait être tenté de considérer le S&E comme une simple obligation administrative imposée par les bailleurs de fonds. En réalité, un système de S&E bien conçu rend des services essentiels à toutes les parties prenantes d'un projet :</p><ul><li><strong>Piloter la mise en œuvre</strong> : identifier rapidement les retards, les blocages ou les dérives budgétaires, et permettre des corrections avant qu'il ne soit trop tard.</li><li><strong>Rendre des comptes (redevabilité)</strong> : démontrer aux bailleurs de fonds, aux autorités et aux communautés bénéficiaires que les ressources ont été utilisées comme prévu et que les résultats annoncés ont bien été atteints.</li><li><strong>Apprendre et capitaliser</strong> : tirer des leçons de l'expérience pour améliorer la conception des projets futurs et éviter de répéter les mêmes erreurs.</li><li><strong>Prendre des décisions fondées sur des preuves</strong> : allouer les ressources et arbitrer entre options stratégiques sur la base de données fiables plutôt que d'impressions.</li><li><strong>Motiver et responsabiliser les équipes</strong> : donner un sens concret au travail quotidien des équipes de terrain en leur montrant l'impact réel de leurs efforts.</li><li><strong>Renforcer la confiance des bénéficiaires</strong> : lorsque les communautés sont associées au suivi (suivi participatif), elles s'approprient davantage le projet et deviennent des actrices, non de simples récipiendaires.</li></ul>" },
-        { "label": "1.4. Principes d'un bon système de S&E", "html": "<p>Un système de S&E n'a de valeur que s'il respecte un certain nombre de principes de qualité. La littérature spécialisée (notamment les lignes directrices du CAD/OCDE) en retient généralement les suivants :</p><ul><li><strong>Utilité</strong> — le système doit produire des informations réellement utilisées par les décideurs, et non de simples rapports classés sans suite.</li><li><strong>Fiabilité et rigueur</strong> — les données collectées doivent être exactes, vérifiables et collectées selon une méthode cohérente dans le temps.</li><li><strong>Faisabilité</strong> — le système doit être réaliste au regard des ressources humaines, financières et techniques disponibles ; un système trop complexe finit par ne pas être appliqué.</li><li><strong>Participation</strong> — les bénéficiaires et les acteurs locaux doivent, autant que possible, être associés à la définition des indicateurs et à la collecte des données.</li><li><strong>Éthique</strong> — la collecte de données doit respecter la dignité, la confidentialité et le consentement des personnes concernées.</li><li><strong>Ponctualité</strong> — les informations doivent être disponibles au moment où elles sont utiles à la prise de décision, et non après coup.</li></ul>" },
-        { "label": "1.5. Premier regard sur notre exemple fil rouge", "html": "<p>Reprenons le <strong>Projet d'Amélioration de l'Assainissement Familial de Fond-Sable (PAAF-Fond-Sable)</strong>. Dès la phase de conception, l'équipe de projet a dû répondre à plusieurs questions de S&E fondamentales :</p><ol><li><em>Comment allons-nous savoir, chaque mois, combien de latrines ont réellement été construites, et si ce rythme est compatible avec l'atteinte de l'objectif de 500 latrines en 24 mois ?</em> (Question de <strong>suivi</strong>)</li><li><em>Comment allons-nous savoir, un an après la fin du projet, si les ménages continuent réellement à utiliser leurs latrines et si la défécation à l'air libre a effectivement disparu dans la zone ?</em> (Question d'<strong>évaluation</strong>)</li><li><em>Quelles données faut-il collecter avant même le démarrage des travaux, pour pouvoir comparer plus tard la situation « avant » et « après » le projet ?</em> (Question de <strong>ligne de base</strong>)</li></ol><p>Ces trois questions illustrent déjà la complémentarité entre suivi et évaluation.</p>" },
-        { "label": "1.6. Le S&E comme système d'apprentissage", "html": "<p>Le Suivi & Évaluation n'est pas seulement une activité technique de collecte et de comptage. C'est un système d'<strong>apprentissage organisationnel</strong> qui transforme l'expérience du terrain en connaissances utiles pour la gestion du projet. Chaque donnée collectée doit être analysée et interprétée par rapport à une question de décision ou à une politique de projet. Le S&E permet ainsi de passer d'un simple « on a fait » à un « on sait pourquoi, comment et jusqu'où cela a réussi ». Cette logique est essentielle lorsqu'un projet doit être ajusté face à des contraintes imprévues, qu'il s'agisse d'un retard de livraison de matériaux, d'un faible taux de participation communautaire, ou d'un comportement récalcitrant à l'égard d'une innovation technique.</p><p>En pratique, le S&E aide les gestionnaires à formuler des hypothèses sur les causes du problème, à tester ces hypothèses au moyen de données, puis à réajuster la stratégie. C'est la raison pour laquelle il est souvent considéré comme le « cerveau » d'un projet : il n'est pas seulement au service du reporting, il est au service du pilotage.</p>" },
-        { "label": "1.7. Les données utiles pour la prise de décision", "html": "<p>Une information n'a de valeur qu'à condition d'être <strong>utilisable</strong>. Pour qu'une donnée devienne utile à la décision, elle doit être fiable, opportune et compréhensible pour le décideur. Il faut donc savoir quelles informations mobiliser à quel moment : données de gestion mensuelles pour le pilotage opérationnel, données de performance trimestrielles pour suivre le rythme d'exécution, données de résultats à mi-parcours pour réajuster les priorités, et données finales pour rendre compte de l'impact.</p><p>Une bonne culture de S&E évite de perdre du temps à produire des rapports volumineux mais peu utiles. L'objectif n'est pas d'accumuler des données sans fin, mais de produire des informations de qualité qui soutiennent les décisions concrètes : ajuster un budget, former de nouveaux agents, modifier un calendrier, renforcer la sensibilisation, ou réorienter des ressources vers les zones les plus vulnérables.</p>" },
-        { "label": "1.8. Qui fait quoi ? Les acteurs du S&E", "html": "<p>Un système de S&E n'est jamais l'affaire d'une seule personne : il mobilise plusieurs acteurs, chacun avec un rôle et un intérêt différent.</p><ul><li><strong>Le chargé de S&E (ou responsable S&E)</strong> conçoit les outils de collecte, forme les agents de terrain, compile et analyse les données, et alerte le chef de projet en cas d'écart.</li><li><strong>Le chef / gestionnaire de projet</strong> utilise les informations produites par le S&E pour ajuster le calendrier, réaffecter les ressources et rendre compte au bailleur.</li><li><strong>Les agents / animateurs de terrain</strong> sont souvent les premiers collecteurs de données : fiches de présence, fiches de chantier, comptes rendus de visite.</li><li><strong>Le bailleur de fonds</strong> exige généralement un plan de S&E dès la soumission du projet, et impose parfois ses propres formats de rapport et ses propres indicateurs.</li><li><strong>Les communautés et bénéficiaires</strong> peuvent être associés au suivi (on parle alors de <strong>suivi participatif</strong>), ce qui renforce la fiabilité des données et l'appropriation du projet.</li><li><strong>L'évaluateur externe</strong> intervient ponctuellement, en général à mi-parcours et en fin de projet, pour porter un regard indépendant sur les résultats.</li></ul><p>Un bon système de S&E clarifie, dès le départ, qui collecte quelle donnée, à quelle fréquence, et qui l'utilise pour quelle décision — sans cette clarté, même les meilleurs outils de collecte restent lettre morte.</p>" },
-        { "label": "1.9. Erreurs fréquentes à éviter dès le départ", "html": "<p>L'expérience du secteur permet d'identifier quelques pièges récurrents qu'un futur professionnel du S&E doit apprendre à repérer dès sa formation :</p><ul><li><strong>Confondre activités et résultats</strong> : « 10 formations organisées » est une activité ; « 80% des participants appliquent la nouvelle pratique » est un résultat. Un rapport de S&E qui ne parle que d'activités ne dit rien de l'impact réel.</li><li><strong>Collecter des données jamais utilisées</strong> : si un indicateur n'éclaire aucune décision, il coûte du temps et de l'argent pour rien. Chaque indicateur doit répondre à la question « à quoi cela va-t-il nous servir ? ».</li><li><strong>Oublier la ligne de base</strong> : sans données de référence collectées avant le démarrage, il devient impossible de démontrer un changement de manière crédible.</li><li><strong>Négliger la qualité au profit de la quantité</strong> : mieux vaut suivre 5 indicateurs fiables et bien renseignés que 30 indicateurs mal remplis.</li></ul><p>Ces réflexes seront approfondis tout au long de ce module, en particulier lors de l'étude de cas complète du chapitre 4.</p>" }
-         ]
+      "body": "",
+      "points": []
     },
     {
       "type": "quiz",
+      "position": 2,
       "title": "Quiz 1",
-      "questions": [
-        {
-          "type": "single",
-          "q": "Quelle affirmation décrit le mieux le suivi (par opposition à l'évaluation) ?",
-          "options": [
-            "Un jugement ponctuel sur l'impact global du projet",
-            "Une collecte continue d'informations pendant la mise en œuvre",
-            "Une étude uniquement réalisée par un consultant externe"
-          ],
-          "correct": 1
-        },
-        {
-          "type": "single",
-          "q": "Quel est un objectif principal du Suivi & Évaluation ?",
-          "options": [
-            "Justifier a posteriori toutes les dépenses sans les analyser",
-            "Apprendre, ajuster les activités et rendre compte des résultats",
-            "Remplacer entièrement la gestion de projet"
-          ],
-          "correct": 1
-        },
-        {
-          "type": "match",
-          "q": "Associez chaque terme à sa définition.",
-          "pairs": [
-            { "left": "Suivi", "right": "Processus continu de collecte d'informations pendant la mise en œuvre" },
-            { "left": "Évaluation", "right": "Appréciation ponctuelle et systématique d'un projet" },
-            { "left": "Cadre logique", "right": "Matrice présentant la logique d'intervention et les indicateurs" },
-            { "left": "Ligne de base (baseline)", "right": "Données collectées avant le démarrage du projet" }
-          ]
-        }
-      ]
+      "questions": []
     },
     {
       "type": "lesson",
+      "position": 3,
       "title": "Différence entre suivi et évaluation",
       "chapterTag": "Chapitre 2",
-      "body": "Bien que le suivi et l'évaluation soient étroitement liés et se nourrissent mutuellement, il est essentiel, pour tout gestionnaire de projet, de bien comprendre ce qui les distingue. Confondre les deux fonctions conduit souvent à des systèmes de S&E mal conçus : soit un suivi trop léger qui ne permet pas de détecter les problèmes à temps, soit des évaluations réduites à un simple comptage d'activités qui ne renseignent en rien sur les effets réels du projet.",
-      "points": [
-        { "label": "2.1. Le suivi en profondeur", "html": "<p>Le suivi répond avant tout à la question : <em>« Faisons-nous ce que nous avions prévu de faire, et au rythme prévu ? »</em>. Il porte principalement sur les <strong>intrants</strong> (ressources mobilisées), les <strong>activités</strong> (actions menées) et les <strong>extrants</strong> (produits ou services directement livrés par le projet). Le suivi est réalisé en interne, par l'équipe de projet elle-même, de manière continue : quotidienne, hebdomadaire, mensuelle ou trimestrielle selon les indicateurs.</p><p>Concrètement, le suivi s'appuie sur des outils simples et répétés dans le temps : <strong>fiches de pointage de chantier</strong>, <strong>rapports d'activité mensuels</strong>, <strong>registres de présence aux formations</strong>, listes de bénéficiaires, visites de terrain régulières, <strong>tableaux de bord actualisés</strong>. Ces données sont généralement agrégées dans un système d'information de gestion (MIS — Management Information System) qui permet de visualiser, en un coup d'œil, l'état d'avancement du projet par rapport aux cibles fixées dans le plan de travail.</p><p>Pensez au suivi comme au tableau de bord d'une voiture : il vous alerte en temps réel sur votre vitesse, votre niveau d'essence, la température du moteur — autant d'informations qui vous permettent de conduire de façon sécurisée, sans attendre de tomber en panne.</p>" },
-        { "label": "2.2. L'évaluation en profondeur", "html": "<p>L'évaluation répond à des questions plus larges : <em>« Avons-nous fait les bonnes choses ? Ces choses ont-elles produit les changements attendus ? Ces changements sont-ils durables ? Le jeu en valait-il la chandelle ? »</em>. Elle s'intéresse non seulement aux extrants (ce qui a été livré) mais surtout aux <strong>effets</strong> (les changements de comportement, de connaissances ou de conditions de vie induits par le projet) et à l'<strong>impact</strong> (les changements durables et parfois non intentionnels, positifs ou négatifs, à plus long terme).</p><p>L'évaluation mobilise des méthodes plus rigoureuses et souvent plus coûteuses que le suivi : <strong>enquêtes par sondage</strong> auprès d'un échantillon représentatif de la population, <strong>entretiens approfondis</strong>, <strong>groupes de discussion</strong> (focus groups), parfois comparaison avec un groupe témoin n'ayant pas bénéficié du projet (pour isoler l'effet propre de l'intervention). Elle est fréquemment confiée, en tout ou en partie, à des <strong>évaluateurs externes indépendants</strong> de l'équipe de mise en œuvre, afin de garantir l'objectivité de l'exercice.</p><p>Si le suivi est le tableau de bord de la voiture, l'évaluation est le <strong>bilan mécanique complet</strong> réalisé chez le garagiste : il ne se fait pas tous les jours, mais il vous dit si le véhicule est globalement en bon état et va tenir la distance.</p>" },
-        { "label": "2.3. Tableau comparatif suivi / évaluation", "html": "<div class=\"content-table-wrap\"><table class=\"content-table\"><thead><tr><th>Critère</th><th>Suivi (Monitoring)</th><th>Évaluation (Evaluation)</th></tr></thead><tbody><tr><td>Question centrale</td><td>Faisons-nous les choses correctement, dans les délais et le budget prévus ?</td><td>Faisons-nous les bonnes choses ? Produisent-elles les résultats attendus, et pourquoi ?</td></tr><tr><td>Fréquence</td><td>Continue et régulière (quotidienne à trimestrielle)</td><td>Ponctuelle : ex-ante, à mi-parcours, finale, parfois ex-post</td></tr><tr><td>Focus principal</td><td>Intrants, activités, extrants (processus)</td><td>Effets, impacts, pertinence, efficience, durabilité (résultats)</td></tr><tr><td>Responsable</td><td>Équipe de projet (en interne)</td><td>Souvent un évaluateur externe indépendant (ou mixte interne/externe)</td></tr><tr><td>Sources de données</td><td>Rapports d'activité, fiches de suivi, registres, visites de terrain</td><td>Enquêtes, entretiens approfondis, groupes de discussion, études comparatives</td></tr><tr><td>Utilisation des résultats</td><td>Ajustements opérationnels immédiats, gestion quotidienne</td><td>Décisions stratégiques : réorientation, reproduction à plus grande échelle, arrêt</td></tr><tr><td>Coût relatif</td><td>Faible à modéré, intégré au budget de fonctionnement</td><td>Plus élevé, souvent budgétisé séparément (5 à 10% du budget projet)</td></tr><tr><td>Exemple de produit</td><td>Tableau de bord mensuel, rapport trimestriel d'avancement</td><td>Rapport d'évaluation à mi-parcours ou finale, étude d'impact</td></tr></tbody></table></div>" },
-        { "label": "2.4. Les différents types et moments d'évaluation", "html": "<p>Il n'existe pas une seule forme d'évaluation, mais plusieurs, qui se distinguent par le moment où elles interviennent dans le cycle du projet et par leur finalité.</p><p><strong>Selon le moment :</strong></p><ul><li><strong>Ex-ante</strong> (ou étude de faisabilité) — réalisée avant le démarrage du projet, elle vérifie la pertinence et la faisabilité de l'intervention envisagée, et établit souvent la ligne de base (baseline) qui servira de point de comparaison.</li><li><strong>À mi-parcours</strong> — réalisée à la moitié de la durée du projet, elle permet de vérifier si le projet est sur la bonne trajectoire et de recommander des ajustements avant qu'il ne soit trop tard.</li><li><strong>Finale</strong> — réalisée à la clôture du projet, elle mesure l'atteinte des objectifs fixés et tire les premières leçons pour les projets futurs.</li><li><strong>Ex-post</strong> — réalisée un à deux ans (parfois plus) après la fin du projet, elle mesure la durabilité réelle des résultats et des effets, une fois que l'appui externe a cessé.</li></ul><p><strong>Selon la finalité et la position de l'évaluateur :</strong></p><ul><li><strong>Formative</strong> : conduite en cours de projet dans un objectif d'amélioration continue.</li><li><strong>Sommative</strong> : conduite en fin de parcours pour porter un jugement global sur la réussite du projet.</li><li><strong>Interne</strong> : menée par l'équipe du projet, souvent moins coûteuse mais avec un risque de biais.</li><li><strong>Externe</strong> : menée par un consultant ou un cabinet indépendant, gage d'objectivité, souvent exigée par les bailleurs pour l'évaluation finale.</li></ul>" },
-        { "label": "2.5. Application au projet de latrinisation de Fond-Sable", "html": "<p>Reprenons le projet PAAF-Fond-Sable pour illustrer concrètement cette distinction essentielle :</p><div class=\"content-table-wrap\"><table class=\"content-table\"><thead><tr><th></th><th>Ce qui relève du SUIVI</th><th>Ce qui relève de l'ÉVALUATION</th></tr></thead><tbody><tr><td><strong>Exemples concrets</strong></td><td>Nombre de latrines construites chaque mois ; nombre de maçons formés à ce jour ; taux de décaissement du budget ; nombre de ménages ayant reçu la visite d'un animateur d'hygiène ; respect du calendrier des travaux par site.</td><td>Proportion réelle de ménages qui utilisent effectivement leur latrine six mois après la construction ; évolution du taux de défécation à l'air libre dans la zone ; réduction des maladies diarrhéiques chez les enfants de moins de 5 ans ; pérennité de l'entretien des latrines sans appui du projet.</td></tr><tr><td><strong>Qui collecte l'information ?</strong></td><td>Les animateurs de terrain et le chargé de S&E du projet, chaque semaine ou chaque mois.</td><td>Un consultant externe en évaluation, appuyé par l'équipe de S&E, à mi-parcours et en fin de projet.</td></tr><tr><td><strong>Que fait-on de l'information ?</strong></td><td>Réorienter les équipes de maçons vers les sites en retard ; relancer les ménages n'ayant pas encore commencé leur chantier.</td><td>Décider si le modèle de latrine à double fosse doit être reproduit dans d'autres communes ; ajuster la stratégie de sensibilisation à l'hygiène si l'adoption reste faible.</td></tr></tbody></table></div>" },
-        { "label": "2.6. Pourquoi distinguer les deux fonctions ?", "html": "<p>Il y a une raison profonde à cette distinction : chacun de ces outils répond à un type de décision différent. Le suivi sert à corriger les écarts de mise en œuvre, à maintenir le calendrier et la qualité des activités, et à sécuriser le bon usage des ressources. L'évaluation sert à juger la pertinence et l'efficacité du projet dans son ensemble, à éclairer des décisions de stratégie ou de capitalisation, et à fournir une base pour apprendre et améliorer la conception des interventions futures.</p><p>Dans une logique de gestion de projet, le suivi ne remplace pas l'évaluation, et l'évaluation ne remplace pas le suivi. Ils sont complémentaires et doivent être intégrés dans un même système d'information, avec des responsabilités claires, des indicateurs adaptés et des cycles de restitution réguliers. Un mauvais système de S&E est souvent celui où les données sont produites, mais utilisées ni pour corriger la mise en œuvre ni pour améliorer la stratégie.</p>" },
-        { "label": "2.7. La clé : données de gestion et données de preuve", "html": "<p>Une bonne culture du S&E distingue bien les données de gestion, qui servent au pilotage interne, des données de preuve, qui servent à la reddition de comptes et à l'apprentissage. Les données de gestion se rapportent souvent aux activités, aux ressources et aux calendriers : combien de fiches de chantier ont été remplies, combien de maçons sont formés, combien d'animateurs ont supervisé des sessions. Les données de preuve se rapportent davantage aux changements observés chez les bénéficiaires ou aux effets à long terme : proportion de ménages qui utilisent réellement la latrine, réduction des maladies diarrhéiques, nombre de personnes qui ont adopté un comportement durable.</p><p>Le professionnalisme en S&E consiste justement à faire circuler ces deux types de données dans le bon sens : les données de gestion alimentent les ajustements opérationnels, et les données de preuve alimentent la stratégie, la communication cadrée et l'apprentissage institutionnel.</p>" },
-        { "label": "2.8. Biais et pièges courants dans la collecte de données", "html": "<p>Un système de S&E n'est utile que si les données qu'il produit sont fiables. Or, la collecte de données de terrain est exposée à plusieurs biais classiques qu'il faut savoir reconnaître :</p><ul><li><strong>Le biais de désirabilité sociale</strong> : un bénéficiaire interrogé a tendance à répondre ce qu'il pense que l'enquêteur veut entendre (« oui, j'utilise bien ma latrine ») plutôt que la vérité. C'est pourquoi l'observation directe est souvent préférée à la simple déclaration, chaque fois que cela est possible.</li><li><strong>Le biais de sélection</strong> : si l'échantillon interrogé n'est pas représentatif (par exemple, uniquement les ménages les plus faciles à joindre, situés près de la route), les conclusions risquent de ne pas refléter la réalité de l'ensemble de la population cible.</li><li><strong>Le biais de mémoire (recall bias)</strong> : demander à quelqu'un de se souvenir précisément d'un événement survenu plusieurs mois plus tôt donne des réponses souvent imprécises ou reconstruites.</li><li><strong>La pression à « bien performer »</strong> : lorsque le financement futur dépend directement de résultats chiffrés, certains agents de terrain peuvent être tentés d'enjoliver les données. Un bon système de S&E prévoit des mécanismes de vérification croisée (contre-visites, échantillons aléatoires) pour limiter ce risque.</li></ul><p>Retenir ces biais dès ce stade permet d'aborder avec un œil critique les outils de collecte qui seront présentés en détail dans les modules suivants.</p>" }
-      ]
+      "body": "",
+      "points": []
     },
     {
       "type": "quiz",
+      "position": 4,
       "title": "Quiz 2",
-      "questions": [
-        {
-          "type": "single",
-          "q": "Quelle question centrale correspond au SUIVI ?",
-          "options": [
-            "Faisons-nous les choses correctement, dans les délais et le budget prévus ?",
-            "Faisons-nous les bonnes choses ? Produisent-elles les résultats attendus ?",
-            "Le projet mérite-t-il d'être reproduit ailleurs ?"
-          ],
-          "correct": 0
-        },
-        {
-          "type": "single",
-          "q": "Quel type d'évaluation a lieu avant le démarrage du projet, pour vérifier sa faisabilité ?",
-          "options": [
-            "L'évaluation finale",
-            "L'évaluation ex-post",
-            "L'évaluation ex-ante"
-          ],
-          "correct": 2
-        },
-        {
-          "type": "match",
-          "q": "Associez chaque moment d'évaluation à sa définition.",
-          "pairs": [
-            { "left": "Ex-ante", "right": "Avant démarrage : vérifie la faisabilité, établit la ligne de base" },
-            { "left": "À mi-parcours", "right": "Vérifie la trajectoire, recommande des ajustements" },
-            { "left": "Finale", "right": "Mesure l'atteinte des objectifs à la clôture" },
-            { "left": "Ex-post", "right": "1 à 2 ans après, mesure la durabilité des effets" }
-          ]
-        }
-      ]
+      "questions": []
     },
     {
       "type": "lesson",
+      "position": 5,
       "title": "Le cycle de vie d'un projet",
       "chapterTag": "Chapitre 3",
-      "body": "Un projet de développement n'est jamais une action isolée : il suit un processus structuré, appelé <strong>cycle de vie du projet</strong> (ou cycle de gestion de projet), composé d'une série de phases successives, chacune ayant ses propres objectifs, ses propres livrables et son propre lien avec le Suivi & Évaluation. Comprendre ce cycle est indispensable pour savoir à quel moment mobiliser quel type d'activité de S&E. Si les organisations utilisent des terminologies parfois différentes (le cycle de projet de l'Union Européenne, celui de la Banque Mondiale ou celui de USAID ne portent pas exactement les mêmes noms), la logique générale reste la même. Dans ce module, nous retiendrons un cycle en six grandes phases, largement reconnu dans le secteur du développement communautaire.",
-      "points": [
-        { "label": "3.1. Vue d'ensemble : le S&E est transversal", "html": "<p>Le suivi n'est pas une phase séparée du cycle : c'est une <strong>fonction transversale</strong> qui accompagne le projet du début à la fin. L'évaluation, en revanche, correspond à des points précis du cycle — le plus souvent à la fin de la phase de mise en œuvre, mais parfois aussi en amont (évaluation ex-ante) et bien après la clôture (évaluation ex-post).</p><p>Ce principe fondamental est souvent mal compris : le S&E n'est pas une activité que l'on ajoute à la fin d'un projet pour « faire un rapport » — c'est une démarche qui doit être pensée dès la phase d'identification, et qui accompagne le projet à chacune de ses étapes, jusque et au-delà de sa clôture.</p>" },
-        { "label": "3.2.A. Phase 1 — Identification et analyse des besoins", "html": "<p>Cette première phase consiste à analyser une situation problématique, à consulter les populations concernées et les acteurs locaux, et à vérifier qu'un projet est réellement pertinent pour répondre à un besoin exprimé. Elle s'appuie généralement sur un <strong>diagnostic participatif</strong> (enquêtes, entretiens communautaires, données statistiques existantes).</p><p><strong>Application au projet PAAF-Fond-Sable :</strong> une enquête de base (baseline) menée dans les cinq sections communales révèle que 68% des ménages pratiquent encore la défécation à l'air libre, et que le taux de maladies diarrhéiques chez les enfants de moins de 5 ans est deux fois supérieur à la moyenne départementale. Ce diagnostic, associé à des consultations communautaires, confirme la pertinence d'un projet de latrinisation familiale couplé à une sensibilisation à l'hygiène.</p><p><strong>Lien S&E :</strong> c'est à cette phase que l'on collecte la <strong>ligne de base</strong> — l'ensemble des données de référence qui permettront plus tard de mesurer les progrès accomplis.</p>" },
-        { "label": "3.2.B. Phase 2 — Formulation et conception", "html": "<p>Sur la base du diagnostic, l'équipe formule les objectifs du projet, choisit une stratégie d'intervention, définit les résultats attendus et construit le <strong>cadre logique</strong> du projet. C'est à ce stade que sont posées les bases du futur système de S&E : quels indicateurs permettront de mesurer le succès du projet ?</p><p><strong>Application :</strong> l'équipe fixe l'objectif « 500 latrines familiales construites et fonctionnelles, avec adoption de bonnes pratiques d'hygiène par au moins 80% des ménages bénéficiaires en 24 mois », et définit dès cette étape les indicateurs qui permettront de le vérifier.</p><p><strong>Point clé :</strong> définir les indicateurs dès cette phase — et non après le démarrage — est essentiel. Si on attend trop longtemps, on ne pourra plus faire de comparaison « avant/après » fiable.</p>" },
-        { "label": "3.2.C. Phase 3 — Planification", "html": "<p>La planification traduit la stratégie en un <strong>plan opérationnel détaillé</strong> : calendrier des activités, budget, répartition des responsabilités, plan d'approvisionnement. Et, élément central pour ce module : le <strong>plan de S&E</strong> — quels indicateurs, avec quelle fréquence, par qui, avec quels outils de collecte, avec quel budget.</p><p><strong>Application :</strong> un plan de travail annuel est élaboré, répartissant la construction des 500 latrines en cinq vagues de 100 latrines par section communale, avec un calendrier mensuel de suivi et un plan de collecte de données confié à trois animateurs de terrain.</p>" },
-        { "label": "3.2.D. Phase 4 — Mise en œuvre (exécution)", "html": "<p>C'est la phase la plus longue du cycle : les activités planifiées sont réalisées sur le terrain. C'est également pendant cette phase que le <strong>suivi continu</strong> prend toute son importance, en comparant en permanence ce qui est réalisé avec ce qui était planifié.</p><p><strong>Application :</strong> les maçons formés commencent la construction des latrines, les animateurs organisent des séances de sensibilisation à l'hygiène dans chaque section communale, et un tableau de bord mensuel enregistre le nombre de latrines achevées, en cours ou en retard. Quand un site accuse du retard, le chargé de S&E en alerte le chef de projet, qui peut réaffecter des ressources.</p>" },
-        { "label": "3.2.E. Phase 5 — Évaluation (à mi-parcours et finale)", "html": "<p>À un ou plusieurs moments du cycle, une évaluation plus approfondie est réalisée pour porter un jugement sur la pertinence, l'efficacité, l'efficience et les premiers effets du projet, et pour orienter d'éventuels ajustements ou la reproduction du modèle.</p><p><strong>Application :</strong> à 12 mois, une évaluation à mi-parcours révèle que le rythme de construction est conforme aux prévisions, mais que l'adoption des pratiques d'hygiène reste faible (55% au lieu des 80% visés). Le projet ajuste alors sa stratégie de sensibilisation en y intégrant des visites à domicile individualisées — ce qui illustre parfaitement la fonction de pilotage du S&E.</p>" },
-        { "label": "3.2.F. Phase 6 — Clôture et capitalisation", "html": "<p>En fin de projet, les activités sont finalisées, les comptes sont soldés, les résultats sont documentés et communiqués aux parties prenantes, et les <strong>leçons apprises</strong> sont capitalisées pour améliorer la conception de futurs projets similaires.</p><p><strong>Application :</strong> un rapport final documente que 512 latrines ont été construites (dépassant légèrement la cible), que 20 maçons ont été formés et sont désormais capables de construire et réparer des latrines de manière autonome, et qu'un guide de bonnes pratiques est produit pour orienter de futurs projets d'assainissement dans le département.</p><p>Une évaluation ex-post est parfois programmée 12 à 18 mois plus tard pour vérifier si les résultats ont perduré sans appui externe.</p>" },
-        { "label": "3.3. Le rôle du S&E à chaque étape du cycle", "html": "<div class=\"content-table-wrap\"><table class=\"content-table\"><thead><tr><th>Phase du cycle</th><th>Activité de S&E correspondante</th></tr></thead><tbody><tr><td>1. Identification</td><td>Diagnostic de situation, collecte des données de référence (ligne de base)</td></tr><tr><td>2. Formulation / conception</td><td>Définition des objectifs et des indicateurs, construction du cadre logique</td></tr><tr><td>3. Planification</td><td>Élaboration du plan de S&E : fréquence, outils, responsabilités, budget S&E</td></tr><tr><td>4. Mise en œuvre</td><td>Suivi continu : collecte régulière de données, tableaux de bord, rapports périodiques</td></tr><tr><td>5. Évaluation</td><td>Évaluation à mi-parcours et finale : jugement sur pertinence, efficacité, effets</td></tr><tr><td>6. Clôture</td><td>Rapport final, capitalisation des leçons apprises, évaluation ex-post (parfois différée)</td></tr></tbody></table></div><p>Ce tableau met en évidence un principe fondamental : le S&E n'est pas une activité que l'on ajoute à la fin d'un projet pour « faire un rapport » — c'est une démarche qui doit être pensée dès la phase d'identification, et qui accompagne le projet à chacune de ses étapes, jusque et au-delà de sa clôture.</p>" },
-        { "label": "3.4. Pourquoi le cycle est important pour la gestion", "html": "<p>Le cycle de vie d'un projet n'est pas une simple description administrative. C'est la base de la planification, du pilotage et de la reddition de comptes. Savoir à quelle phase on se trouve permet de déterminer le bon type de données à collecter, le bon type de décision à prendre et le bon type d'évaluation à organiser. Un projet qui n'a pas correctement défini sa ligne de base au départ pourra difficilement démontrer les progrès accomplis à la fin sans contester sa propre méthode de mesure.</p><p>Cette dynamique de cycle est importante pour les responsables de projet et les bailleurs car elle permet de distinguer les problèmes de conception des problèmes de mise en œuvre. Si une activité ne produit pas les résultats attendus, on peut avoir affaire à un problème de qualité d'exécution, de calendrier, de ressources, de stratégie ou d'hypothèse de causalité. Le S&E, en fournissant des données factuelles à chaque étape, aide précisément à identifier la cause du problème et à répondre en conséquence.</p>" },
-        { "label": "3.5. Le bon moment pour agir", "html": "<p>Le point central du cycle est le fait que le S&E ne se limite pas à un bilan final. Elle structure la manière dont une équipe agit au bon moment. L'évaluation à mi-parcours, par exemple, n'est utile que si elle intervient avant qu'il ne soit trop tard pour corriger la trajectoire. De même, la collecte de données de référence ne sert à rien si elle n'est pas faite avant le démarrage des activités, car la comparaison « avant/après » ne sera alors plus possible. Dans le secteur du développement, c'est souvent la fenêtre de décision qui compte autant, sinon plus, que la qualité des données elles-mêmes.</p><p>Par conséquent, le S&E doit être intégré dès la phase de conception, et non invoqué comme une obligation de dernier moment. Cette logique de temps réel, de preuve et d'ajustement est précisément ce qui distingue un projet bien géré d'un projet qui subit son propre déroulement.</p>" },
-        { "label": "3.6. Rôles et responsabilités du S&E le long du cycle", "html": "<p>À chaque phase du cycle correspond non seulement un type d'activité de S&E, mais aussi des responsabilités précises qu'il est utile de clarifier dès le départ pour éviter les zones grises :</p><div class=\"content-table-wrap\"><table class=\"content-table\"><thead><tr><th>Phase</th><th>Qui est responsable ?</th><th>Livrable clé</th></tr></thead><tbody><tr><td>Identification</td><td>Équipe de conception, avec appui d'un spécialiste S&E</td><td>Rapport de diagnostic, données de ligne de base</td></tr><tr><td>Formulation / conception</td><td>Chef de projet et responsable S&E</td><td>Cadre logique validé, liste d'indicateurs SMART</td></tr><tr><td>Planification</td><td>Responsable S&E, avec le gestionnaire financier</td><td>Plan de S&E détaillé et budgété</td></tr><tr><td>Mise en œuvre</td><td>Agents de terrain et responsable S&E</td><td>Tableaux de bord, rapports périodiques</td></tr><tr><td>Évaluation</td><td>Évaluateur externe (souvent), appuyé par l'équipe S&E</td><td>Rapport d'évaluation à mi-parcours / finale</td></tr><tr><td>Clôture</td><td>Chef de projet et responsable S&E</td><td>Rapport final, document de capitalisation</td></tr></tbody></table></div><p>Cette répartition n'est pas figée — elle varie selon la taille de l'organisation et les exigences du bailleur — mais un principe reste constant : plus les rôles sont clairs dès la planification, moins il y a de retards ou de doublons dans la collecte de données pendant la mise en œuvre.</p>" }
-      ]
-	       
+      "body": "",
+      "points": []
     },
     {
       "type": "quiz",
+      "position": 6,
       "title": "Quiz 3",
-      "questions": [
-        {
-          "type": "single",
-          "q": "À quel moment du cycle de projet doit-on définir les indicateurs de S&E ?",
-          "options": [
-            "Uniquement à la clôture du projet",
-            "Dès la conception du projet",
-            "Seulement si le bailleur le demande en cours de route"
-          ],
-          "correct": 1
-        },
-        {
-          "type": "single",
-          "q": "Quelle est la phase la plus longue du cycle de projet ?",
-          "options": [
-            "L'identification",
-            "La planification",
-            "La mise en œuvre"
-          ],
-          "correct": 2
-        },
-        {
-          "type": "match",
-          "q": "Associez chaque phase du cycle à son activité de S&E correspondante.",
-          "pairs": [
-            { "left": "Identification", "right": "Diagnostic de situation, collecte de la ligne de base" },
-            { "left": "Formulation / conception", "right": "Définition des objectifs et indicateurs, cadre logique" },
-            { "left": "Mise en œuvre", "right": "Suivi continu : collecte, tableaux de bord, rapports périodiques" },
-            { "left": "Clôture", "right": "Rapport final, capitalisation des leçons, évaluation ex-post" }
-          ]
-        }
-      ]
+      "questions": []
     },
-	{
+    {
       "type": "lesson",
+      "position": 7,
       "title": "Étude de cas complète : le projet de latrinisation de Fond-Sable",
       "chapterTag": "Chapitre 4",
-      "body": "Ce dernier chapitre rassemble et approfondit, sous la forme d'une étude de cas intégrée, l'ensemble des notions vues dans ce module. Il propose une mise en situation aussi proche que possible de la réalité du terrain, afin de préparer les participants aux exercices pratiques des modules suivants. <br><br><strong>Le Projet d'Amélioration de l'Assainissement Familial de Fond-Sable (PAAF-Fond-Sable)</strong> est mis en œuvre par une ONG locale, en partenariat avec la mairie et un bailleur international, dans cinq sections communales rurales. Sur une durée de 24 mois et avec un budget de 180 000 USD, le projet vise à construire 500 latrines familiales améliorées à double fosse, à former 20 maçons locaux, et à faire adopter des pratiques d'hygiène adéquates par au moins 80% des ménages bénéficiaires, dans l'objectif final de mettre fin à la défécation à l'air libre dans la zone d'intervention.",
-      "points": [
-        { "label": "4.1. Contexte et justification", "html": "<p>Les cinq sections communales ciblées comptent environ <strong>12 000 habitants</strong> répartis dans <strong>2 400 ménages</strong>. L'enquête de base (baseline) réalisée avant le démarrage du projet a établi les constats suivants :</p><ul><li><strong>68%</strong> des ménages pratiquaient la défécation à l'air libre, faute de latrines fonctionnelles.</li><li>Seulement <strong>12%</strong> des ménages disposaient d'un point de lavage des mains à proximité de leur latrine.</li><li>Le taux de maladies diarrhéiques chez les enfants de moins de 5 ans atteignait <strong>34%</strong>, contre une moyenne départementale de 17%.</li></ul><p>Ces données de référence (baseline) constituent le <strong>point zéro</strong> par rapport auquel tous les progrès futurs seront mesurés. Sans elles, il est impossible de savoir, à la fin du projet, si la situation s'est réellement améliorée — ou simplement de l'affirmer sans preuve.</p><p>Ce diagnostic, associé à des consultations communautaires, confirme la pertinence d'un projet de latrinisation familiale couplé à une sensibilisation à l'hygiène. La décision de cibler prioritairement les ménages les plus éloignés des équipements existants a également été prise sur base de ces données.</p>" },
-        { "label": "4.2. Objectifs et cadre logique simplifié", "html": "<p>L'objectif spécifique du projet est formulé ainsi : <em>« D'ici 24 mois, mettre fin à la défécation à l'air libre dans les cinq sections communales de la zone d'intervention, par la construction de 500 latrines familiales améliorées et l'adoption de pratiques d'hygiène adéquates par au moins 80% des ménages bénéficiaires. »</em></p><p>Cet objectif se décline en <strong>trois résultats attendus</strong>, chacun assorti d'indicateurs et de cibles précises :</p><div class=\"content-table-wrap\"><table class=\"content-table\"><thead><tr><th>Résultat attendu</th><th>Indicateur</th><th>Cible à 24 mois</th></tr></thead><tbody><tr><td>R1 — Des latrines familiales sont construites</td><td>Nombre de latrines construites et fonctionnelles</td><td>500 latrines</td></tr><tr><td>R2 — Des maçons locaux sont formés et autonomes</td><td>Nombre de maçons certifiés capables de construire/réparer une latrine</td><td>20 maçons</td></tr><tr><td>R3 — Les ménages adoptent de bonnes pratiques d'hygiène</td><td>% de ménages utilisant régulièrement leur latrine ET disposant d'un point de lavage des mains</td><td>80% des ménages</td></tr></tbody></table></div><p>Notez que chaque indicateur est <strong>SMART</strong> (Spécifique, Mesurable, Atteignable, Réaliste, Temporellement défini) : il ne dit pas « améliorer les conditions d'hygiène » (vague et non mesurable) mais fixe une cible précise vérifiable par une méthode définie.</p>" },
-        { "label": "4.3. Plan de suivi", "html": "<p>Le plan de suivi précise, pour chaque indicateur retenu, la source de données, la fréquence de collecte et le responsable :</p><div class=\"content-table-wrap\"><table class=\"content-table\"><thead><tr><th>Indicateur</th><th>Source / outil</th><th>Fréquence</th><th>Responsable</th></tr></thead><tbody><tr><td>Nombre de latrines construites</td><td>Fiche de suivi de chantier</td><td>Hebdomadaire</td><td>Animateur de terrain</td></tr><tr><td>Nombre de maçons formés</td><td>Registre de formation</td><td>À chaque session</td><td>Formateur / chargé S&E</td></tr><tr><td>Nombre de séances de sensibilisation tenues</td><td>Fiche de présence</td><td>Mensuelle</td><td>Animateur communautaire</td></tr><tr><td>Taux de décaissement budgétaire</td><td>Rapport financier</td><td>Mensuelle</td><td>Gestionnaire administratif et financier</td></tr><tr><td>% de ménages utilisant la latrine</td><td>Visite d'observation à domicile (échantillon)</td><td>Trimestrielle</td><td>Chargé de S&E</td></tr></tbody></table></div><p>Ce plan de suivi est un <strong>contrat interne</strong> : il engage chaque membre de l'équipe sur la collecte d'informations précises, à une fréquence définie. Un plan non respecté revient à conduire sans tableau de bord.</p>" },
-        { "label": "4.4. Outils de collecte de données", "html": "<p>Sur le terrain, l'équipe de S&E du projet utilise principalement trois outils simples :</p><ul><li><strong>Fiche de suivi de chantier</strong> : remplie chaque semaine par l'animateur, elle indique pour chaque site l'état d'avancement (fosse creusée, superstructure montée, dalle coulée, latrine fonctionnelle), la date, et les éventuelles difficultés rencontrées. Elle permet au chargé de S&E d'identifier en temps réel les sites en retard et d'alerter le chef de projet.</li><li><strong>Fiche de présence aux formations et séances de sensibilisation</strong> : elle permet de vérifier que les cibles de participation (nombre de maçons, nombre de ménages touchés) sont bien atteintes, et de documenter qui a participé à quoi.</li><li><strong>Fiche de visite post-construction</strong> : utilisée lors des visites trimestrielles à domicile, elle documente par <em>observation directe</em> (et non par simple déclaration du ménage) l'état d'entretien et l'usage réel de la latrine. Ce choix méthodologique est crucial : les ménages ont tendance à déclarer qu'ils utilisent leur latrine pour « faire plaisir » à l'enquêteur (biais de désirabilité sociale), alors que l'observation directe révèle la réalité.</li></ul><p>Des modèles vierges de ces trois fiches sont fournis en annexe du module.</p>" },
-        { "label": "4.5. Évaluations à mi-parcours et finale", "html": "<p><strong>À 12 mois — Évaluation à mi-parcours :</strong></p><p>L'évaluation confirme que le rythme de construction est conforme à la planification (250 latrines achevées sur les 250 attendues à ce stade), mais révèle un écart préoccupant sur l'indicateur R3 : seulement <strong>55% des ménages</strong> visités utilisent effectivement leur latrine de façon régulière, loin de la cible de 80%.</p><p>L'analyse des causes révèle que les séances de sensibilisation collectives, bien que suivies, ne suffisent pas à modifier durablement les habitudes ancrées de certains ménages. Sur la base de cette évaluation, l'équipe de projet décide d'ajuster sa stratégie en complétant les séances collectives par des <strong>visites individuelles de suivi comportemental</strong> (« accompagnement au changement »), ciblant en priorité les ménages identifiés comme les moins engagés.</p><p>Cet ajustement illustre concrètement la <strong>fonction de pilotage du S&E</strong> : sans l'évaluation à mi-parcours, l'équipe aurait continué sa stratégie jusqu'à la fin du projet, pour découvrir trop tard que la cible de 80% n'était pas atteinte.</p><p><strong>À 24 mois — Évaluation finale :</strong></p><p>Une évaluation finale externe est commandée auprès d'un consultant indépendant. Elle confirme que :</p><ul><li><strong>512 latrines</strong> ont été construites (dépassant légèrement la cible de 500).</li><li>Les <strong>20 maçons</strong> formés sont opérationnels et ont déjà commencé à recevoir des commandes privées.</li><li>Le taux d'adoption des bonnes pratiques d'hygiène est passé de 55% (mi-parcours) à <strong>76%</strong> (fin de projet) — un progrès net mais légèrement en-deçà de la cible initiale de 80%.</li></ul><p>Le rapport recommande une <strong>évaluation ex-post</strong> 18 mois plus tard, afin de vérifier la pérennité de ces résultats une fois l'accompagnement du projet terminé.</p>" },
-        { "label": "4.6. Difficultés rencontrées et leçons apprises", "html": "<p>Un bon rapport de S&E ne se contente pas de présenter les succès — il documente aussi honnêtement les difficultés et ce qu'elles ont enseigné :</p><ul><li><strong>Retards de collecte en début de projet</strong> : les animateurs de terrain n'avaient pas été formés à l'utilisation des fiches de suivi dès le démarrage. Les premières semaines ont produit des données incomplètes ou mal renseignées. Leçon apprise : intégrer la formation aux outils de suivi dans le plan de démarrage du projet, avant même le début des activités terrain.</li><li><strong>Difficulté à mesurer « l'usage régulier de la latrine »</strong> : la simple déclaration des ménages s'est révélée peu fiable (biais de désirabilité sociale). L'équipe a dû privilégier l'observation directe, plus fiable mais plus coûteuse en temps. Leçon apprise : dès la conception, choisir des indicateurs mesurables par observation plutôt que par auto-déclaration, chaque fois que possible.</li><li><strong>Ajustement stratégique rendu possible par le S&E</strong> : l'écart entre la cible (80%) et la réalité (55%) n'a pu être détecté — et corrigé — que parce que l'évaluation à mi-parcours avait été programmée suffisamment tôt (à 12 mois et non à 20 mois). Leçon apprise : planifier les évaluations à un moment où il est encore possible d'agir sur les résultats.</li></ul><p>Cette étude de cas illustre, de bout en bout, comment les concepts théoriques présentés dans ce module — suivi, évaluation, cycle de projet, chaîne de résultats, indicateurs SMART — s'articulent concrètement dans la gestion d'un projet réel de développement communautaire.</p>" },
-        { "label": "4.7. Combien coûte un système de S&E ?", "html": "<p>Une question fréquente chez les gestionnaires de projet est celle du coût du S&E. Dans la pratique du secteur, un système de S&E bien dimensionné représente généralement entre <strong>5% et 10% du budget total</strong> d'un projet — un ordre de grandeur largement admis par les bailleurs internationaux. Pour le projet PAAF-Fond-Sable, avec un budget global de 180 000 USD, cela représente environ <strong>9 000 à 18 000 USD</strong> consacrés au S&E sur 24 mois : salaire du chargé de S&E, impression et reproduction des fiches de collecte, déplacements pour les visites de terrain, honoraires du consultant externe pour les évaluations à mi-parcours et finale.</p><p>Un budget de S&E trop faible conduit presque toujours à des données incomplètes ou peu fiables ; à l'inverse, un budget disproportionné par rapport aux activités du projet peut être perçu par le bailleur comme un signe de mauvaise priorisation. L'enjeu, pour un futur professionnel du S&E, est de savoir justifier ce budget ligne par ligne, en le reliant directement au plan de S&E et aux décisions qu'il permettra de prendre.</p>" },
-        { "label": "Glossaire des termes clés", "html": "<div class=\"content-table-wrap\"><table class=\"content-table\"><thead><tr><th>Terme</th><th>Définition</th></tr></thead><tbody><tr><td>Cadre logique (logframe)</td><td>Outil de planification présentant, sous forme de matrice, la logique d'intervention d'un projet, ses indicateurs, ses sources de vérification et ses hypothèses.</td></tr><tr><td>Chaîne de résultats</td><td>Séquence causale reliant les intrants d'un projet à ses activités, extrants, effets et impacts.</td></tr><tr><td>Cible (target)</td><td>Valeur quantifiée qu'un indicateur doit atteindre à une échéance donnée.</td></tr><tr><td>Effet (outcome)</td><td>Changement de comportement, de connaissance ou de condition induit à moyen terme par un projet.</td></tr><tr><td>Extrant (output)</td><td>Produit ou service directement livré par les activités d'un projet.</td></tr><tr><td>Impact</td><td>Changement durable, parfois non intentionnel, produit à long terme par un projet.</td></tr><tr><td>Indicateur</td><td>Variable quantitative ou qualitative permettant de mesurer un changement ou un progrès de façon simple et fiable.</td></tr><tr><td>Intrant (input)</td><td>Ressource financière, humaine ou matérielle mobilisée pour mener les activités d'un projet.</td></tr><tr><td>Ligne de base (baseline)</td><td>Ensemble de données collectées avant le démarrage d'un projet, servant de référence pour mesurer les progrès ultérieurs.</td></tr><tr><td>Redevabilité</td><td>Obligation de rendre compte de l'utilisation des ressources et de l'atteinte des résultats auprès des parties prenantes.</td></tr><tr><td>SMART</td><td>Critères de qualité d'un indicateur : Spécifique, Mesurable, Atteignable, Réaliste, Temporellement défini.</td></tr><tr><td>Suivi (monitoring)</td><td>Processus continu de collecte et d'analyse de données sur l'avancement d'un projet.</td></tr></tbody></table></div>" }
-     
-	  ]
-	  },
-    {
-      "type": "quiz",
-      "title": "Quiz 4 ",
-      "questions": [
-        {
-          "type": "single",
-          "q": "Avant le projet, quel pourcentage des ménages de Fond-Sable pratiquait la défécation à l'air libre ?",
-          "options": [
-            "12%",
-            "34%",
-            "68%"
-          ],
-          "correct": 2
-        },
-        {
-          "type": "single",
-          "q": "Qu'est-ce qui a permis d'ajuster la stratégie du projet à mi-parcours ?",
-          "options": [
-            "L'évaluation à mi-parcours, programmée assez tôt (à 12 mois)",
-            "Une décision prise sans données, sur simple impression",
-            "L'absence totale de suivi pendant la mise en œuvre"
-          ],
-          "correct": 0
-        },
-        {
-          "type": "match",
-          "q": "Associez chaque indicateur à sa source / outil de collecte.",
-          "pairs": [
-            { "left": "Latrines construites", "right": "Fiche de suivi de chantier" },
-            { "left": "Maçons formés", "right": "Registre de formation" },
-            { "left": "Séances de sensibilisation", "right": "Fiche de présence" },
-            { "left": "% ménages utilisant la latrine", "right": "Visite d'observation" }
-          ]
-        }
-      ]
+      "body": "",
+      "points": []
     },
     {
       "type": "quiz",
+      "position": 8,
+      "title": "Quiz 4",
+      "questions": []
+    },
+    {
+      "type": "quiz",
+      "position": 9,
       "title": "Quiz final",
-      "questions": [
-        {
-          "type": "single",
-          "q": "Selon l'OCDE, le suivi (monitoring) est défini comme :",
-          "options": [
-            "Une appréciation ponctuelle et objective de l'efficacité d'un projet à sa clôture",
-            "Une fonction continue qui utilise la collecte systématique de données sur des indicateurs spécifiés pour informer les gestionnaires sur l'étendue des progrès",
-            "Une étude qualitative menée uniquement par un évaluateur externe indépendant",
-            "Un audit financier réalisé à la demande des bailleurs de fonds"
-          ],
-          "correct": 1
-        },
-        {
-          "type": "single",
-          "q": "Dans le projet PAAF-Fond-Sable, quel pourcentage de ménages pratiquait la défécation à l'air libre avant le démarrage du projet, selon l'enquête de base ?",
-          "options": ["12%", "34%", "68%", "80%"],
-          "correct": 2
-        },
-        {
-          "type": "single",
-          "q": "Le Cadre Logique (Logical Framework Approach) a été développé à l'origine par :",
-          "options": [
-            "La Banque Mondiale",
-            "L'Union Européenne",
-            "L'agence américaine USAID",
-            "Le Programme des Nations Unies pour le Développement (PNUD)"
-          ],
-          "correct": 2
-        },
-        {
-          "type": "single",
-          "q": "L'évaluation ex-post est réalisée avant le démarrage d'un projet afin de vérifier sa faisabilité et d'établir la ligne de base.",
-          "options": ["Vrai", "Faux"],
-          "correct": 1
-        },
-        {
-          "type": "single",
-          "q": "Dans un projet de développement, le suivi est une fonction transversale qui accompagne le projet du début à la fin du cycle, et non une phase séparée.",
-          "options": ["Vrai", "Faux"],
-          "correct": 0
-        },
-        {
-          "type": "fill",
-          "q": "Les données collectées avant le démarrage d'un projet, qui servent de référence pour mesurer les progrès ultérieurs, sont appelées la ____.",
-          "pairs": [{ "left": "Complétez la phrase", "right": "ligne de base (baseline)" }],
-          "decoys": ["rapport d'audit", "solde budgétaire"]
-        },
-        {
-          "type": "fill",
-          "q": "Le suivi porte principalement sur les ____ du projet.",
-          "pairs": [{ "left": "Complétez la phrase", "right": "intrants, activités et extrants" }],
-          "decoys": ["l'impact financier brut", "SMART-2"]
-        },
-        {
-          "type": "fill",
-          "q": "L'évaluation vise à déterminer ____ des interventions.",
-          "pairs": [{ "left": "Complétez la phrase", "right": "la pertinence, l'efficacité, l'efficience, l'impact et la durabilité" }],
-          "decoys": ["le solde budgétaire", "la liste des parties prenantes internes uniquement"]
-        },
-        {
-          "type": "fill",
-          "q": "Un système de S&E bien conçu permet de démontrer aux bailleurs, autorités et communautés que les ressources ont été utilisées comme prévu — c'est ce qu'on appelle la ____.",
-          "pairs": [{ "left": "Complétez la phrase", "right": "redevabilité" }],
-          "decoys": ["rapport d'audit", "l'impact financier brut"]
-        },
-        {
-          "type": "fill",
-          "q": "L'évaluation ____ est réalisée un à deux ans après la clôture du projet afin de mesurer la durabilité réelle des résultats.",
-          "pairs": [{ "left": "Complétez la phrase", "right": "ex-post" }],
-          "decoys": ["à mi-parcours", "de conception"]
-        },
-        {
-          "type": "fill",
-          "q": "L'évaluation s'intéresse davantage aux ____ et à l'impact du projet, là où le suivi se concentre sur les extrants.",
-          "pairs": [{ "left": "Complétez la phrase", "right": "effets" }],
-          "decoys": ["intrants", "extrants"]
-        },
-        {
-          "type": "match",
-          "q": "Associez la phase du cycle de projet à son activité de S&E.",
-          "pairs": [{ "left": "Phase 1 — Identification", "right": "Diagnostic de situation, collecte de la ligne de base" }],
-          "decoys": [
-            "Calcul du TRI financier du projet",
-            "Recrutement de l'équipe de terrain",
-            "Rédaction du contrat de bailleur",
-            "Publication des appels d'offres"
-          ]
-        },
-        {
-          "type": "match",
-          "q": "Associez la phase du cycle de projet à son activité de S&E.",
-          "pairs": [{ "left": "Phase 2 — Formulation / conception", "right": "Définition des indicateurs et construction du cadre logique" }],
-          "decoys": [
-            "Calcul du TRI financier du projet",
-            "Recrutement de l'équipe de terrain",
-            "Rédaction du contrat de bailleur",
-            "Publication des appels d'offres"
-          ]
-        },
-        {
-          "type": "match",
-          "q": "Associez la phase du cycle de projet à son activité de S&E.",
-          "pairs": [{ "left": "Phase 4 — Mise en œuvre", "right": "Suivi continu : collecte, tableaux de bord, rapports périodiques" }],
-          "decoys": [
-            "Calcul du TRI financier du projet",
-            "Recrutement de l'équipe de terrain",
-            "Rédaction du contrat de bailleur",
-            "Publication des appels d'offres"
-          ]
-        },
-        {
-          "type": "match",
-          "q": "Associez la phase du cycle de projet à son activité de S&E.",
-          "pairs": [{ "left": "Phase 6 — Clôture", "right": "Rapport final, capitalisation des leçons, évaluation ex-post" }],
-          "decoys": [
-            "Calcul du TRI financier du projet",
-            "Recrutement de l'équipe de terrain",
-            "Rédaction du contrat de bailleur",
-            "Publication des appels d'offres"
-          ]
-        },
-        {
-          "type": "match",
-          "q": "Associez le concept de S&E à sa définition.",
-          "pairs": [{ "left": "Extrant (output)", "right": "Produit ou service directement livré par les activités d'un projet" }],
-          "decoys": [
-            "La somme des coûts directs et indirects du projet",
-            "Le nombre de rapports produits par trimestre",
-            "La durée contractuelle de l'accord de financement",
-            "La liste des parties prenantes internes uniquement"
-          ]
-        },
-        {
-          "type": "match",
-          "q": "Associez le concept de S&E à sa définition.",
-          "pairs": [{ "left": "Effet (outcome)", "right": "Changement de comportement ou de condition induit à moyen terme par un projet" }],
-          "decoys": [
-            "La somme des coûts directs et indirects du projet",
-            "Le nombre de rapports produits par trimestre",
-            "La durée contractuelle de l'accord de financement",
-            "La liste des parties prenantes internes uniquement"
-          ]
-        },
-        {
-          "type": "match",
-          "q": "Associez le concept de S&E à sa définition.",
-          "pairs": [{ "left": "Impact", "right": "Changement durable, parfois non intentionnel, produit à long terme" }],
-          "decoys": [
-            "La somme des coûts directs et indirects du projet",
-            "Le nombre de rapports produits par trimestre",
-            "La durée contractuelle de l'accord de financement",
-            "La liste des parties prenantes internes uniquement"
-          ]
-        },
-        {
-          "type": "match",
-          "q": "Associez le concept de S&E à sa définition.",
-          "pairs": [{ "left": "Critères SMART", "right": "Spécifique, Mesurable, Atteignable, Réaliste, Temporellement défini" }],
-          "decoys": [
-            "La somme des coûts directs et indirects du projet",
-            "Le nombre de rapports produits par trimestre",
-            "La durée contractuelle de l'accord de financement",
-            "La liste des parties prenantes internes uniquement"
-          ]
-        },
-        {
-          "type": "match",
-          "q": "Reconstituez le glossaire du Module 1 en associant chaque terme à sa définition.",
-          "pairs": [
-            { "left": "Cadre logique (logframe)", "right": "Outil présentant en matrice la logique d'intervention, les indicateurs, sources de vérification et hypothèses" },
-            { "left": "Chaîne de résultats", "right": "Séquence causale : intrants → activités → extrants → effets → impacts" },
-            { "left": "Cible (target)", "right": "Valeur quantifiée qu'un indicateur doit atteindre à une échéance donnée" },
-            { "left": "Indicateur", "right": "Variable mesurant un changement ou un progrès de façon simple et fiable" },
-            { "left": "Intrant (input)", "right": "Ressource financière, humaine ou matérielle mobilisée pour mener les activités" },
-            { "left": "Redevabilité", "right": "Obligation de rendre compte de l'utilisation des ressources et des résultats" }
-          ],
-          "decoys": [
-            "Le solde net entre recettes et dépenses du projet",
-            "Le nombre d'agents de terrain recrutés",
-            "La liste des bailleurs internationaux approuvés",
-            "Le pourcentage d'avancement administratif"
-          ]
-        }
-      ]
+      "questions": []
     }
   ],
   "m2": [
@@ -4850,7 +4551,15 @@ header .wrap{
         }
       ]
     },
-    {
+	 {
+      "type": "video",
+      "title": "Voir la vidéo sur la création et l'utilisation d'un questionnaire sur KoboToolbox ",
+      "chapterTag": "Module 1",
+      "videoKey": "kobo",
+      "icon": "<i class=\"fi fi-brands-youtube\"></i> "
+    },
+	
+	{
       "type": "quiz",
       "title": "Quiz 2",
       "questions": [
@@ -5038,9 +4747,423 @@ header .wrap{
         }
       ]
     },
+ 
+    {
+      "type": "lesson",
+      "title": "Échantillonnage et fiabilité des données",
+      "chapterTag": "Module 3",
+      "body": "Il est rarement possible d'interroger toute une population : on sélectionne donc un échantillon représentatif. La méthode et la taille de cet échantillon déterminent la fiabilité des résultats.",
+      "points": [
+        {
+          "label": "22. Pourquoi échantillonner ?",
+          "html": "<p>Un échantillon trop petit ou mal choisi produit des résultats trompeurs. L'échantillonnage aléatoire — où chaque personne a une chance connue d'être choisie — donne les résultats les plus fiables et permet de généraliser les conclusions à toute la population.</p><p>Interroger l'intégralité d'une population (un <strong>recensement</strong>) est souvent impossible faute de temps, de budget ou de personnel suffisant. L'échantillonnage permet donc de tirer des conclusions solides sur l'ensemble d'une communauté en n'interrogeant qu'une fraction représentative de ses membres, à condition que la méthode de sélection soit rigoureuse et non biaisée.</p>"
+        },
+        {
+          "label": "23. Les méthodes d'échantillonnage",
+          "html": "<p><strong>Aléatoire simple</strong> : chaque ménage a la même probabilité d'être sélectionné. <strong>Systématique</strong> : sélection d'un ménage sur N à partir d'une liste ordonnée. <strong>Stratifié</strong> : division de la population en sous-groupes homogènes avant de tirer un échantillon dans chacun. <strong>Par grappes</strong> : sélection de groupes géographiques, puis interrogation à l'intérieur de ces groupes.</p>"
+        },
+        {
+          "label": "24. Marge d'erreur, confiance et taille d'échantillon",
+          "html": "<p>Deux notions clés : la <strong>marge d'erreur</strong> (l'écart possible entre le résultat de l'échantillon et la réalité) et le <strong>niveau de confiance</strong> (la probabilité que le résultat soit correct). Pour une population de 240 ménages à Fond Sable, une taille d'échantillon de <strong>148 ménages</strong> permet d'atteindre un niveau de confiance de 95% avec une marge d'erreur de 5%.</p>"
+        },
+        {
+          "label": "25. Biais à surveiller",
+          "html": "<p><strong>Biais de sélection</strong> : l'échantillon ne reflète pas correctement la population. <strong>Biais de désirabilité sociale</strong> : le répondant donne la réponse qu'il pense attendue plutôt que la vérité. <strong>Biais de l'enquêteur</strong> : la manière de poser une question influence la réponse. Il faut aussi veiller aux simples <strong>erreurs de saisie</strong> (mauvaise transcription des réponses).</p>"
+        }
+      ]
+    },
     {
       "type": "quiz",
       "title": "Quiz 3",
+      "questions": [
+        {
+          "type": "single",
+          "q": "Pour une population de 240 ménages à Fond Sable, quelle taille d'échantillon permet un niveau de confiance de 95% avec une marge d'erreur de 5% ?",
+          "options": [
+            "100 ménages",
+            "148 ménages",
+            "200 ménages",
+            "240 ménages"
+          ],
+          "correct": 1
+        },
+        {
+          "type": "single",
+          "q": "Quelle méthode d'échantillonnage divise la population en sous-groupes homogènes avant de tirer un échantillon dans chacun ?",
+          "options": [
+            "Aléatoire simple",
+            "Systématique",
+            "Stratifié",
+            "Par grappes"
+          ],
+          "correct": 2
+        },
+        {
+          "type": "match",
+          "q": "Associez chaque méthode d'échantillonnage à sa description.",
+          "pairs": [
+            {
+              "left": "Aléatoire simple",
+              "right": "Chaque ménage a la même probabilité d'être sélectionné"
+            },
+            {
+              "left": "Systématique",
+              "right": "Sélection d'un ménage sur N à partir d'une liste ordonnée"
+            },
+            {
+              "left": "Stratifié",
+              "right": "Division en sous-groupes homogènes puis tirage dans chaque strate"
+            },
+            {
+              "left": "Par grappes",
+              "right": "Sélection de groupes géographiques puis interrogation à l'intérieur"
+            }
+          ]
+        },
+        {
+          "type": "match",
+          "q": "Associez chaque biais à sa définition.",
+          "pairs": [
+            {
+              "left": "Biais de sélection",
+              "right": "L'échantillon ne reflète pas correctement la population"
+            },
+            {
+              "left": "Biais de désirabilité sociale",
+              "right": "Le répondant donne la réponse qu'il pense attendue plutôt que la vérité"
+            },
+            {
+              "left": "Biais de l'enquêteur",
+              "right": "La manière de poser une question influence la réponse"
+            },
+            {
+              "left": "Erreur de saisie",
+              "right": "Mauvaise transcription des réponses"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "type": "lesson",
+      "title": "Éthique et consentement dans la collecte de données",
+      "chapterTag": "Module 3",
+      "body": "Collecter des données auprès de personnes implique une responsabilité éthique, souvent sous-estimée sur le terrain.",
+      "points": [
+        {
+          "label": "26. Le consentement éclairé",
+          "html": "<p>Avant toute collecte, chaque personne interrogée doit comprendre pourquoi elle est sollicitée, comment ses réponses seront utilisées, et qu'elle a le droit de refuser de répondre ou d'interrompre l'entretien à tout moment, sans conséquence négative (<strong>volontariat</strong>) : c'est le consentement <strong>libre et éclairé</strong> : libre, car donné sans pression ni contrepartie ; éclairé, car fondé sur une compréhension réelle de l'objectif de la collecte.</p>"
+        },
+        {
+          "label": "27. Protection des données individuelles (confidentialité)",
+          "html": "<p>Les données individuelles, en particulier sur des sujets sensibles comme l'hygiène ou le revenu, doivent être protégées : accès restreint à l'équipe projet, identifiants anonymisés, résultats présentés sous forme agrégée.</p><p>Concrètement, cela implique de <strong>stocker les fichiers sur un support sécurisé</strong> (protégé par mot de passe), de ne partager que des tableaux ou graphiques <strong>agrégés</strong> (jamais les réponses individuelles brutes) dans les rapports publics, et de définir dès le départ <strong>qui a le droit d'accéder</strong> à la table de correspondance entre identifiants et noms réels.</p>"
+        },
+        {
+          "label": "28. Le rôle du superviseur de terrain",
+          "html": "<p>Le superviseur vérifie quotidiennement les formulaires soumis (complétude et cohérence des données), ré-interroge un échantillon de ménages pour un contrôle croisé de fiabilité, organise un débriefing quotidien pour identifier les difficultés rencontrées, et s'assure des moyens matériels des enquêteurs (batterie, connexion, transport).</p>"
+        },
+        {
+          "label": "29. Application à Fond Sable",
+          "html": "<p>À Fond Sable, une <strong>question de consentement</strong> est placée en première position du formulaire KoboToolbox. Dès l'export des données, les noms des chefs de ménage sont remplacés par des <strong>identifiants numériques anonymes</strong>, et seul le coordinateur du projet conserve la table de correspondance, protégée par mot de passe.</p>"
+        }
+      ]
+    },
+    {
+      "type": "quiz",
+      "title": "Quiz 4",
+      "questions": [
+        {
+          "type": "single",
+          "q": "Comment le consentement est-il enregistré dans le formulaire KoboToolbox à Fond Sable ?",
+          "options": [
+            "Dans un registre papier séparé",
+            "Par une question de consentement placée en première position du formulaire",
+            "Uniquement à l'oral, sans aucune trace",
+            "À la toute fin du formulaire"
+          ],
+          "correct": 1
+        },
+        {
+          "type": "single",
+          "q": "Comment l'identité des chefs de ménage est-elle protégée lors de l'export des données à Fond Sable ?",
+          "options": [
+            "Les noms sont publiés dans le rapport final",
+            "Les noms sont remplacés par des identifiants numériques anonymes",
+            "Aucune protection n'est appliquée",
+            "Les données sont supprimées immédiatement après collecte"
+          ],
+          "correct": 1
+        },
+        {
+          "type": "match",
+          "q": "Associez chaque principe éthique à sa description.",
+          "pairs": [
+            {
+              "left": "Consentement éclairé",
+              "right": "Le répondant comprend pourquoi il est sollicité et comment ses données seront utilisées"
+            },
+            {
+              "left": "Confidentialité",
+              "right": "Limiter l'accès aux données brutes à l'équipe projet"
+            },
+            {
+              "left": "Volontariat",
+              "right": "Le refus de répondre n'entraîne aucune conséquence négative"
+            },
+            {
+              "left": "Rôle du superviseur",
+              "right": "Vérifie le respect du consentement et le bien-être des enquêteurs et répondants"
+            }
+          ]
+        },
+        {
+          "type": "match",
+          "q": "Associez chaque responsabilité du superviseur de terrain à son objectif.",
+          "pairs": [
+            {
+              "left": "Vérifier quotidiennement les formulaires soumis",
+              "right": "Vérifier la complétude et la cohérence des données"
+            },
+            {
+              "left": "Ré-interroger un échantillon de ménages",
+              "right": "Contrôler la fiabilité des réponses (contrôle croisé)"
+            },
+            {
+              "left": "Organiser un débriefing quotidien",
+              "right": "Identifier les difficultés rencontrées sur le terrain"
+            },
+            {
+              "left": "S'assurer des moyens matériels des enquêteurs",
+              "right": "Garantir batterie, connexion, transport"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "type": "lesson",
+      "title": "Analyse quantitative de base",
+      "chapterTag": "Module 3",
+      "body": "L'analyse quantitative commence par des statistiques descriptives simples — moyennes, pourcentages, médianes — qui résument l'information de façon lisible.",
+      "points": [
+        {
+          "label": "30. Statistiques descriptives",
+          "html": "<p>Par exemple, « 68% des ménages enquêtés ont accès à l'eau potable ». À Fond Sable, la taille moyenne de ménage observée sur l'échantillon est de <strong>5,2 personnes</strong>. Lorsque des valeurs extrêmes faussent la moyenne (par exemple pour le revenu du ménage), c'est la <strong>médiane</strong> — la valeur qui sépare l'échantillon en deux moitiés égales — qui est l'indicateur le plus utile.</p>"
+        },
+        {
+          "label": "31. Toujours comparer",
+          "html": "<p>Il est important de toujours comparer : par rapport à une situation de départ (<strong>baseline</strong>), par rapport à un groupe témoin non touché par le projet, ou par rapport à une cible fixée au départ.</p><p>Un chiffre isolé (« 68% des ménages ont accès à l'eau potable ») n'a que peu de sens en lui-même : c'est la <strong>comparaison</strong> qui lui donne toute sa valeur analytique, en révélant une évolution, un écart à combler ou un progrès à célébrer. C'est pourquoi il est essentiel de définir des <strong>indicateurs de référence</strong> dès le début du projet, avant même le lancement des activités.</p>"
+        },
+        {
+          "label": "32. Tableaux croisés et outils",
+          "html": "<p>Les tableaux croisés permettent de voir si un résultat varie selon des sous-groupes (hommes/femmes, zones rurales/urbaines). Des outils simples comme <strong>Excel</strong> suffisent pour la plupart des analyses de projets ; des logiciels plus avancés (SPSS, R, Stata) sont utiles pour des analyses statistiques plus poussées, mais ne sont pas indispensables pour un suivi de routine.</p>"
+        },
+        {
+          "label": "47. Moyenne, médiane, mode : quand les utiliser ?",
+          "html": "<p>Ces trois indicateurs résument une série de chiffres, mais ne racontent pas la même histoire :</p><table><thead><tr><th>Indicateur</th><th>Définition</th><th>Quand l'utiliser</th></tr></thead><tbody><tr><td>Moyenne</td><td>Somme des valeurs divisée par leur nombre</td><td>Données homogènes, sans valeurs extrêmes</td></tr><tr><td>Médiane</td><td>Valeur qui se situe au milieu d'un ensemble de données ordonnées</td><td>Données avec valeurs extrêmes (ex. revenus), pour éviter qu'elles ne faussent le résultat</td></tr><tr><td>Mode</td><td>Valeur la plus fréquente</td><td>Données catégorielles (ex. méthode de collecte préférée)</td></tr></tbody></table><p>Exemple à Fond Sable : si un ménage très riche fait grimper artificiellement le revenu moyen du village, la médiane donnera une image plus représentative du revenu du ménage « typique » que la moyenne.</p>"
+        }
+      ]
+    },
+    {
+      "type": "quiz",
+      "title": "Quiz 5",
+      "questions": [
+        {
+          "type": "single",
+          "q": "Quelle est la taille moyenne de ménage observée sur l'échantillon de Fond Sable ?",
+          "options": [
+            "3,2 personnes",
+            "5,2 personnes",
+            "7,5 personnes",
+            "11 personnes"
+          ],
+          "correct": 1
+        },
+        {
+          "type": "single",
+          "q": "Quel indicateur est le plus utile lorsque des valeurs extrêmes faussent la moyenne, par exemple pour le revenu du ménage ?",
+          "options": [
+            "La fréquence",
+            "Le pourcentage",
+            "La médiane",
+            "Le maximum"
+          ],
+          "correct": 2
+        },
+        {
+          "type": "match",
+          "q": "Associez chaque indicateur statistique à sa définition.",
+          "pairs": [
+            {
+              "left": "Fréquence / pourcentage",
+              "right": "Combien de ménages, et quelle proportion, appartiennent à une catégorie"
+            },
+            {
+              "left": "Moyenne",
+              "right": "Valeur centrale d'un ensemble de données numériques"
+            },
+            {
+              "left": "Médiane",
+              "right": "Valeur qui sépare l'échantillon en deux moitiés égales"
+            },
+            {
+              "left": "Minimum / maximum",
+              "right": "Valeurs extrêmes observées dans les données"
+            }
+          ]
+        },
+        {
+          "type": "match",
+          "q": "Associez chaque indicateur de suivi de Fond Sable à son évolution avant/après le projet.",
+          "pairs": [
+            {
+              "left": "Ménages sans latrine",
+              "right": "Passe de 57,5 % à 22,3 %"
+            },
+            {
+              "left": "Lavage des mains au savon",
+              "right": "Passe de 18,9 % à 64,1 %"
+            },
+            {
+              "left": "Cas de diarrhée signalés",
+              "right": "Passe de 31,4 % à 12,7 %"
+            }
+          ],
+          "decoys": [
+            "Reste stable autour de 50 % (intrus)"
+          ]
+        }
+      ]
+    },
+    {
+      "type": "lesson",
+      "title": "Analyse qualitative de base",
+      "chapterTag": "Module 3",
+      "body": "L'analyse qualitative consiste à donner du sens à des données non chiffrées : transcriptions d'entretiens, notes d'observation, comptes-rendus de groupes de discussion.",
+      "points": [
+        {
+          "label": "33. Donner du sens aux données non chiffrées",
+          "html": "<p>Contrairement à l'analyse quantitative, l'objectif n'est pas de chiffrer mais de comprendre en profondeur les causes, les perceptions et les expériences vécues. Combinée aux chiffres, l'analyse qualitative aide à expliquer le « pourquoi » derrière les tendances observées.</p><p>Une enquête quantitative peut révéler <em>qu'</em>un problème existe (par exemple, un faible taux d'utilisation des latrines), mais c'est l'analyse qualitative qui permet de comprendre <em>pourquoi</em> — habitudes culturelles, contraintes matérielles, perceptions sociales — et donc de concevoir des solutions réellement adaptées au contexte local.</p>"
+        },
+        {
+          "label": "34. L'analyse thématique, étape par étape",
+          "html": "<p>La méthode la plus courante est l'analyse thématique : on <strong>retranscrit fidèlement les notes d'entretien</strong> (étape 1), on <strong>relit l'ensemble du matériel une première fois sans coder</strong>, pour s'imprégner du contenu global (étape 2), on <strong>attribue un code court à chaque idée importante</strong> (étape 3), on <strong>regroupe les codes similaires en thèmes plus larges</strong> (étape 4), on <strong>vérifie la cohérence des thèmes en les confrontant à nouveau au texte source</strong> (étape 5), puis on <strong>illustre chaque thème par une citation représentative</strong> (étape 6).</p>"
+        },
+        {
+          "label": "35. L'exemple de Fond Sable",
+          "html": "<p>À Fond Sable, <strong>14 sources</strong> (12 entretiens individuels et 2 groupes de discussion) ont été analysées lors du codage thématique. Le thème le plus fréquent identifié est celui des <strong>contraintes financières</strong>, suivi par le manque d'espace disponible et les enjeux de sécurité et d'intimité la nuit — chacun ayant orienté une solution concrète proposée par l'équipe projet (paiement échelonné, modèles compacts, éclairage solaire).</p>"
+        }
+      ]
+    },
+    {
+      "type": "quiz",
+      "title": "Quiz 6",
+      "questions": [
+        {
+          "type": "single",
+          "q": "Combien de sources au total (entretiens individuels + groupes de discussion) ont été analysées lors du codage thématique à Fond Sable ?",
+          "options": [
+            "10",
+            "12",
+            "14",
+            "20"
+          ],
+          "correct": 2
+        },
+        {
+          "type": "single",
+          "q": "Quel est le thème le plus fréquent identifié lors de l'analyse qualitative à Fond Sable ?",
+          "options": [
+            "Manque d'espace disponible",
+            "Contraintes financières",
+            "Sécurité et intimité la nuit",
+            "Habitudes anciennes difficiles à changer"
+          ],
+          "correct": 1
+        },
+        {
+          "type": "match",
+          "q": "Associez chaque étape du codage thématique à sa description.",
+          "pairs": [
+            {
+              "left": "Étape 1",
+              "right": "Retranscrire fidèlement les notes d'entretien"
+            },
+            {
+              "left": "Étape 3",
+              "right": "Attribuer un code court à chaque idée importante"
+            },
+            {
+              "left": "Étape 4",
+              "right": "Regrouper les codes similaires en thèmes plus larges"
+            },
+            {
+              "left": "Étape 6",
+              "right": "Illustrer chaque thème par une citation représentative"
+            }
+          ]
+        },
+        {
+          "type": "match",
+          "q": "Associez chaque thème identifié à Fond Sable à la solution proposée par l'équipe projet.",
+          "pairs": [
+            {
+              "left": "Contraintes financières",
+              "right": "Mécanisme de paiement échelonné"
+            },
+            {
+              "left": "Manque d'espace disponible",
+              "right": "Modèles de latrines compactes"
+            },
+            {
+              "left": "Sécurité et intimité la nuit",
+              "right": "Éclairage solaire à proximité des latrines"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "type": "lesson",
+      "title": "Excel — Tableau croisé dynamique",
+      "chapterTag": "Module 3",
+      "body": "Le tableau croisé dynamique (TCD) est l'un des outils les plus puissants d'Excel pour résumer, organiser et analyser rapidement de grands volumes de données, sans écrire de formule.",
+      "points": [
+        {
+          "label": "1. Qu'est-ce qu'un tableau croisé dynamique ?",
+          "html": "<p>Un <strong>tableau croisé dynamique (TCD)</strong> est un outil d'Excel qui permet de résumer, organiser et analyser rapidement de grands volumes de données, sans écrire de formule. Il transforme une liste de données brutes (par exemple des lignes de ventes ou d'enquêtes ménages) en un tableau de synthèse interactif : sommes, moyennes, comptages, pourcentages, etc.</p><p>Un TCD permet de croiser plusieurs dimensions (produit, région, période…) en quelques clics, de repérer des tendances et de réorganiser l'analyse instantanément par glisser-déposer, sans toucher aux données source.</p>"
+        },
+        {
+          "label": "2. Préparer les données source",
+          "html": "<p>La qualité du TCD dépend directement de la qualité des données de départ. Avant de créer un tableau croisé dynamique, il faut vérifier que : chaque colonne possède un <strong>en-tête unique et explicite</strong> (pas de cellule vide en en-tête) ; il n'y a <strong>aucune ligne ni colonne totalement vide</strong> dans la plage ; chaque colonne contient un <strong>seul type de donnée</strong> (texte, nombre ou date, sans mélange) ; et les données sont idéalement converties en <strong>tableau structuré (Ctrl+T)</strong> pour s'étendre automatiquement.</p>"
+        },
+        {
+          "label": "3. Créer un tableau croisé dynamique",
+          "html": "<p>Pour créer un TCD : sélectionner une cellule à l'intérieur de la plage de données ; aller dans l'onglet <strong>Insertion</strong>, puis cliquer sur <strong>Tableau croisé dynamique</strong> ; vérifier la plage de données proposée et choisir l'emplacement du TCD (nouvelle feuille recommandé) ; cliquer sur <strong>OK</strong> pour afficher le volet des champs ; puis glisser les champs souhaités dans les zones <strong>Lignes, Colonnes, Valeurs et Filtres</strong>. Le type de calcul (somme, moyenne, nombre…) s'ajuste par un clic droit sur le champ dans la zone Valeurs.</p>"
+        },
+        {
+          "label": "4. Les quatre zones du TCD",
+          "html": "<p><strong>Filtres</strong> : restreint l'analyse à une ou plusieurs catégories (ex. afficher uniquement une année). <strong>Colonnes</strong> : définit les en-têtes de colonnes du tableau de synthèse (ex. les mois de l'année). <strong>Lignes</strong> : définit les catégories affichées en lignes (ex. les noms de produits ou de régions). <strong>Valeurs</strong> : contient les données chiffrées à agréger (ex. chiffre d'affaires, quantités vendues).</p>"
+        },
+        {
+          "label": "5. Fonctionnalités utiles pour l'analyse",
+          "html": "<p><strong>Segments (slicers)</strong> : boutons visuels pour filtrer rapidement les données d'un ou plusieurs TCD liés. <strong>Chronologie</strong> : filtre visuel dédié aux champs de type date. <strong>Regroupement</strong> : regrouper des dates par mois/trimestre/année, ou des nombres par tranches. <strong>Champs calculés</strong> : créer une formule personnalisée à partir des champs existants. <strong>Actualisation</strong> : le bouton « Actualiser » met à jour le TCD après modification des données source. <strong>Graphique croisé dynamique</strong> : une visualisation graphique directement connectée au TCD.</p>"
+        },
+        {
+          "label": "6. Bonnes pratiques et erreurs courantes",
+          "html": "<p>À faire : toujours partir d'un tableau structuré (Ctrl+T) ; nommer clairement les en-têtes de colonnes ; actualiser le TCD après toute modification des données source. À éviter : laisser des cellules fusionnées dans les données source ; mélanger du texte et des nombres dans une même colonne ; oublier d'actualiser le TCD avant de présenter une analyse.</p>"
+        }
+      ]
+    },
+    {
+      "type": "video",
+      "title": "Excel — Tableau croisé dynamique",
+      "chapterTag": "Module 3",
+      "videoKey": "excel-tcd"
+    },
+	   {
+      "type": "quiz",
+      "title": "Quiz 7",
       "questions": [
         {
           "type": "single",
@@ -5164,419 +5287,6 @@ header .wrap{
           ]
         }
       ]
-    },
-    {
-      "type": "lesson",
-      "title": "Échantillonnage et fiabilité des données",
-      "chapterTag": "Module 3",
-      "body": "Il est rarement possible d'interroger toute une population : on sélectionne donc un échantillon représentatif. La méthode et la taille de cet échantillon déterminent la fiabilité des résultats.",
-      "points": [
-        {
-          "label": "22. Pourquoi échantillonner ?",
-          "html": "<p>Un échantillon trop petit ou mal choisi produit des résultats trompeurs. L'échantillonnage aléatoire — où chaque personne a une chance connue d'être choisie — donne les résultats les plus fiables et permet de généraliser les conclusions à toute la population.</p><p>Interroger l'intégralité d'une population (un <strong>recensement</strong>) est souvent impossible faute de temps, de budget ou de personnel suffisant. L'échantillonnage permet donc de tirer des conclusions solides sur l'ensemble d'une communauté en n'interrogeant qu'une fraction représentative de ses membres, à condition que la méthode de sélection soit rigoureuse et non biaisée.</p>"
-        },
-        {
-          "label": "23. Les méthodes d'échantillonnage",
-          "html": "<p><strong>Aléatoire simple</strong> : chaque ménage a la même probabilité d'être sélectionné. <strong>Systématique</strong> : sélection d'un ménage sur N à partir d'une liste ordonnée. <strong>Stratifié</strong> : division de la population en sous-groupes homogènes avant de tirer un échantillon dans chacun. <strong>Par grappes</strong> : sélection de groupes géographiques, puis interrogation à l'intérieur de ces groupes.</p>"
-        },
-        {
-          "label": "24. Marge d'erreur, confiance et taille d'échantillon",
-          "html": "<p>Deux notions clés : la <strong>marge d'erreur</strong> (l'écart possible entre le résultat de l'échantillon et la réalité) et le <strong>niveau de confiance</strong> (la probabilité que le résultat soit correct). Pour une population de 240 ménages à Fond Sable, une taille d'échantillon de <strong>148 ménages</strong> permet d'atteindre un niveau de confiance de 95% avec une marge d'erreur de 5%.</p>"
-        },
-        {
-          "label": "25. Biais à surveiller",
-          "html": "<p><strong>Biais de sélection</strong> : l'échantillon ne reflète pas correctement la population. <strong>Biais de désirabilité sociale</strong> : le répondant donne la réponse qu'il pense attendue plutôt que la vérité. <strong>Biais de l'enquêteur</strong> : la manière de poser une question influence la réponse. Il faut aussi veiller aux simples <strong>erreurs de saisie</strong> (mauvaise transcription des réponses).</p>"
-        }
-      ]
-    },
-    {
-      "type": "quiz",
-      "title": "Quiz 4",
-      "questions": [
-        {
-          "type": "single",
-          "q": "Pour une population de 240 ménages à Fond Sable, quelle taille d'échantillon permet un niveau de confiance de 95% avec une marge d'erreur de 5% ?",
-          "options": [
-            "100 ménages",
-            "148 ménages",
-            "200 ménages",
-            "240 ménages"
-          ],
-          "correct": 1
-        },
-        {
-          "type": "single",
-          "q": "Quelle méthode d'échantillonnage divise la population en sous-groupes homogènes avant de tirer un échantillon dans chacun ?",
-          "options": [
-            "Aléatoire simple",
-            "Systématique",
-            "Stratifié",
-            "Par grappes"
-          ],
-          "correct": 2
-        },
-        {
-          "type": "match",
-          "q": "Associez chaque méthode d'échantillonnage à sa description.",
-          "pairs": [
-            {
-              "left": "Aléatoire simple",
-              "right": "Chaque ménage a la même probabilité d'être sélectionné"
-            },
-            {
-              "left": "Systématique",
-              "right": "Sélection d'un ménage sur N à partir d'une liste ordonnée"
-            },
-            {
-              "left": "Stratifié",
-              "right": "Division en sous-groupes homogènes puis tirage dans chaque strate"
-            },
-            {
-              "left": "Par grappes",
-              "right": "Sélection de groupes géographiques puis interrogation à l'intérieur"
-            }
-          ]
-        },
-        {
-          "type": "match",
-          "q": "Associez chaque biais à sa définition.",
-          "pairs": [
-            {
-              "left": "Biais de sélection",
-              "right": "L'échantillon ne reflète pas correctement la population"
-            },
-            {
-              "left": "Biais de désirabilité sociale",
-              "right": "Le répondant donne la réponse qu'il pense attendue plutôt que la vérité"
-            },
-            {
-              "left": "Biais de l'enquêteur",
-              "right": "La manière de poser une question influence la réponse"
-            },
-            {
-              "left": "Erreur de saisie",
-              "right": "Mauvaise transcription des réponses"
-            }
-          ]
-        }
-      ]
-    },
-    {
-      "type": "lesson",
-      "title": "Éthique et consentement dans la collecte de données",
-      "chapterTag": "Module 3",
-      "body": "Collecter des données auprès de personnes implique une responsabilité éthique, souvent sous-estimée sur le terrain.",
-      "points": [
-        {
-          "label": "26. Le consentement éclairé",
-          "html": "<p>Avant toute collecte, chaque personne interrogée doit comprendre pourquoi elle est sollicitée, comment ses réponses seront utilisées, et qu'elle a le droit de refuser de répondre ou d'interrompre l'entretien à tout moment, sans conséquence négative (<strong>volontariat</strong>) : c'est le consentement <strong>libre et éclairé</strong> : libre, car donné sans pression ni contrepartie ; éclairé, car fondé sur une compréhension réelle de l'objectif de la collecte.</p>"
-        },
-        {
-          "label": "27. Protection des données individuelles (confidentialité)",
-          "html": "<p>Les données individuelles, en particulier sur des sujets sensibles comme l'hygiène ou le revenu, doivent être protégées : accès restreint à l'équipe projet, identifiants anonymisés, résultats présentés sous forme agrégée.</p><p>Concrètement, cela implique de <strong>stocker les fichiers sur un support sécurisé</strong> (protégé par mot de passe), de ne partager que des tableaux ou graphiques <strong>agrégés</strong> (jamais les réponses individuelles brutes) dans les rapports publics, et de définir dès le départ <strong>qui a le droit d'accéder</strong> à la table de correspondance entre identifiants et noms réels.</p>"
-        },
-        {
-          "label": "28. Le rôle du superviseur de terrain",
-          "html": "<p>Le superviseur vérifie quotidiennement les formulaires soumis (complétude et cohérence des données), ré-interroge un échantillon de ménages pour un contrôle croisé de fiabilité, organise un débriefing quotidien pour identifier les difficultés rencontrées, et s'assure des moyens matériels des enquêteurs (batterie, connexion, transport).</p>"
-        },
-        {
-          "label": "29. Application à Fond Sable",
-          "html": "<p>À Fond Sable, une <strong>question de consentement</strong> est placée en première position du formulaire KoboToolbox. Dès l'export des données, les noms des chefs de ménage sont remplacés par des <strong>identifiants numériques anonymes</strong>, et seul le coordinateur du projet conserve la table de correspondance, protégée par mot de passe.</p>"
-        }
-      ]
-    },
-    {
-      "type": "quiz",
-      "title": "Quiz 5",
-      "questions": [
-        {
-          "type": "single",
-          "q": "Comment le consentement est-il enregistré dans le formulaire KoboToolbox à Fond Sable ?",
-          "options": [
-            "Dans un registre papier séparé",
-            "Par une question de consentement placée en première position du formulaire",
-            "Uniquement à l'oral, sans aucune trace",
-            "À la toute fin du formulaire"
-          ],
-          "correct": 1
-        },
-        {
-          "type": "single",
-          "q": "Comment l'identité des chefs de ménage est-elle protégée lors de l'export des données à Fond Sable ?",
-          "options": [
-            "Les noms sont publiés dans le rapport final",
-            "Les noms sont remplacés par des identifiants numériques anonymes",
-            "Aucune protection n'est appliquée",
-            "Les données sont supprimées immédiatement après collecte"
-          ],
-          "correct": 1
-        },
-        {
-          "type": "match",
-          "q": "Associez chaque principe éthique à sa description.",
-          "pairs": [
-            {
-              "left": "Consentement éclairé",
-              "right": "Le répondant comprend pourquoi il est sollicité et comment ses données seront utilisées"
-            },
-            {
-              "left": "Confidentialité",
-              "right": "Limiter l'accès aux données brutes à l'équipe projet"
-            },
-            {
-              "left": "Volontariat",
-              "right": "Le refus de répondre n'entraîne aucune conséquence négative"
-            },
-            {
-              "left": "Rôle du superviseur",
-              "right": "Vérifie le respect du consentement et le bien-être des enquêteurs et répondants"
-            }
-          ]
-        },
-        {
-          "type": "match",
-          "q": "Associez chaque responsabilité du superviseur de terrain à son objectif.",
-          "pairs": [
-            {
-              "left": "Vérifier quotidiennement les formulaires soumis",
-              "right": "Vérifier la complétude et la cohérence des données"
-            },
-            {
-              "left": "Ré-interroger un échantillon de ménages",
-              "right": "Contrôler la fiabilité des réponses (contrôle croisé)"
-            },
-            {
-              "left": "Organiser un débriefing quotidien",
-              "right": "Identifier les difficultés rencontrées sur le terrain"
-            },
-            {
-              "left": "S'assurer des moyens matériels des enquêteurs",
-              "right": "Garantir batterie, connexion, transport"
-            }
-          ]
-        }
-      ]
-    },
-    {
-      "type": "lesson",
-      "title": "Analyse quantitative de base",
-      "chapterTag": "Module 3",
-      "body": "L'analyse quantitative commence par des statistiques descriptives simples — moyennes, pourcentages, médianes — qui résument l'information de façon lisible.",
-      "points": [
-        {
-          "label": "30. Statistiques descriptives",
-          "html": "<p>Par exemple, « 68% des ménages enquêtés ont accès à l'eau potable ». À Fond Sable, la taille moyenne de ménage observée sur l'échantillon est de <strong>5,2 personnes</strong>. Lorsque des valeurs extrêmes faussent la moyenne (par exemple pour le revenu du ménage), c'est la <strong>médiane</strong> — la valeur qui sépare l'échantillon en deux moitiés égales — qui est l'indicateur le plus utile.</p>"
-        },
-        {
-          "label": "31. Toujours comparer",
-          "html": "<p>Il est important de toujours comparer : par rapport à une situation de départ (<strong>baseline</strong>), par rapport à un groupe témoin non touché par le projet, ou par rapport à une cible fixée au départ.</p><p>Un chiffre isolé (« 68% des ménages ont accès à l'eau potable ») n'a que peu de sens en lui-même : c'est la <strong>comparaison</strong> qui lui donne toute sa valeur analytique, en révélant une évolution, un écart à combler ou un progrès à célébrer. C'est pourquoi il est essentiel de définir des <strong>indicateurs de référence</strong> dès le début du projet, avant même le lancement des activités.</p>"
-        },
-        {
-          "label": "32. Tableaux croisés et outils",
-          "html": "<p>Les tableaux croisés permettent de voir si un résultat varie selon des sous-groupes (hommes/femmes, zones rurales/urbaines). Des outils simples comme <strong>Excel</strong> suffisent pour la plupart des analyses de projets ; des logiciels plus avancés (SPSS, R, Stata) sont utiles pour des analyses statistiques plus poussées, mais ne sont pas indispensables pour un suivi de routine.</p>"
-        },
-        {
-          "label": "47. Moyenne, médiane, mode : quand les utiliser ?",
-          "html": "<p>Ces trois indicateurs résument une série de chiffres, mais ne racontent pas la même histoire :</p><table><thead><tr><th>Indicateur</th><th>Définition</th><th>Quand l'utiliser</th></tr></thead><tbody><tr><td>Moyenne</td><td>Somme des valeurs divisée par leur nombre</td><td>Données homogènes, sans valeurs extrêmes</td></tr><tr><td>Médiane</td><td>Valeur qui se situe au milieu d'un ensemble de données ordonnées</td><td>Données avec valeurs extrêmes (ex. revenus), pour éviter qu'elles ne faussent le résultat</td></tr><tr><td>Mode</td><td>Valeur la plus fréquente</td><td>Données catégorielles (ex. méthode de collecte préférée)</td></tr></tbody></table><p>Exemple à Fond Sable : si un ménage très riche fait grimper artificiellement le revenu moyen du village, la médiane donnera une image plus représentative du revenu du ménage « typique » que la moyenne.</p>"
-        }
-      ]
-    },
-    {
-      "type": "quiz",
-      "title": "Quiz 6",
-      "questions": [
-        {
-          "type": "single",
-          "q": "Quelle est la taille moyenne de ménage observée sur l'échantillon de Fond Sable ?",
-          "options": [
-            "3,2 personnes",
-            "5,2 personnes",
-            "7,5 personnes",
-            "11 personnes"
-          ],
-          "correct": 1
-        },
-        {
-          "type": "single",
-          "q": "Quel indicateur est le plus utile lorsque des valeurs extrêmes faussent la moyenne, par exemple pour le revenu du ménage ?",
-          "options": [
-            "La fréquence",
-            "Le pourcentage",
-            "La médiane",
-            "Le maximum"
-          ],
-          "correct": 2
-        },
-        {
-          "type": "match",
-          "q": "Associez chaque indicateur statistique à sa définition.",
-          "pairs": [
-            {
-              "left": "Fréquence / pourcentage",
-              "right": "Combien de ménages, et quelle proportion, appartiennent à une catégorie"
-            },
-            {
-              "left": "Moyenne",
-              "right": "Valeur centrale d'un ensemble de données numériques"
-            },
-            {
-              "left": "Médiane",
-              "right": "Valeur qui sépare l'échantillon en deux moitiés égales"
-            },
-            {
-              "left": "Minimum / maximum",
-              "right": "Valeurs extrêmes observées dans les données"
-            }
-          ]
-        },
-        {
-          "type": "match",
-          "q": "Associez chaque indicateur de suivi de Fond Sable à son évolution avant/après le projet.",
-          "pairs": [
-            {
-              "left": "Ménages sans latrine",
-              "right": "Passe de 57,5 % à 22,3 %"
-            },
-            {
-              "left": "Lavage des mains au savon",
-              "right": "Passe de 18,9 % à 64,1 %"
-            },
-            {
-              "left": "Cas de diarrhée signalés",
-              "right": "Passe de 31,4 % à 12,7 %"
-            }
-          ],
-          "decoys": [
-            "Reste stable autour de 50 % (intrus)"
-          ]
-        }
-      ]
-    },
-    {
-      "type": "lesson",
-      "title": "Analyse qualitative de base",
-      "chapterTag": "Module 3",
-      "body": "L'analyse qualitative consiste à donner du sens à des données non chiffrées : transcriptions d'entretiens, notes d'observation, comptes-rendus de groupes de discussion.",
-      "points": [
-        {
-          "label": "33. Donner du sens aux données non chiffrées",
-          "html": "<p>Contrairement à l'analyse quantitative, l'objectif n'est pas de chiffrer mais de comprendre en profondeur les causes, les perceptions et les expériences vécues. Combinée aux chiffres, l'analyse qualitative aide à expliquer le « pourquoi » derrière les tendances observées.</p><p>Une enquête quantitative peut révéler <em>qu'</em>un problème existe (par exemple, un faible taux d'utilisation des latrines), mais c'est l'analyse qualitative qui permet de comprendre <em>pourquoi</em> — habitudes culturelles, contraintes matérielles, perceptions sociales — et donc de concevoir des solutions réellement adaptées au contexte local.</p>"
-        },
-        {
-          "label": "34. L'analyse thématique, étape par étape",
-          "html": "<p>La méthode la plus courante est l'analyse thématique : on <strong>retranscrit fidèlement les notes d'entretien</strong> (étape 1), on <strong>relit l'ensemble du matériel une première fois sans coder</strong>, pour s'imprégner du contenu global (étape 2), on <strong>attribue un code court à chaque idée importante</strong> (étape 3), on <strong>regroupe les codes similaires en thèmes plus larges</strong> (étape 4), on <strong>vérifie la cohérence des thèmes en les confrontant à nouveau au texte source</strong> (étape 5), puis on <strong>illustre chaque thème par une citation représentative</strong> (étape 6).</p>"
-        },
-        {
-          "label": "35. L'exemple de Fond Sable",
-          "html": "<p>À Fond Sable, <strong>14 sources</strong> (12 entretiens individuels et 2 groupes de discussion) ont été analysées lors du codage thématique. Le thème le plus fréquent identifié est celui des <strong>contraintes financières</strong>, suivi par le manque d'espace disponible et les enjeux de sécurité et d'intimité la nuit — chacun ayant orienté une solution concrète proposée par l'équipe projet (paiement échelonné, modèles compacts, éclairage solaire).</p>"
-        }
-      ]
-    },
-    {
-      "type": "quiz",
-      "title": "Quiz 7",
-      "questions": [
-        {
-          "type": "single",
-          "q": "Combien de sources au total (entretiens individuels + groupes de discussion) ont été analysées lors du codage thématique à Fond Sable ?",
-          "options": [
-            "10",
-            "12",
-            "14",
-            "20"
-          ],
-          "correct": 2
-        },
-        {
-          "type": "single",
-          "q": "Quel est le thème le plus fréquent identifié lors de l'analyse qualitative à Fond Sable ?",
-          "options": [
-            "Manque d'espace disponible",
-            "Contraintes financières",
-            "Sécurité et intimité la nuit",
-            "Habitudes anciennes difficiles à changer"
-          ],
-          "correct": 1
-        },
-        {
-          "type": "match",
-          "q": "Associez chaque étape du codage thématique à sa description.",
-          "pairs": [
-            {
-              "left": "Étape 1",
-              "right": "Retranscrire fidèlement les notes d'entretien"
-            },
-            {
-              "left": "Étape 3",
-              "right": "Attribuer un code court à chaque idée importante"
-            },
-            {
-              "left": "Étape 4",
-              "right": "Regrouper les codes similaires en thèmes plus larges"
-            },
-            {
-              "left": "Étape 6",
-              "right": "Illustrer chaque thème par une citation représentative"
-            }
-          ]
-        },
-        {
-          "type": "match",
-          "q": "Associez chaque thème identifié à Fond Sable à la solution proposée par l'équipe projet.",
-          "pairs": [
-            {
-              "left": "Contraintes financières",
-              "right": "Mécanisme de paiement échelonné"
-            },
-            {
-              "left": "Manque d'espace disponible",
-              "right": "Modèles de latrines compactes"
-            },
-            {
-              "left": "Sécurité et intimité la nuit",
-              "right": "Éclairage solaire à proximité des latrines"
-            }
-          ]
-        }
-      ]
-    },
-    {
-      "type": "lesson",
-      "title": "Excel — Tableau croisé dynamique",
-      "chapterTag": "Module 3",
-      "body": "Le tableau croisé dynamique (TCD) est l'un des outils les plus puissants d'Excel pour résumer, organiser et analyser rapidement de grands volumes de données, sans écrire de formule.",
-      "points": [
-        {
-          "label": "1. Qu'est-ce qu'un tableau croisé dynamique ?",
-          "html": "<p>Un <strong>tableau croisé dynamique (TCD)</strong> est un outil d'Excel qui permet de résumer, organiser et analyser rapidement de grands volumes de données, sans écrire de formule. Il transforme une liste de données brutes (par exemple des lignes de ventes ou d'enquêtes ménages) en un tableau de synthèse interactif : sommes, moyennes, comptages, pourcentages, etc.</p><p>Un TCD permet de croiser plusieurs dimensions (produit, région, période…) en quelques clics, de repérer des tendances et de réorganiser l'analyse instantanément par glisser-déposer, sans toucher aux données source.</p>"
-        },
-        {
-          "label": "2. Préparer les données source",
-          "html": "<p>La qualité du TCD dépend directement de la qualité des données de départ. Avant de créer un tableau croisé dynamique, il faut vérifier que : chaque colonne possède un <strong>en-tête unique et explicite</strong> (pas de cellule vide en en-tête) ; il n'y a <strong>aucune ligne ni colonne totalement vide</strong> dans la plage ; chaque colonne contient un <strong>seul type de donnée</strong> (texte, nombre ou date, sans mélange) ; et les données sont idéalement converties en <strong>tableau structuré (Ctrl+T)</strong> pour s'étendre automatiquement.</p>"
-        },
-        {
-          "label": "3. Créer un tableau croisé dynamique",
-          "html": "<p>Pour créer un TCD : sélectionner une cellule à l'intérieur de la plage de données ; aller dans l'onglet <strong>Insertion</strong>, puis cliquer sur <strong>Tableau croisé dynamique</strong> ; vérifier la plage de données proposée et choisir l'emplacement du TCD (nouvelle feuille recommandé) ; cliquer sur <strong>OK</strong> pour afficher le volet des champs ; puis glisser les champs souhaités dans les zones <strong>Lignes, Colonnes, Valeurs et Filtres</strong>. Le type de calcul (somme, moyenne, nombre…) s'ajuste par un clic droit sur le champ dans la zone Valeurs.</p>"
-        },
-        {
-          "label": "4. Les quatre zones du TCD",
-          "html": "<p><strong>Filtres</strong> : restreint l'analyse à une ou plusieurs catégories (ex. afficher uniquement une année). <strong>Colonnes</strong> : définit les en-têtes de colonnes du tableau de synthèse (ex. les mois de l'année). <strong>Lignes</strong> : définit les catégories affichées en lignes (ex. les noms de produits ou de régions). <strong>Valeurs</strong> : contient les données chiffrées à agréger (ex. chiffre d'affaires, quantités vendues).</p>"
-        },
-        {
-          "label": "5. Fonctionnalités utiles pour l'analyse",
-          "html": "<p><strong>Segments (slicers)</strong> : boutons visuels pour filtrer rapidement les données d'un ou plusieurs TCD liés. <strong>Chronologie</strong> : filtre visuel dédié aux champs de type date. <strong>Regroupement</strong> : regrouper des dates par mois/trimestre/année, ou des nombres par tranches. <strong>Champs calculés</strong> : créer une formule personnalisée à partir des champs existants. <strong>Actualisation</strong> : le bouton « Actualiser » met à jour le TCD après modification des données source. <strong>Graphique croisé dynamique</strong> : une visualisation graphique directement connectée au TCD.</p>"
-        },
-        {
-          "label": "6. Bonnes pratiques et erreurs courantes",
-          "html": "<p>À faire : toujours partir d'un tableau structuré (Ctrl+T) ; nommer clairement les en-têtes de colonnes ; actualiser le TCD après toute modification des données source. À éviter : laisser des cellules fusionnées dans les données source ; mélanger du texte et des nombres dans une même colonne ; oublier d'actualiser le TCD avant de présenter une analyse.</p>"
-        }
-      ]
-    },
-    {
-      "type": "video",
-      "title": "Excel — Tableau croisé dynamique",
-      "chapterTag": "Module 3",
-      "videoKey": "excel-tcd"
     },
     {
       "type": "lesson",
@@ -7296,7 +7006,18 @@ function goToCertificate(mod){
       wrap.appendChild(docs);
     }
 
-    if(item.type === 'quiz'){
+    if(item.type === 'quiz' && (!item.questions || !item.questions.length)){
+      // Titre déjà affiché (codé en dur) mais le contenu du quiz n'est pas encore
+      // chargé depuis Supabase (visiteur non connecté, inscription non confirmée,
+      // ou chargement en cours) — on l'indique clairement plutôt que d'ouvrir un
+      // quiz vide.
+      eyebrow.textContent = 'Quiz';
+      hint.style.display = 'none';
+      renderLockedContentMessage(mainCol, mod, isLoggedIn());
+      actionBtn.textContent = 'Valider mes réponses';
+      actionBtn.disabled = true;
+      actionBtn.onclick = null;
+    } else if(item.type === 'quiz'){
       eyebrow.textContent = 'Quiz';
       hint.style.display = 'none';
       renderQuizBody(mainCol, item);
@@ -7314,7 +7035,7 @@ function goToCertificate(mod){
         goToNextLesson(mod, idx);
       };
       renderRadialBody(mainCol, item, hint, actionBtn);
-    }  else {
+    }  else if(item.body){
       eyebrow.textContent = 'Leçon';
       item.body.split(/\n{2,}/).forEach(function(para){
         var pEl = document.createElement('p');
@@ -7332,6 +7053,15 @@ function goToCertificate(mod){
       };
       body.addEventListener('scroll', onLessonBodyScroll);
       setTimeout(function(){ onLessonBodyScroll(); }, 50);
+    }  else {
+      // Même cas que pour le quiz ci-dessus : titre codé en dur, contenu pas encore
+      // chargé depuis Supabase.
+      eyebrow.textContent = 'Leçon';
+      hint.style.display = 'none';
+      renderLockedContentMessage(mainCol, mod, isLoggedIn());
+      actionBtn.textContent = 'Passez à la leçon suivante →';
+      actionBtn.disabled = true;
+      actionBtn.onclick = null;
     }
 
     overlay.classList.add('open');
@@ -7706,6 +7436,40 @@ document.addEventListener('keydown', function(e){
     });
     container.classList.add('quiz-match-locked');
     return allCorrect;
+  }
+
+  // Message affiché à la place du contenu d'une leçon/quiz de m1 dont le titre est
+  // codé en dur mais dont le contenu (venant de Supabase) n'est pas encore accessible :
+  // visiteur non connecté, connecté mais inscription non confirmée, ou chargement en cours.
+  function renderLockedContentMessage(container, mod, loggedIn){
+    var wrap = document.createElement('div');
+    wrap.style.padding = '18px 4px';
+    wrap.style.color = 'var(--ink-soft, #666)';
+    wrap.style.fontSize = '0.92rem';
+    wrap.style.lineHeight = '1.5';
+
+    var title = document.createElement('p');
+    title.style.fontWeight = '700';
+    title.style.color = 'var(--navy, #1a2b4c)';
+    title.style.marginBottom = '6px';
+
+    var text = document.createElement('p');
+
+    if(!loggedIn){
+      title.textContent = 'Connectez-vous pour accéder à ce contenu';
+      text.textContent = "Le titre de cette leçon est visible par tous, mais son contenu (texte, points clés, questions du quiz) n'est débloqué qu'après connexion à votre compte élève et confirmation de votre inscription au module.";
+    } else if(!isModuleUnlocked(mod)){
+      title.textContent = 'Inscription en attente de confirmation';
+      text.textContent = "Votre compte est connecté, mais votre inscription à ce module n'a pas encore été confirmée. Le contenu se débloquera automatiquement dès la confirmation de votre paiement.";
+    } else {
+      title.textContent = 'Chargement du contenu…';
+      text.textContent = "Le contenu de cette leçon est en cours de récupération. Si rien ne s'affiche après quelques secondes, rafraîchissez la page.";
+    }
+
+    wrap.appendChild(title);
+    wrap.appendChild(text);
+    container.innerHTML = '';
+    container.appendChild(wrap);
   }
 
   function renderQuizBody(body, item){
@@ -8221,6 +7985,88 @@ document.addEventListener('keydown', function(e){
       }
     }
   });
+
+  // ---- Chargement dynamique du CONTENU des leçons + quiz de m1 depuis Supabase ----
+  // Les titres (et l'ordre) des leçons/quiz de m1 restent codés en dur ci-dessus dans
+  // LESSON_CONTENT, afin de toujours s'afficher — même pour un visiteur non connecté.
+  // Seul le corps des leçons (body/points) et les questions des quiz sont chargés ici et
+  // fusionnés dans les objets existants (jamais de remplacement de tableau, donc les
+  // titres ne disparaissent jamais). Protection : la table "lessons"/"quizzes" n'est
+  // lisible (RLS) que pour un élève avec une inscription "confirmed" sur le cours — un
+  // visiteur non connecté ou non payant reçoit 0 ligne, donc le contenu reste vide et
+  // seuls les titres codés en dur restent visibles.
+  var DYNAMIC_MODULES = ['m1'];
+  var dynamicModuleLoadPromise = {}; // { m1: Promise } — évite les fetch concurrents en double
+
+  function loadDynamicModuleContent(mod){
+    // On relance systématiquement le chargement (connexion/déconnexion peut changer ce
+    // qui est visible), donc pas de cache de promesse déjà résolue entre deux appels
+    // distincts de session — seul un fetch en cours est dédupliqué.
+    if(dynamicModuleLoadPromise[mod] && dynamicModuleLoadPromise[mod].pending){
+      return dynamicModuleLoadPromise[mod].promise;
+    }
+
+    var items = getModuleItems(mod);
+    var lessonItems = {};  // { position: item }
+    var quizItems = {};    // { position: item }
+    items.forEach(function(it){
+      if(it.type === 'lesson' && it.position != null){ lessonItems[it.position] = it; }
+      if(it.type === 'quiz' && it.position != null){ quizItems[it.position] = it; }
+    });
+
+    var state = { pending: true, promise: null };
+    dynamicModuleLoadPromise[mod] = state;
+
+    var promise = supabaseClient
+      .from('courses')
+      .select('id')
+      .eq('slug', mod)
+      .single()
+      .then(function(courseRes){
+        if(!courseRes || courseRes.error || !courseRes.data){ throw (courseRes && courseRes.error) || new Error('cours introuvable: ' + mod); }
+        var courseId = courseRes.data.id;
+        return Promise.all([
+          supabaseClient.from('lessons').select('position, content').eq('course_id', courseId),
+          supabaseClient.from('quizzes').select('position, quiz_questions(position, data)').eq('course_id', courseId)
+        ]);
+      })
+      .then(function(results){
+        var lessonsRes = results[0], quizzesRes = results[1];
+        if(lessonsRes.error){ throw lessonsRes.error; }
+        if(quizzesRes.error){ throw quizzesRes.error; }
+
+        // Fusionne le corps des leçons dans les items existants (titre déjà en place) —
+        // ne touche jamais au titre / chapterTag codés en dur.
+        (lessonsRes.data || []).forEach(function(l){
+          var target = lessonItems[l.position];
+          if(!target){ return; }
+          target.body = (l.content && l.content.body) || '';
+          target.points = (l.content && l.content.points) || [];
+        });
+
+        // Fusionne les questions des quiz dans les items existants (titre déjà en place).
+        (quizzesRes.data || []).forEach(function(q){
+          var target = quizItems[q.position];
+          if(!target){ return; }
+          target.questions = (q.quiz_questions || [])
+            .slice()
+            .sort(function(a, b){ return a.position - b.position; })
+            .map(function(row){ return row.data; });
+        });
+
+        refreshAll();
+        updateDashboard();
+      })
+      .catch(function(err){
+        console.error('Erreur de chargement du contenu dynamique pour ' + mod + ' :', err);
+      })
+      .then(function(){
+        state.pending = false;
+      });
+
+    state.promise = promise;
+    return promise;
+  }
 
   // ---- Nombre d'étudiants déjà inscrits, par module (affiché en haut de chaque carte) ----
   // Appelle la fonction RPC "get_enrolled_counts" (SECURITY DEFINER, voir le script SQL
@@ -8971,6 +8817,7 @@ document.addEventListener('keydown', function(e){
     refreshAll(); // met à jour l'état des certificats selon la connexion (nom du compte)
     loadPaymentStatus();
     loadLessonProgress();
+    DYNAMIC_MODULES.forEach(loadDynamicModuleContent);
     if(isLoggedIn() && !rememberMeActive()){ startInactivityTimer(); } else { clearInactivityTimers(); }
     // Arrivée depuis Cours.html via "Revoir le cours" / "Poursuivre" (plateforme unique) :
     // on ouvre directement le tableau de bord au lieu de laisser l'élève le rechercher.
@@ -8985,6 +8832,7 @@ document.addEventListener('keydown', function(e){
     refreshAll(); // débloque/régénère automatiquement les certificats dès la connexion
     loadPaymentStatus();
     loadLessonProgress();
+    DYNAMIC_MODULES.forEach(loadDynamicModuleContent);
     if(isLoggedIn() && !rememberMeActive()){ startInactivityTimer(); } else { clearInactivityTimers(); closeInactivityModal(); }
 
     // L'utilisateur a cliqué sur le lien de réinitialisation reçu par email :
