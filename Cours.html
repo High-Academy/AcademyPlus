@@ -892,6 +892,7 @@
   .lesson-modal-content-wrap{
     display:grid; grid-template-columns:minmax(0, 1fr) 270px; gap:18px; align-items:start;
   }
+  .lesson-modal-content-wrap.no-doc-panel{ grid-template-columns:1fr; }
   .lesson-modal-main{min-width:0;}
   .module3-lesson-docs{
     width:100%; background:#fff; border:1px solid var(--line); border-radius:12px;
@@ -1994,7 +1995,7 @@ header .wrap{
       </div>
       <div class="foot-contact">
         <span style="color:#fff; font-weight:600; font-size:0.85rem; text-transform:uppercase; letter-spacing:.06em; margin-bottom:4px;">Contact</span>
-        <a href="https://wa.me/50947655002" target="_blank" rel="noopener" class="foot-whatsapp" aria-label="Nous écrire sur WhatsApp — +509 4765 5002" title="WhatsApp — +509 4765 5002">
+        <a href="https://wa.me/50948219522" target="_blank" rel="noopener" class="foot-whatsapp" aria-label="Nous écrire sur WhatsApp — +509 4821 9522" title="WhatsApp — +509 4821 9522">
           <svg viewBox="0 0 24 24" width="20" height="20" fill="currentColor" aria-hidden="true"><path d="M12.04 2C6.58 2 2.13 6.45 2.13 11.91c0 1.75.46 3.46 1.32 4.96L2.05 22l5.25-1.38a9.9 9.9 0 0 0 4.74 1.21h.01c5.46 0 9.9-4.45 9.9-9.92 0-2.65-1.03-5.14-2.9-7.01A9.82 9.82 0 0 0 12.04 2m0 1.67c2.24 0 4.35.87 5.94 2.46a8.24 8.24 0 0 1 2.42 5.85c0 4.56-3.71 8.27-8.37 8.27a8.3 8.3 0 0 1-4.22-1.15l-.3-.18-3.12.82.83-3.04-.2-.31a8.18 8.18 0 0 1-1.27-4.42c0-4.56 3.71-8.3 8.29-8.3M8.5 6.9c-.17 0-.44.06-.67.32-.23.25-.87.85-.87 2.08 0 1.22.89 2.4 1.01 2.57.13.17 1.74 2.8 4.31 3.81 2.13.85 2.57.68 3.03.64.47-.04 1.5-.61 1.71-1.2.21-.6.21-1.1.15-1.21-.06-.11-.23-.17-.47-.3-.25-.12-1.5-.74-1.73-.83-.23-.08-.4-.12-.57.13-.17.25-.65.82-.8.99-.15.17-.29.19-.54.06-.25-.12-1.05-.39-2-1.23-.74-.66-1.24-1.47-1.39-1.72-.14-.25-.02-.38.11-.51.11-.11.25-.29.37-.43.12-.15.16-.25.24-.42.08-.17.04-.31-.02-.43-.06-.12-.55-1.36-.78-1.85-.2-.44-.41-.44-.57-.45z"/></svg>
           <span>WhatsApp</span>
         </a>
@@ -2405,7 +2406,7 @@ header .wrap{
   </div>
 </div>
 
-<!-- Modale : vidéo de la leçon (bucket privé "course-videos", URL signée) -->
+<!-- Modale : vidéo de la leçon (bucket privé "course-videos" via URL signée, ou embed Wistia selon la leçon) -->
 <div class="modal-overlay" id="lessonVideoModal" aria-hidden="true">
   <div class="modal-box" role="dialog" aria-modal="true" aria-labelledby="lessonVideoModalTitle" style="max-width:820px;">
     <button type="button" class="modal-close" onclick="closeLessonVideoModal()" aria-label="Fermer">
@@ -2567,9 +2568,20 @@ header .wrap{
         return;
       }
 
-      // Inscription enregistrée en base : on poursuit l'envoi normal
-      // (email FormSubmit + redirection vers le moyen de paiement).
-      enskriFormEl.submit();
+      // L'inscription est déjà enregistrée en base à ce stade (ligne ci-dessus,
+      // avec await) : elle est donc conservée dans Supabase même si l'envoi vers
+      // FormSubmit échoue ensuite (site indisponible, blocage réseau, etc.).
+      // On tente quand même la soumission normale (email FormSubmit + redirection
+      // vers le moyen de paiement), dans un try/catch pour ne jamais bloquer
+      // l'élève si cette étape échoue de façon inattendue.
+      try{
+        enskriFormEl.submit();
+      } catch(submitErr){
+        console.error('Erreur soumission FormSubmit (inscription déjà enregistrée) :', submitErr);
+        // Filet de sécurité : on redirige quand même vers le moyen de paiement choisi,
+        // même si l'envoi de l'email de notification a échoué.
+        if(nextField && nextField.value){ window.location.href = nextField.value; }
+      }
     });
   }
 
@@ -2675,13 +2687,36 @@ header .wrap{
   function lsSet(key, val){ try{ localStorage.setItem(key, val); }catch(e){} }
   function rememberMeActive(){ return lsGet('ha_remember_me') === '1'; }
 
-  // Reprend automatiquement l'achat en attente une fois l'élève connecté
-  function resumePendingEnskri(){
-    if(pendingEnskri){
-      var p = pendingEnskri;
-      pendingEnskri = null;
-      openEnskriModal(p.nomModil, p.pri, p.modId);
+  // Reprend automatiquement l'achat en attente une fois l'élève connecté.
+  // On vérifie d'abord que ce cours n'est pas déjà acheté (ex. inscription faite
+  // sur un autre appareil, ou compte existant) : dans ce cas on n'affiche pas la
+  // modale d'achat, on ouvre directement les leçons du cours.
+  async function resumePendingEnskri(){
+    if(!pendingEnskri){ return; }
+    var p = pendingEnskri;
+    pendingEnskri = null;
+
+    if(isLoggedIn() && currentSession && currentSession.user && currentSession.user.id && p.modId){
+      try{
+        var res = await supabaseClient
+          .from('enrollments')
+          .select('status')
+          .eq('user_id', currentSession.user.id)
+          .eq('course_id', p.modId)
+          .eq('status', 'confirmed')
+          .maybeSingle();
+        if(!res.error && res.data){
+          // Déjà acheté : pas de modale d'inscription, on va directement au cours.
+          openCourseLessons(p.modId, p.nomModil);
+          return;
+        }
+      }catch(err){
+        console.error('Erreur vérification inscription existante :', err);
+        // En cas de doute, on ne bloque pas l'achat : on affiche la modale normalement.
+      }
     }
+
+    openEnskriModal(p.nomModil, p.pri, p.modId);
   }
 
   function setLoginMode(mode){
@@ -3362,7 +3397,21 @@ header .wrap{
       if(loadingEl){ loadingEl.style.display = 'none'; }
       if(res.error){ throw res.error; }
 
-      var courses = res.data || [];
+      // Exclut les "cours" qui sont en réalité les modules m1-m4 (gérés sur index.html) :
+      // certains existent aussi comme lignes dans la table Supabase "courses" (même
+      // titre), ce qui les faisait apparaître en double ici. Ils ne doivent pas
+      // s'afficher dans Cours.html.
+      var EXCLUDED_MODULE_IDS = { m1: true, m2: true, m3: true, m4: true };
+      var excludedModuleTitles = {};
+      Object.keys(INDEX_MODULE_TITLES).forEach(function(k){
+        excludedModuleTitles[INDEX_MODULE_TITLES[k]] = true;
+      });
+      var courses = (res.data || []).filter(function(c){
+        var id = String(c.id || '');
+        if(EXCLUDED_MODULE_IDS[id]){ return false; }
+        if(c.title && excludedModuleTitles[c.title]){ return false; }
+        return true;
+      });
       var ownershipMap = {};
       var lessonsByCourse = {};
 
@@ -3484,6 +3533,25 @@ header .wrap{
       quiz: quiz,
       documents: documents
     };
+  }
+
+  // Rassemble les documents de TOUTES les leçons du cours actif (dédupliqués
+  // par chemin de fichier), pour que le panneau documents reste visible et
+  // identique quelle que soit la leçon consultée.
+  function getAllCourseDocuments(){
+    if(!activeCourse || !activeCourse.lessons){ return []; }
+    var seen = {};
+    var all = [];
+    activeCourse.lessons.forEach(function(l){
+      var docs = (l.content && l.content.documents) || [];
+      docs.forEach(function(d){
+        if(d && d.path && !seen[d.path]){
+          seen[d.path] = true;
+          all.push(d);
+        }
+      });
+    });
+    return all;
   }
 
   function shuffleArray(arr){
@@ -3628,7 +3696,7 @@ header .wrap{
 
     supabaseClient
       .from('lessons')
-      .select('id, course_id, position, chapter_title, content, video_path, duration_seconds')
+      .select('id, course_id, position, chapter_title, content, video_path, video_key, duration_seconds')
       .eq('course_id', courseId)
       .order('position', { ascending: true })
       .then(function(res){
@@ -3931,31 +3999,32 @@ header .wrap{
 
   // ---- Modale d'une leçon ----
   // ---- Documents de formation (bucket privé "course-documents" + URL signée) ----
-  function buildDocumentsSection(container, documents){
+  // Affichés dans le bloc fixe (sticky) à droite de la leçon, dans le style
+  // déjà utilisé pour le panneau documents du module 3 (.module3-doc-panel).
+  var DOC_ICON_SVG = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline></svg>';
+
+  function buildDocumentsPanel(container, documents){
     if(!documents || !documents.length){ return; }
+    container.innerHTML = '';
 
-    var wrap = document.createElement('div');
-    wrap.className = 'lesson-documents';
-    wrap.style.marginBottom = '20px';
+    var heading = document.createElement('h4');
+    heading.textContent = 'Documents';
+    container.appendChild(heading);
 
-    var heading = document.createElement('h3');
-    heading.style.margin = '0 0 10px';
-    heading.textContent = 'Documents de la leçon';
-    wrap.appendChild(heading);
+    var stack = document.createElement('div');
+    stack.className = 'module3-doc-stack';
+    container.appendChild(stack);
 
-    documents.forEach(function(doc){
-      var btn = document.createElement('button');
-      btn.type = 'button';
-      btn.className = 'btn-secondary';
-      btn.style.display = 'flex';
-      btn.style.alignItems = 'center';
-      btn.style.gap = '8px';
-      btn.style.marginBottom = '8px';
-      btn.textContent = '📄 ' + (doc.name || 'Document');
-      btn.addEventListener('click', function(){
-        var originalText = btn.textContent;
-        btn.disabled = true;
-        btn.textContent = 'Préparation du téléchargement…';
+    documents.forEach(function(doc, i){
+      var link = document.createElement('a');
+      link.href = '#';
+      link.className = 'module3-doc-link ' + (i % 2 === 0 ? 'primary' : 'secondary');
+      link.innerHTML = DOC_ICON_SVG + '<span>' + escapeHtml(doc.name || 'Document') + '</span>';
+      link.addEventListener('click', function(ev){
+        ev.preventDefault();
+        var originalHtml = link.innerHTML;
+        link.style.pointerEvents = 'none';
+        link.innerHTML = DOC_ICON_SVG + '<span>Préparation…</span>';
         supabaseClient.storage
           .from(LESSON_DOCS_BUCKET)
           .createSignedUrl(doc.path, 3600, { download: doc.name || true })
@@ -3967,21 +4036,18 @@ header .wrap{
             document.body.appendChild(a);
             a.click();
             document.body.removeChild(a);
-            btn.disabled = false;
-            btn.textContent = originalText;
           })
           .catch(function(err){
             console.error('Erreur téléchargement document :', err);
-            btn.textContent = 'Document indisponible — réessayez';
+            link.innerHTML = DOC_ICON_SVG + '<span>Indisponible — réessayez</span>';
           })
           .finally(function(){
-            btn.disabled = false;
+            link.style.pointerEvents = '';
+            setTimeout(function(){ link.innerHTML = originalHtml; }, 1500);
           });
       });
-      wrap.appendChild(btn);
+      stack.appendChild(link);
     });
-
-    container.appendChild(wrap);
   }
 
   function openLessonModal(idx){
@@ -4012,15 +4078,25 @@ header .wrap{
     body.innerHTML = '';
     body.scrollTop = 0;
 
+    var courseDocuments = getAllCourseDocuments();
+
     var wrap = document.createElement('div');
     wrap.className = 'lesson-modal-content-wrap';
     var mainCol = document.createElement('div');
     mainCol.className = 'lesson-modal-main';
     wrap.appendChild(mainCol);
+    var sideCol = null;
+    if(courseDocuments.length){
+      sideCol = document.createElement('div');
+      sideCol.className = 'module3-lesson-docs';
+      wrap.appendChild(sideCol);
+    } else {
+      wrap.classList.add('no-doc-panel');
+    }
     body.appendChild(wrap);
 
-    // Bouton vidéo, seulement si cette leçon a une vidéo associée.
-    if(lesson.video_path){
+    // Bouton vidéo, seulement si cette leçon a une vidéo associée (Supabase Storage ou Wistia).
+    if(lesson.video_path || lesson.video_key){
       var videoBtn = document.createElement('button');
       videoBtn.type = 'button';
       videoBtn.className = 'btn-secondary';
@@ -4040,8 +4116,9 @@ header .wrap{
       if(isLastLesson){ openCourseCertModal(); } else { goToNextCourseLesson(idx); }
     };
 
-    // Documents de la leçon, affichés en premier (pas de condition de complétion).
-    buildDocumentsSection(mainCol, item.documents);
+    // Documents du cours, toujours affichés dans le bloc fixe à droite,
+    // identiques quelle que soit la leçon consultée (pas de condition de complétion).
+    if(sideCol){ buildDocumentsPanel(sideCol, courseDocuments); }
 
     var hasPoints = !!(item.points && item.points.length);
     var hasQuiz = !!(item.quiz && item.quiz.length);
@@ -4085,17 +4162,52 @@ header .wrap{
     lessonModalState = null;
   }
 
-  // ---- Vidéo de leçon (bucket privé "course-videos" + URL signée) ----
+  // ---- Vidéo de leçon : bucket privé "course-videos" (URL signée) par défaut,
+  // ou vidéo Wistia si la leçon a un video_key — dans ce cas l'ID Wistia réel n'est
+  // jamais exposé côté client : on passe par la edge function "get-video" (même
+  // système que sur index.html, VIDEO_MAP + vérification domaine/session) qui
+  // résout la clé en ID Wistia côté serveur.
+  var LESSON_VIDEO_FRAME_DEFAULT_HTML = '<video id="lessonVideoModalPlayer" controls style="width:100%; display:block;"></video>';
+
   function openLessonVideo(lesson){
     var modal = document.getElementById('lessonVideoModal');
     var titleEl = document.getElementById('lessonVideoModalTitle');
-    var player = document.getElementById('lessonVideoModalPlayer');
-    if(!modal || !player){ return; }
+    var frame = document.getElementById('lessonVideoModalFrame');
+    if(!modal || !frame){ return; }
 
     titleEl.textContent = lesson.chapter_title || 'Vidéo de la leçon';
-    player.removeAttribute('src');
     modal.classList.add('open');
     modal.setAttribute('aria-hidden', 'false');
+
+    if(lesson.video_key){
+      frame.innerHTML = '<p style="color:#fff; padding:24px; text-align:center; margin:0;">Chargement de la vidéo...</p>';
+      supabaseClient.functions.invoke('get-video?key=' + encodeURIComponent(lesson.video_key))
+        .then(function(res){
+          if(res.error || !res.data || !res.data.wistia_id){
+            throw res.error || new Error('ID Wistia introuvable pour cette clé');
+          }
+          frame.innerHTML =
+            '<iframe src="https://fast.wistia.net/embed/iframe/' + encodeURIComponent(res.data.wistia_id) + '?videoFoam=true&autoPlay=true" ' +
+            'title="' + escapeHtml(lesson.chapter_title || 'Vidéo de la leçon') + '" ' +
+            'allow="autoplay; fullscreen" allowfullscreen ' +
+            'style="width:100%; aspect-ratio:16/9; border:0; display:block;"></iframe>';
+        })
+        .catch(function(err){
+          console.error('Erreur récupération vidéo (get-video) :', err);
+          frame.innerHTML = '';
+          titleEl.textContent = 'Vidéo indisponible pour le moment';
+        });
+      return;
+    }
+
+    // Vidéo Supabase Storage : on (re)crée le lecteur natif au cas où la modale
+    // affichait un embed Wistia juste avant.
+    frame.innerHTML = LESSON_VIDEO_FRAME_DEFAULT_HTML;
+    var player = document.getElementById('lessonVideoModalPlayer');
+    if(!lesson.video_path){
+      titleEl.textContent = 'Vidéo indisponible pour le moment';
+      return;
+    }
 
     supabaseClient.storage
       .from(LESSON_VIDEO_BUCKET)
@@ -4113,6 +4225,11 @@ header .wrap{
 
   function closeLessonVideoModal(){
     var modal = document.getElementById('lessonVideoModal');
+    var frame = document.getElementById('lessonVideoModalFrame');
+    // Remet toujours le cadre vidéo dans son état par défaut (lecteur natif vide) :
+    // ça coupe la lecture qu'il s'agisse du lecteur natif ou d'un embed Wistia,
+    // et ça prépare la modale pour la prochaine leçon consultée.
+    if(frame){ frame.innerHTML = LESSON_VIDEO_FRAME_DEFAULT_HTML; }
     var player = document.getElementById('lessonVideoModalPlayer');
     if(player){ player.pause(); player.removeAttribute('src'); player.load(); }
     if(modal){ modal.classList.remove('open'); modal.setAttribute('aria-hidden', 'true'); }
@@ -4562,49 +4679,9 @@ header .wrap{
 
   // Récupère la progression des modules (achetés sur index.html) de l'élève connecté.
   async function fetchModuleDashboardEntries(){
-    var empty = { cards: [], sumPct: 0, count: 0, resumeTitle: null };
-    if(!isLoggedIn()){ return empty; }
-    try{
-      var enrollRes = await supabaseClient
-        .from('enrollments')
-        .select('module_id, status')
-        .eq('user_id', currentSession.user.id)
-        .eq('status', 'confirmed')
-        .not('module_id', 'is', null);
-      if(enrollRes.error){ throw enrollRes.error; }
-
-      var moduleIds = (enrollRes.data || [])
-        .map(function(r){ return r.module_id; })
-        .filter(function(id, i, arr){ return id && INDEX_MODULE_LESSON_COUNTS[id] && arr.indexOf(id) === i; });
-      if(!moduleIds.length){ return empty; }
-
-      var progRes = await supabaseClient
-        .from('lesson_progress')
-        .select('module_id, lesson_idx')
-        .eq('user_id', currentSession.user.id)
-        .in('module_id', moduleIds);
-
-      var doneCountByModule = {};
-      (progRes.data || []).forEach(function(row){
-        doneCountByModule[row.module_id] = (doneCountByModule[row.module_id] || 0) + 1;
-      });
-
-      var out = { cards: [], sumPct: 0, count: moduleIds.length, resumeTitle: null };
-      moduleIds.forEach(function(mod){
-        var total = INDEX_MODULE_LESSON_COUNTS[mod];
-        var done = Math.min(doneCountByModule[mod] || 0, total);
-        var pct = total ? Math.round((done / total) * 100) : 0;
-        out.sumPct += pct;
-        var isDone = total > 0 && done === total;
-        var title = INDEX_MODULE_TITLES[mod] || mod;
-        if(done > 0 && !out.resumeTitle){ out.resumeTitle = title; }
-        out.cards.push({ title: title, pct: pct, isDone: isDone });
-      });
-      return out;
-    } catch(err){
-      console.error('Erreur chargement progression des modules :', err);
-      return empty;
-    }
+    // Modules (m1-m4, gérés sur index.html) volontairement exclus du tableau de
+    // bord de Cours.html : ils ne doivent pas y apparaître.
+    return { cards: [], sumPct: 0, count: 0, resumeTitle: null };
   }
 
   async function updateDashboard(){
