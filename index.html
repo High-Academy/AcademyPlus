@@ -3541,6 +3541,7 @@ header .wrap{
     "title": "Formation sur la collecte des données avec Kobocollect",
     "chapterTag": "Module 3",
     "videoKey": "kobocollect",
+    "mergeWithPrevLesson": true,
     "icon": "<i class=\"fi fi-brands-youtube\"></i> "
   },
   {
@@ -3901,12 +3902,12 @@ header .wrap{
       
       
       
-      if(item.type === 'video' && idx > 0 && items[idx - 1].type === 'lesson' && items[idx - 1].title === item.title){
+      if(item.type === 'video' && idx > 0 && items[idx - 1].type === 'lesson' && (items[idx - 1].title === item.title || item.mergeWithPrevLesson)){
         return;
       }
 
       var pairedVideoIdx = null;
-      if(item.type === 'lesson' && items[idx + 1] && items[idx + 1].type === 'video' && items[idx + 1].title === item.title){
+      if(item.type === 'lesson' && items[idx + 1] && items[idx + 1].type === 'video' && (items[idx + 1].title === item.title || items[idx + 1].mergeWithPrevLesson)){
         pairedVideoIdx = idx + 1;
       }
 
