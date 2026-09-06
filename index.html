@@ -2016,7 +2016,7 @@ header .wrap{
     <h1 class="hero-title">Devenez expert en Suivi &amp; Évaluation et gestion de projets.</h1>
 
     <p class="hero-subtitle">
-     Des formations 100 % pratiques, conçues par des experts nationaux et internationaux — pour transformer vos compétences en résultats concrets.
+     Des formations 100 % pratiques, conçues par des experts nationaux et internationaux, pour transformer vos compétences en résultats concrets.
     </p>
 
     <div class="hero-buttons">
@@ -2326,10 +2326,10 @@ header .wrap{
   <div class="bundle-cta">
     <div class="bundle-cta-text">
       <h3 style="color:red">Pack complet : les 4 modules</h3>
-      <p>Profitez du parcours complet en une seule commande pour 15 000 HTG. Vous avez accès aux 4 modules du cours, avec le même formulaire d'inscription, puis le paiement via MonCash ou UNIBANK Online.</p>
+      <p>Profitez du parcours complet en une seule commande pour 18 000 HTG. Vous avez accès aux 4 modules du cours, avec le même formulaire d'inscription, puis le paiement via MonCash ou UNIBANK Online.</p>
     </div>
     <div style="display:flex; flex-direction:column; align-items:flex-start; gap:8px;">
-      <button type="button" class="btn-enroll" id="bundleBuyBtn" onclick="openBundleModal()">Acheter les 4 modules — 15 000 HTG</button>
+      <button type="button" class="btn-enroll" id="bundleBuyBtn" onclick="openBundleModal()">Acheter les 4 modules — 18 000 HTG</button>
       <p id="bundleProcessingMessage" style="display:none; margin:0; color:#16a34a; font-weight:600; font-size:0.95rem;">Traitement du paiement en cours, veuillez patienter.</p>
     </div>
   </div>
@@ -2565,12 +2565,12 @@ header .wrap{
             <div class="lesson-locked" id="lessonLocked-m3">
               <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="5" y="11" width="14" height="9" rx="1.5"/><path d="M8 11V8a4 4 0 0 1 8 0v3"/></svg>
               <p id="lessonLockedMsg-m3">Le contenu détaillé de ce module est réservé aux personnes inscrites. Inscrivez-vous, puis connectez-vous avec le code d'accès reçu après vérification du paiement.</p>
-              <button type="button" class="btn-ghost lesson-locked-btn" id="lessonLockedBtn-m3" onclick="openEnskriModal('Collecte &amp; Analyse de Données sur le Terrain', '7 000HTG', 'm3')">Acheter pour débloquer</button>
+              <button type="button" class="btn-ghost lesson-locked-btn" id="lessonLockedBtn-m3" onclick="openEnskriModal('Collecte &amp; Analyse de Données sur le Terrain', '9 500 HTG', 'm3')">Acheter pour débloquer</button>
             </div>
               </div>
               <div class="card-foot">
-                 <div class="price">7000<span> HTG</span></div>
-                 <button type="button" class="btn-enroll" id="enrollBtn-m3" onclick="openEnskriModal('Collecte &amp; Analyse de Données sur le Terrain', '7 000HTG', 'm3')">Acheter le cours</button>
+                 <div class="price">9500<span> HTG</span></div>
+                 <button type="button" class="btn-enroll" id="enrollBtn-m3" onclick="openEnskriModal('Collecte &amp; Analyse de Données sur le Terrain', '9 500 HTG', 'm3')">Acheter le cours</button>
              </div>
             </div>
         </div>
@@ -3529,6 +3529,13 @@ header .wrap{
     "points": []
   },
   {
+    "type": "video",
+    "title": "Voir la vidéo sur la création et l'utilisation d'un questionnaire sur KoboToolbox ",
+    "chapterTag": "Module 1",
+    "videoKey": "kobo",
+    "icon": "<i class=\"fi fi-brands-youtube\"></i> "
+  },
+  {
     "type": "lesson",
     "position": 5,
     "title": "KoboCollect",
@@ -3542,13 +3549,6 @@ header .wrap{
     "chapterTag": "Module 3",
     "videoKey": "kobocollect",
     "mergeWithPrevLesson": true,
-    "icon": "<i class=\"fi fi-brands-youtube\"></i> "
-  },
-  {
-    "type": "video",
-    "title": "Voir la vidéo sur la création et l'utilisation d'un questionnaire sur KoboToolbox ",
-    "chapterTag": "Module 1",
-    "videoKey": "kobo",
     "icon": "<i class=\"fi fi-brands-youtube\"></i> "
   },
   {
@@ -4336,7 +4336,7 @@ function goToCertificate(mod){
     if(mod === 'm3'){
       var docs = document.createElement('aside');
       docs.className = 'module3-lesson-docs';
-      docs.innerHTML = '<h4>DOCUMENT DE COURS</h4><div class="module3-doc-stack"><a class="module3-doc-link primary" href="https://drive.google.com/uc?export=download&id=1USVYZk8g4fQQJDv8qPWRjDJzU2uOpKtz" target="_self" rel="noopener noreferrer" download="module-3-formation.pdf"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3v12"/><path d="M7 20l5 5 5-5"/><path d="M5 10l7-7 7 7"/></svg>Télécharger le module 3 de la formation</a><a class="module3-doc-link secondary" href="https://drive.google.com/uc?export=download&id=1KGn-E88AfPW9vqZKtNq1F4xfl3UtSg6N" target="_self" rel="noopener noreferrer" download="module-collecte-donnees.pdf"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3v12"/><path d="M7 20l5 5 5-5"/><path d="M5 10l7-7 7 7"/></svg>Télécharger le module collecte des données</a><a class="module3-doc-link secondary" href="https://drive.google.com/uc?export=download&id=1cJzaYsl5zu0fikC5M-RF3ZMDPhhyAz_K" target="_self" rel="noopener noreferrer" download="module-tcd.pdf"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3v12"/><path d="M7 20l5 5 5-5"/><path d="M5 10l7-7 7 7"/></svg>Télécharger le module TCD</a><a class="module3-doc-link secondary" href="https://drive.google.com/uc?export=download&id=1QUU8ThE_4na8f2fLvObY_4nuwgIFGaZS" target="_self" rel="noopener noreferrer" download="exo-pratique-tcd.pdf"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3v12"/><path d="M7 20l5 5 5-5"/><path d="M5 10l7-7 7 7"/></svg>Télécharger l\'exo pratique TCD</a></div>';
+      docs.innerHTML = '<h4>DOCUMENT DE COURS</h4><div class="module3-doc-stack"><a class="module3-doc-link primary" href="https://drive.google.com/uc?export=download&id=1USVYZk8g4fQQJDv8qPWRjDJzU2uOpKtz" target="_self" rel="noopener noreferrer" download="module-3-formation.pdf"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3v12"/><path d="M7 20l5 5 5-5"/><path d="M5 10l7-7 7 7"/></svg>Télécharger le module 3 de la formation</a><a class="module3-doc-link secondary" href="https://drive.google.com/uc?export=download&id=1KGn-E88AfPW9vqZKtNq1F4xfl3UtSg6N" target="_self" rel="noopener noreferrer" download="module-collecte-donnees.pdf"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3v12"/><path d="M7 20l5 5 5-5"/><path d="M5 10l7-7 7 7"/></svg>Télécharger le module collecte des données</a><a class="module3-doc-link secondary" href="https://drive.google.com/uc?export=download&id=1cJzaYsl5zu0fikC5M-RF3ZMDPhhyAz_K" target="_self" rel="noopener noreferrer" download="module-tcd.pdf"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3v12"/><path d="M7 20l5 5 5-5"/><path d="M5 10l7-7 7 7"/></svg>Télécharger le module TCD</a><a class="module3-doc-link secondary" href="https://drive.google.com/uc?export=download&id=1QUU8ThE_4na8f2fLvObY_4nuwgIFGaZS" target="_self" rel="noopener noreferrer" download="exo-pratique-tcd.pdf"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3v12"/><path d="M7 20l5 5 5-5"/><path d="M5 10l7-7 7 7"/></svg>Télécharger l\'exo pratique TCD</a><a class="module3-doc-link secondary" href="https://docs.google.com/spreadsheets/d/1w9_PlcJHL5Nt0PwgtjFnBx6n6uu57emy/export?format=xlsx" target="_self" rel="noopener noreferrer" download="exo-pratique-formulaire.xlsx"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3v12"/><path d="M7 20l5 5 5-5"/><path d="M5 10l7-7 7 7"/></svg>Télécharger l\'exo pratique de conception du formulaire</a></div>';
       wrap.appendChild(docs);
     }
         if(mod === 'm4'){
@@ -6554,7 +6554,7 @@ document.addEventListener('keydown', function(e){
   }
 
   function openBundleModal(){
-    openEnskriModal('Les 4 modules', '15 000 HTG', 'bundle-4-modules');
+    openEnskriModal('Les 4 modules', '18 000 HTG', 'bundle-4-modules');
   }
 
   function closeEnskriModal(){
